@@ -1,0 +1,2 @@
+com.github.beihaifeiwu.sakura.common.jackson.FuzzyEnumModule
+com.github.beihaifeiwu.sakura.common.jackson.GuavaExtrasModule

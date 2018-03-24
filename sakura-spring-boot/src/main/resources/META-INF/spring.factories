@@ -1,0 +1,14 @@
+# Auto Configure
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+  com.github.beihaifeiwu.sakura.autoconfigure.core.BeanResolverAutoConfiguration,\
+  com.github.beihaifeiwu.sakura.autoconfigure.core.CacheExtAutoConfiguration,\
+  com.github.beihaifeiwu.sakura.autoconfigure.core.JacksonExtAutoConfiguration,\
+  com.github.beihaifeiwu.sakura.autoconfigure.core.NiceFeatureAutoConfiguration,\
+  com.github.beihaifeiwu.sakura.autoconfigure.core.SecurityExtAutoConfiguration,\
+  com.github.beihaifeiwu.sakura.autoconfigure.core.WebServletAutoConfiguration,\
+  com.github.beihaifeiwu.sakura.autoconfigure.HttpClientAutoConfiguration,\
+  com.github.beihaifeiwu.sakura.autoconfigure.TemplateAutoConfiguration
+
+# Template availability providers
+org.springframework.boot.autoconfigure.template.TemplateAvailabilityProvider=\
+  com.github.beihaifeiwu.sakura.template.velocity.VelocityTemplateAvailabilityProvider

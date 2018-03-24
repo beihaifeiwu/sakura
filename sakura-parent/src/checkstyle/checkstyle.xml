@@ -1,0 +1,195 @@
+﻿<?xml version="1.0"?>
+
+<!DOCTYPE module PUBLIC
+        "-//Puppy Crawl//DTD Check Configuration 1.2//EN"
+        "http://www.puppycrawl.com/dtds/configuration_1_2.dtd">
+
+<!--
+  Checkstyle gRpcProperties that checks the Euphoria coding conventions.
+-->
+
+<module name="Checker">
+
+    <!-- Checks that a package.html file exists for each package.     -->
+    <!-- See http://checkstyle.sf.net/config_javadoc.html#PackageHtml -->
+    <!-- module name="PackageHtml"/ -->
+
+    <!-- Checks whether files end with a new line.                        -->
+    <!-- See http://checkstyle.sf.net/config_misc.html#NewlineAtEndOfFile -->
+    <!-- module name="NewlineAtEndOfFile"/ -->
+
+    <!-- Checks that property files contain the same keys.         -->
+    <!-- See http://checkstyle.sf.net/config_misc.html#Translation -->
+    <!-- module name="Translation"/ -->
+
+    <!-- Checks for Headers                              -->
+    <!-- See http://checkstyle.sf.net/config_header.html -->
+    <!--    <module name="Header">
+            <property name="headerFile" value="${checkstyle.header.file}"/>
+            <property name="fileExtensions" value="java"/>
+        </module>-->
+
+    <!-- Checks for Size Violations.                    -->
+    <!-- See http://checkstyle.sf.net/config_sizes.html -->
+    <module name="TreeWalker">
+        <property name="cacheFile" value="${checkstyle.cache.file}"/>
+
+        <!-- Checks for Javadoc comments.                     -->
+        <!-- See http://checkstyle.sf.net/config_javadoc.html -->
+        <!-- module name="JavadocMethod"/ -->
+        <!-- module name="JavadocType"/ -->
+        <!-- module name="JavadocVariable"/ -->
+
+
+        <!-- Checks for Naming Conventions.                  -->
+        <!-- See http://checkstyle.sf.net/config_naming.html -->
+        <module name="ConstantName">
+            <!-- Normal rules, except that:
+               -  * any name can start with an underscore.
+               -  * "log" is allowed; this is a traditional name for log objects
+               -  * names ending with "ThreadLocal" are allowed so that threadlocal vars don't have to be
+               -    all-caps. They are static final, but are not really constants. Yes, type prefixes
+               -    on variable names sucks ("hungarian notation") but checkstyle doesn't allow
+               -    name rules to vary by the type of the constant, and no other alternative seems
+               -    any better.
+               -->
+            <property name="format"
+                      value="^((log)|(logger)|([a-z][a-zA-Z]*ThreadLocal)|([A-Z][A-Z0-9]*(_[A-Z0-9]+)*))$"/>
+        </module>
+        <module name="LocalFinalVariableName"/>
+        <module name="LocalVariableName">
+            <property name="format" value="^(([A-Z]+[_a-z]*)|([a-z][a-zA-Z0-9]*))$"/>
+        </module>
+        <module name="MemberName">
+            <property name="format" value="^[a-z][_a-zA-Z0-9]*$"/>
+        </module>
+        <module name="MethodName">
+            <property name="format" value="^(([A-Z]+[_a-z0-9]*)|([a-zA-Z][_a-zA-Z0-9]*))$"/>
+            <property name="allowClassName" value="true"/>
+        </module>
+        <module name="PackageName"/>
+        <module name="ParameterName">
+            <property name="format" value="^(([A-Z]+[_a-z0-9]*)|([a-z][a-zA-Z0-9]*))$"/>
+            <property name="ignoreOverridden" value="true"/>
+        </module>
+        <module name="StaticVariableName"/>
+        <module name="TypeName">
+            <property name="format" value="^[A-Z][_a-zA-Z0-9]*$"/>
+        </module>
+
+        <!-- Checks for Annotations -->
+        <!-- See http://checkstyle.sourceforge.net/config_annotation.html -->
+        <module name="PackageAnnotation"/>
+
+        <!-- Checks for imports                              -->
+        <!-- See http://checkstyle.sf.net/config_import.html -->
+        <module name="IllegalImport"/>
+        <module name="RedundantImport"/>
+        <module name="UnusedImports"/>
+
+        <!-- Checks for size                                 -->
+        <!-- See http://checkstyle.sf.net/config_sizes.html  -->
+        <module name="LineLength">
+            <property name="max" value="240"/>
+            <property name="ignorePattern" value="@version|@see"/>
+        </module>
+        <module name="MethodLength">
+            <property name="max" value="500"/>
+        </module>
+        <module name="ParameterNumber">
+            <property name="max" value="15"/>
+        </module>
+
+        <!-- Modifier Checks                                    -->
+        <!-- See http://checkstyle.sf.net/config_modifiers.html -->
+        <module name="ModifierOrder"/>
+        <module name="RedundantModifier"/>
+
+        <!-- Checks for blocks. You know, those {}'s         -->
+        <!-- See http://checkstyle.sf.net/config_blocks.html -->
+        <!-- module name="EmptyBlock"/ -->
+        <module name="LeftCurly">
+            <property name="option" value="eol"/>
+            <property name="ignoreEnums" value="true"/>
+        </module>
+        <module name="NeedBraces">
+            <property name="allowSingleLineStatement" value="true"/>
+            <property name="allowEmptyLoopBody" value="true"/>
+        </module>
+        <module name="RightCurly">
+            <property name="option" value="same"/>
+        </module>
+
+        <!-- Checks for common coding problems               -->
+        <!-- See http://checkstyle.sf.net/config_coding.html -->
+        <module name="DeclarationOrder"/>
+        <module name="DefaultComesLast"/>
+        <module name="EmptyStatement"/>
+        <module name="EqualsAvoidNull"/>
+        <module name="EqualsHashCode"/>
+        <module name="FallThrough"/>
+        <!--<module name="InnerAssignment"/>-->
+        <module name="MissingOverride"/>
+        <module name="MissingSwitchDefault"/>
+        <module name="ModifiedControlVariable"/>
+        <!--module name="MultipleStringLiterals"/-->
+        <module name="MultipleVariableDeclarations"/>
+        <module name="NoFinalizer"/>
+        <module name="OneStatementPerLine"/>
+        <module name="StringLiteralEquality"/>
+
+        <!-- Checks for Class Design                         -->
+        <!-- See http://checkstyle.sf.net/config_design.html -->
+        <module name="DesignForExtension">
+            <property name="severity" value="ignore"/>
+        </module>
+        <module name="FinalClass"/>
+        <module name="InnerTypeLast"/>
+        <!-- module name="InterfaceIsType"/ -->
+        <module name="VisibilityModifier">
+            <property name="packageAllowed" value="false"/>
+            <property name="protectedAllowed" value="true"/>
+            <property name="publicMemberPattern" value="^serialVersionUID"/>
+            <property name="severity" value="warning"/>
+        </module>
+
+
+        <!-- Miscellaneous other checks.                   -->
+        <!-- See http://checkstyle.sf.net/config_misc.html -->
+        <!-- module name="ArrayTypeStyle"/ -->
+        <module name="FileContentsHolder"/>
+        <module name="Indentation">
+            <property name="arrayInitIndent" value="8"/>
+            <property name="forceStrictCondition" value="false"/>
+        </module>
+        <module name="UpperEll"/>
+
+        <!-- Checks for Whitespace -->
+        <!-- See http://checkstyle.sourceforge.net/config_whitespace.html -->
+        <module name="WhitespaceAround">
+            <property name="allowEmptyConstructors" value="true"/>
+            <property name="allowEmptyMethods" value="true"/>
+            <property name="allowEmptyTypes" value="true"/>
+            <property name="allowEmptyLoops" value="true"/>
+            <property name="allowEmptyLambdas" value="true"/>
+            <property name="allowEmptyCatches" value="true"/>
+        </module>
+
+        <!-- Checks for Modifier -->
+        <!-- See http://checkstyle.sf.net/config_modifier.html -->
+        <module name="ModifierOrder"/>
+        <module name="RedundantModifier"/>
+    </module>
+
+    <!-- Checks for whitespace                               -->
+    <!-- See http://checkstyle.sf.net/config_whitespace.html -->
+    <module name="FileTabCharacter"/>
+
+    <!-- Checks for size                                 -->
+    <!-- See http://checkstyle.sf.net/config_sizes.html  -->
+    <module name="FileLength">
+        <property name="max" value="3500"/>
+        <property name="fileExtensions" value="java"/>
+    </module>
+</module>
+

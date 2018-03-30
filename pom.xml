@@ -18,18 +18,6 @@
     <name>Sakura</name>
     <description>Spring boot accelerator</description>
 
-    <!-- 开发人员信息 -->
-    <developers>
-        <developer>
-            <name>刘品</name>
-            <email>liuhuizhang@foxmail.com</email>
-            <roles>
-                <role>Project leader</role>
-            </roles>
-            <timezone>8</timezone>
-        </developer>
-    </developers>
-
     <!-- 许可证 -->
     <licenses>
         <license>

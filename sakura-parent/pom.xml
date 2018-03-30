@@ -14,6 +14,11 @@
     <packaging>pom</packaging>
     <name>Sakura :: Parent</name>
 
+    <properties>
+        <main.basedir>${basedir}/..</main.basedir>
+        <disable.checks>false</disable.checks>
+    </properties>
+
     <dependencies>
         <!-- slf4j -->
         <dependency>
@@ -38,7 +43,7 @@
             <scope>test</scope>
         </dependency>
 
-        <!-- coding happily -->
+        <!-- provided -->
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
@@ -102,9 +107,11 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-checkstyle-plugin</artifactId>
                 <configuration>
+                    <skip>${disable.checks}</skip>
                     <configLocation>src/checkstyle/checkstyle.xml</configLocation>
                     <suppressionsLocation>src/checkstyle/checkstyle-suppressions.xml</suppressionsLocation>
                     <headerLocation>src/checkstyle/checkstyle-header.txt</headerLocation>
+                    <propertyExpansion>main.basedir=${main.basedir}</propertyExpansion>
                     <encoding>UTF-8</encoding>
                     <consoleOutput>true</consoleOutput>
                     <failOnViolation>true</failOnViolation>
@@ -177,7 +184,8 @@
                                 <ignoredResourcePattern>banner.txt</ignoredResourcePattern>
                                 <ignoredResourcePattern>changelog.txt</ignoredResourcePattern>
                                 <ignoredResourcePattern>log4j2.xml</ignoredResourcePattern>
-                                <ignoredResourcePattern>myspring-exception-mapping.properties</ignoredResourcePattern>
+                                <ignoredResourcePattern>module-info</ignoredResourcePattern>
+                                <ignoredResourcePattern>sakura-exception-mapping.properties</ignoredResourcePattern>
                                 <ignoredResourcePattern>ValidationMessages.properties</ignoredResourcePattern>
                             </ignoredResourcePatterns>
                             <ignoredDependencies>

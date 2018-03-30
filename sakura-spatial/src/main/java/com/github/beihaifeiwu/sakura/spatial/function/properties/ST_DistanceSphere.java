@@ -1,13 +1,8 @@
-
 package com.github.beihaifeiwu.sakura.spatial.function.properties;
 
 import com.github.beihaifeiwu.sakura.spatial.SpatialException;
 import com.github.beihaifeiwu.sakura.spatial.utils.CRS;
-import com.vividsolutions.jts.geom.Geometry;
-import com.vividsolutions.jts.geom.GeometryCollection;
-import com.vividsolutions.jts.geom.LineString;
-import com.vividsolutions.jts.geom.Point;
-import com.vividsolutions.jts.geom.Polygon;
+import com.vividsolutions.jts.geom.*;
 import org.cts.crs.CoordinateReferenceSystem;
 
 /**

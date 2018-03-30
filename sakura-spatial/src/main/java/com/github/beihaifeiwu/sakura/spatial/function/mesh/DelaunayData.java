@@ -3,17 +3,7 @@ package com.github.beihaifeiwu.sakura.spatial.function.mesh;
 import com.github.beihaifeiwu.sakura.spatial.function.aggregate.ST_Accum;
 import com.github.beihaifeiwu.sakura.spatial.function.convert.ST_ToMultiLine;
 import com.github.beihaifeiwu.sakura.spatial.utils.CoordinateSequenceDimensionFilter;
-import com.vividsolutions.jts.geom.Coordinate;
-import com.vividsolutions.jts.geom.CoordinateFilter;
-import com.vividsolutions.jts.geom.Geometry;
-import com.vividsolutions.jts.geom.GeometryCollection;
-import com.vividsolutions.jts.geom.GeometryFactory;
-import com.vividsolutions.jts.geom.LineSegment;
-import com.vividsolutions.jts.geom.LineString;
-import com.vividsolutions.jts.geom.MultiLineString;
-import com.vividsolutions.jts.geom.MultiPolygon;
-import com.vividsolutions.jts.geom.Point;
-import com.vividsolutions.jts.geom.Polygon;
+import com.vividsolutions.jts.geom.*;
 import lombok.extern.slf4j.Slf4j;
 import org.poly2tri.Poly2Tri;
 import org.poly2tri.geometry.polygon.PolygonPoint;
@@ -27,13 +17,7 @@ import org.poly2tri.triangulation.sets.ConstrainedPointSet;
 import java.math.BigDecimal;
 import java.math.MathContext;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
@@ -187,8 +171,8 @@ public class DelaunayData {
             Polygon[] polygons = new Polygon[delaunayTriangle.size()];
             for (int idTriangle = 0; idTriangle < polygons.length; idTriangle++) {
                 TriangulationPoint[] pts = delaunayTriangle.get(idTriangle).points;
-                polygons[idTriangle] = gf.createPolygon(new Coordinate[]{ toJts(isInput2D, pts[0]),
-                        toJts(isInput2D, pts[1]), toJts(isInput2D, pts[2]), toJts(isInput2D, pts[0]) });
+                polygons[idTriangle] = gf.createPolygon(new Coordinate[]{toJts(isInput2D, pts[0]),
+                        toJts(isInput2D, pts[1]), toJts(isInput2D, pts[2]), toJts(isInput2D, pts[0])});
             }
             return gf.createMultiPolygon(polygons);
         } else {
@@ -312,7 +296,7 @@ public class DelaunayData {
             pts.clear();
             convertedInput = new ConstrainedPointSet(Arrays.asList(ptsArray), index);
         } else {
-            addGeometry(geom.getFactory().createGeometryCollection(new Geometry[]{ geom }));
+            addGeometry(geom.getFactory().createGeometryCollection(new Geometry[]{geom}));
         }
     }
 

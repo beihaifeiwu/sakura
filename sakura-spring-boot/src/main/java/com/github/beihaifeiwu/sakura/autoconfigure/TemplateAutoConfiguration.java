@@ -14,10 +14,10 @@ import org.springframework.context.annotation.Import;
  * Created by liupin on 2017/5/3.
  */
 @Configuration
-@Import({ TemplateConfiguration.class,
+@Import({TemplateConfiguration.class,
         ThymeleafConfiguration.class,
         FreemarkerConfiguration.class,
-        VelocityConfiguration.class })
-@AutoConfigureAfter({ ThymeleafAutoConfiguration.class, FreeMarkerAutoConfiguration.class })
+        VelocityConfiguration.class})
+@AutoConfigureAfter({ThymeleafAutoConfiguration.class, FreeMarkerAutoConfiguration.class})
 public class TemplateAutoConfiguration {
 }

@@ -1,7 +1,7 @@
 package com.github.beihaifeiwu.sakura.http.okhttp;
 
-import com.github.beihaifeiwu.sakura.core.SpringBeans;
 import com.github.beihaifeiwu.sakura.common.http.HTTP;
+import com.github.beihaifeiwu.sakura.core.SpringBeans;
 import okhttp3.*;
 import okhttp3.logging.HttpLoggingInterceptor;
 import org.slf4j.Logger;
@@ -165,7 +165,7 @@ public class OkHttpClientConfiguration {
     }
 
     @Configuration
-    @ConditionalOnClass({ OkHttp3ClientHttpRequestFactory.class })
+    @ConditionalOnClass({OkHttp3ClientHttpRequestFactory.class})
     public static class OkHttpRestTemplateConfiguration {
 
         @Bean

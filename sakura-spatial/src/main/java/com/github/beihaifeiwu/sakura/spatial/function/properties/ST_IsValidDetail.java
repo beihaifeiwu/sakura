@@ -1,4 +1,3 @@
-
 package com.github.beihaifeiwu.sakura.spatial.function.properties;
 
 import com.github.beihaifeiwu.sakura.spatial.utils.GeometryFactories;

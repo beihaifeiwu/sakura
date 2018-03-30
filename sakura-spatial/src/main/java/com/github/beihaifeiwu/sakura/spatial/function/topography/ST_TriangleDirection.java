@@ -3,11 +3,7 @@ package com.github.beihaifeiwu.sakura.spatial.function.topography;
 import com.github.beihaifeiwu.sakura.spatial.utils.CoordinateUtils;
 import com.github.beihaifeiwu.sakura.spatial.utils.GeometryFactories;
 import com.github.beihaifeiwu.sakura.spatial.utils.TriMarkers;
-import com.vividsolutions.jts.geom.Coordinate;
-import com.vividsolutions.jts.geom.Geometry;
-import com.vividsolutions.jts.geom.LineSegment;
-import com.vividsolutions.jts.geom.LineString;
-import com.vividsolutions.jts.geom.Triangle;
+import com.vividsolutions.jts.geom.*;
 import com.vividsolutions.jts.math.Vector3D;
 
 
@@ -39,8 +35,8 @@ public class ST_TriangleDirection {
         // Interpolate Z value
         inCenter.setOrdinate(2, Triangle.interpolateZ(inCenter, triangle.p0, triangle.p1, triangle.p2));
         // Project slope from triangle center to triangle borders
-        final LineSegment[] sides = new LineSegment[]{ new LineSegment(triangle.p0, triangle.p1),
-                new LineSegment(triangle.p1, triangle.p2), new LineSegment(triangle.p2, triangle.p0) };
+        final LineSegment[] sides = new LineSegment[]{new LineSegment(triangle.p0, triangle.p1),
+                new LineSegment(triangle.p1, triangle.p2), new LineSegment(triangle.p2, triangle.p0)};
         Coordinate pointIntersection = null;
         double nearestIntersection = Double.MAX_VALUE;
         for (LineSegment side : sides) {
@@ -57,9 +53,9 @@ public class ST_TriangleDirection {
             }
         }
         if (pointIntersection != null) {
-            return GeometryFactories.default_().createLineString(new Coordinate[]{ inCenter, pointIntersection });
+            return GeometryFactories.default_().createLineString(new Coordinate[]{inCenter, pointIntersection});
         }
-        return GeometryFactories.default_().createLineString(new Coordinate[]{ });
+        return GeometryFactories.default_().createLineString(new Coordinate[]{});
     }
 
 }

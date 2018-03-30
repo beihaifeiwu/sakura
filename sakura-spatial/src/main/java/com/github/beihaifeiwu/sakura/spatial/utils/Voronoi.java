@@ -21,29 +21,13 @@
 package com.github.beihaifeiwu.sakura.spatial.utils;
 
 import com.vividsolutions.jts.algorithm.CGAlgorithms;
-import com.vividsolutions.jts.geom.Coordinate;
-import com.vividsolutions.jts.geom.Envelope;
-import com.vividsolutions.jts.geom.Geometry;
-import com.vividsolutions.jts.geom.GeometryCollection;
-import com.vividsolutions.jts.geom.GeometryFactory;
-import com.vividsolutions.jts.geom.LineSegment;
-import com.vividsolutions.jts.geom.LineString;
-import com.vividsolutions.jts.geom.MultiLineString;
-import com.vividsolutions.jts.geom.MultiPoint;
-import com.vividsolutions.jts.geom.MultiPolygon;
-import com.vividsolutions.jts.geom.Polygon;
-import com.vividsolutions.jts.geom.TopologyException;
-import com.vividsolutions.jts.geom.Triangle;
+import com.vividsolutions.jts.geom.*;
 import com.vividsolutions.jts.index.ItemVisitor;
 import com.vividsolutions.jts.index.quadtree.Quadtree;
 import com.vividsolutions.jts.math.Vector2D;
 import com.vividsolutions.jts.operation.polygonize.Polygonizer;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 
 /**
@@ -173,7 +157,7 @@ public class Voronoi {
     }
 
     private boolean triangleContainsPoint(Triangle tri, Coordinate pt) {
-        return CGAlgorithms.isPointInRing(pt, new Coordinate[]{ tri.p0, tri.p1, tri.p2, tri.p0 });
+        return CGAlgorithms.isPointInRing(pt, new Coordinate[]{tri.p0, tri.p1, tri.p2, tri.p0});
     }
 
     private double fetchZ(Coordinate pt, int idGeom) {
@@ -402,8 +386,8 @@ public class Voronoi {
                             }
                             // If segment not already processed
                             if (neighIndex > idgeom) {
-                                LineString lineString = geometryFactory.createLineString(new Coordinate[]{ getCircumcenter(idgeom,
-                                        triangleCircumcenter), getCircumcenter(neighIndex, triangleCircumcenter) });
+                                LineString lineString = geometryFactory.createLineString(new Coordinate[]{getCircumcenter(idgeom,
+                                        triangleCircumcenter), getCircumcenter(neighIndex, triangleCircumcenter)});
                                 if (lineString.getLength() > epsilon) {
                                     lineStrings.add(lineString);
                                 }

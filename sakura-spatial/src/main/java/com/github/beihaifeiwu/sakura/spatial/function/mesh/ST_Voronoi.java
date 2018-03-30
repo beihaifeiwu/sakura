@@ -1,18 +1,7 @@
 package com.github.beihaifeiwu.sakura.spatial.function.mesh;
 
 import com.github.beihaifeiwu.sakura.spatial.utils.Voronoi;
-import com.vividsolutions.jts.geom.Coordinate;
-import com.vividsolutions.jts.geom.CoordinateFilter;
-import com.vividsolutions.jts.geom.Geometry;
-import com.vividsolutions.jts.geom.GeometryCollection;
-import com.vividsolutions.jts.geom.GeometryFactory;
-import com.vividsolutions.jts.geom.LineSegment;
-import com.vividsolutions.jts.geom.LineString;
-import com.vividsolutions.jts.geom.MultiLineString;
-import com.vividsolutions.jts.geom.MultiPoint;
-import com.vividsolutions.jts.geom.Point;
-import com.vividsolutions.jts.geom.Polygon;
-import com.vividsolutions.jts.geom.Triangle;
+import com.vividsolutions.jts.geom.*;
 import com.vividsolutions.jts.triangulate.VoronoiDiagramBuilder;
 import com.vividsolutions.jts.triangulate.quadedge.QuadEdge;
 import com.vividsolutions.jts.triangulate.quadedge.QuadEdgeSubdivision;
@@ -103,7 +92,7 @@ public class ST_Voronoi {
         LineString[] lineStrings = new LineString[segments.size()];
         int idLine = 0;
         for (LineSegment lineSegment : segments) {
-            lineStrings[idLine++] = factory.createLineString(new Coordinate[]{ lineSegment.p0, lineSegment.p1 });
+            lineStrings[idLine++] = factory.createLineString(new Coordinate[]{lineSegment.p0, lineSegment.p1});
         }
         segments.clear();
         return factory.createMultiLineString(lineStrings);

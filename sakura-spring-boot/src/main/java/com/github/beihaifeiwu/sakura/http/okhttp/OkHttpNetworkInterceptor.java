@@ -14,7 +14,7 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
  * @author liupin
  * @see OkHttpInterceptor
  */
-@Target({ TYPE, METHOD, FIELD, CONSTRUCTOR, PARAMETER })
+@Target({TYPE, METHOD, FIELD, CONSTRUCTOR, PARAMETER})
 @Retention(RUNTIME)
 @Qualifier
 public @interface OkHttpNetworkInterceptor {

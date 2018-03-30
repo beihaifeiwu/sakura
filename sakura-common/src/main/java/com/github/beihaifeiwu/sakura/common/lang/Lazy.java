@@ -30,7 +30,8 @@ public final class Lazy<T> {
             synchronized (this) {
                 result = object;
                 if (result == NO_INIT) {
-                    object = result = supplier.get();
+                    result = supplier.get();
+                    object = result;
                 }
             }
         }

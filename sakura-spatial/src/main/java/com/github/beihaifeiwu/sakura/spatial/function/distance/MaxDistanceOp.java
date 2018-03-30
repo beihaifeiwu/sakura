@@ -32,7 +32,7 @@ public class MaxDistanceOp {
     private void computeMaxDistance() {
         HashSet<Coordinate> coordinatesA = new HashSet<Coordinate>();
         coordinatesA.addAll(Arrays.asList(geomA.convexHull().getCoordinates()));
-        Geometry fullHull = geomA.getFactory().createGeometryCollection(new Geometry[]{ geomA, geomB }).convexHull();
+        Geometry fullHull = geomA.getFactory().createGeometryCollection(new Geometry[]{geomA, geomB}).convexHull();
         maxDistanceFilter = new MaxDistanceFilter(coordinatesA);
         fullHull.apply(maxDistanceFilter);
     }
@@ -145,7 +145,7 @@ public class MaxDistanceOp {
             if (startCoord == null || endCoord == null) {
                 return null;
             }
-            return new Coordinate[]{ startCoord, endCoord };
+            return new Coordinate[]{startCoord, endCoord};
         }
     }
 

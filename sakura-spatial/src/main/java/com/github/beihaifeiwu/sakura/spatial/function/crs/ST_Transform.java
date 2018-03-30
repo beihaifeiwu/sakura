@@ -80,7 +80,7 @@ public class ST_Transform {
                 if (zIsNaN) {
                     coord.z = 0;
                 }
-                double[] xyz = coordinateOperation.transform(new double[]{ coord.x, coord.y, coord.z });
+                double[] xyz = coordinateOperation.transform(new double[]{coord.x, coord.y, coord.z});
                 coord.x = xyz[0];
                 coord.y = xyz[1];
                 if (xyz.length > 2 && !zIsNaN) {

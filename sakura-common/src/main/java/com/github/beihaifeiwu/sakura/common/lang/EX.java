@@ -18,15 +18,19 @@ import java.util.function.*;
 public class EX {
 
     private static final Consumer<Throwable> THROWABLE_TO_RUNTIME_EXCEPTION = t -> {
-        if (t instanceof Error) throw (Error) t;
-
-        if (t instanceof RuntimeException) throw (RuntimeException) t;
-
-        if (t instanceof IOException) throw new UncheckedIOException((IOException) t);
-
+        if (t instanceof Error) {
+            throw (Error) t;
+        }
+        if (t instanceof RuntimeException) {
+            throw (RuntimeException) t;
+        }
+        if (t instanceof IOException) {
+            throw new UncheckedIOException((IOException) t);
+        }
         // Clients will not expect needing to handle this.
-        if (t instanceof InterruptedException) Thread.currentThread().interrupt();
-
+        if (t instanceof InterruptedException) {
+            Thread.currentThread().interrupt();
+        }
         throw new MySpringException(t);
     };
 

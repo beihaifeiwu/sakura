@@ -10,6 +10,9 @@ import com.google.common.cache.CacheBuilderSpec;
 
 import java.io.IOException;
 
+/**
+ * Created by liupin on 2017/5/9.
+ */
 public class GuavaExtrasModule extends Module {
     @Override
     public String getModuleName() {

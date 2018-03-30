@@ -1,25 +1,11 @@
 package com.github.beihaifeiwu.sakura.spatial.function.mesh;
 
 import com.vividsolutions.jts.algorithm.CGAlgorithms;
-import com.vividsolutions.jts.geom.Coordinate;
-import com.vividsolutions.jts.geom.CoordinateArrays;
-import com.vividsolutions.jts.geom.CoordinateList;
-import com.vividsolutions.jts.geom.Geometry;
-import com.vividsolutions.jts.geom.GeometryCollection;
-import com.vividsolutions.jts.geom.GeometryFactory;
-import com.vividsolutions.jts.geom.LineString;
-import com.vividsolutions.jts.geom.LinearRing;
-import com.vividsolutions.jts.geom.Point;
-import com.vividsolutions.jts.geom.Polygon;
+import com.vividsolutions.jts.geom.*;
 import com.vividsolutions.jts.util.Assert;
 import com.vividsolutions.jts.util.UniqueCoordinateArrayFilter;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Stack;
-import java.util.TreeSet;
+import java.util.*;
 
 /**
  * Computes the convex hull of a {@link Geometry}.
@@ -316,7 +302,7 @@ public class FullConvexHull {
      */
     private Geometry lineOrPolygon(Coordinate[] coordinates) {
         if (coordinates.length == 3) {
-            return geomFactory.createLineString(new Coordinate[]{ coordinates[0], coordinates[1] });
+            return geomFactory.createLineString(new Coordinate[]{coordinates[0], coordinates[1]});
         }
         LinearRing linearRing = geomFactory.createLinearRing(coordinates);
         return geomFactory.createPolygon(linearRing, null);

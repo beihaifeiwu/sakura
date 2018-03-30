@@ -1,4 +1,3 @@
-
 package com.github.beihaifeiwu.sakura.spatial.function.convert;
 
 import com.vividsolutions.jts.geom.Coordinate;
@@ -79,7 +78,7 @@ public class ST_GoogleMapLink {
         //– satellite
         h,
         //– hybrid
-        p;//– terrain
+        p; //– terrain
     }
 
 }

@@ -43,14 +43,14 @@ public class FuzzyEnumModule extends Module {
         context.addDeserializers(new PermissiveEnumDeserializers());
     }
 
-    private static class PermissiveEnumDeserializer extends StdScalarDeserializer<Enum<?>> {
+    public static class PermissiveEnumDeserializer extends StdScalarDeserializer<Enum<?>> {
         private static final long serialVersionUID = 1L;
 
         private final Enum<?>[] constants;
         private final List<String> acceptedValues;
 
         @SuppressWarnings("unchecked")
-        protected PermissiveEnumDeserializer(Class<Enum<?>> clazz) {
+        public PermissiveEnumDeserializer(Class<Enum<?>> clazz) {
             super(clazz);
             this.constants = ((Class<Enum<?>>) handledType()).getEnumConstants();
             this.acceptedValues = new ArrayList<>();
@@ -69,7 +69,7 @@ public class FuzzyEnumModule extends Module {
         }
     }
 
-    private static class PermissiveEnumDeserializers extends Deserializers.Base {
+    public static class PermissiveEnumDeserializers extends Deserializers.Base {
         @Override
         @SuppressWarnings("unchecked")
         public JsonDeserializer<?> findEnumDeserializer(Class<?> type,

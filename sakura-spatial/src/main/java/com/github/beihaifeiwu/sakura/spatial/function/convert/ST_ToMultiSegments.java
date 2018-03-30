@@ -1,14 +1,7 @@
 package com.github.beihaifeiwu.sakura.spatial.function.convert;
 
 import com.github.beihaifeiwu.sakura.spatial.utils.GeometryFactories;
-import com.vividsolutions.jts.geom.Coordinate;
-import com.vividsolutions.jts.geom.CoordinateArrays;
-import com.vividsolutions.jts.geom.Geometry;
-import com.vividsolutions.jts.geom.GeometryCollection;
-import com.vividsolutions.jts.geom.GeometryFactory;
-import com.vividsolutions.jts.geom.LineString;
-import com.vividsolutions.jts.geom.MultiLineString;
-import com.vividsolutions.jts.geom.Polygon;
+import com.vividsolutions.jts.geom.*;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -59,7 +52,7 @@ public class ST_ToMultiSegments {
         Coordinate[] coords = CoordinateArrays.removeRepeatedPoints(geom.getCoordinates());
         for (int j = 0; j < coords.length - 1; j++) {
             LineString lineString = GeometryFactories.default_().createLineString(
-                    new Coordinate[]{ coords[j], coords[j + 1] });
+                    new Coordinate[]{coords[j], coords[j + 1]});
             result.add(lineString);
         }
     }

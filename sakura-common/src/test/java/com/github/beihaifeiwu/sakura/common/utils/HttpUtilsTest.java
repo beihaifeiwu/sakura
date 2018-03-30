@@ -1,6 +1,8 @@
 package com.github.beihaifeiwu.sakura.common.utils;
 
 import com.github.beihaifeiwu.sakura.common.http.HTTP;
+import com.github.beihaifeiwu.sakura.common.http.HttpRequest;
+import com.github.beihaifeiwu.sakura.common.http.HttpResponse;
 import com.google.common.base.CharMatcher;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
@@ -68,7 +70,7 @@ public class HttpUtilsTest {
 
     @Test
     public void testGetEmpty() {
-        @Cleanup HTTP.HttpResponse response = HTTP.get(url("/empty")).execute();
+        @Cleanup HttpResponse response = HTTP.get(url("/empty")).execute();
         assertTrue(response.ok());
         assertFalse(response.created());
         assertFalse(response.badRequest());
@@ -83,7 +85,7 @@ public class HttpUtilsTest {
 
     @Test
     public void testGetNoContent() {
-        @Cleanup HTTP.HttpResponse response = HTTP.get(url("/no_content")).execute();
+        @Cleanup HttpResponse response = HTTP.get(url("/no_content")).execute();
         assertFalse(response.ok());
         assertTrue(response.noContent());
         assertEquals("GET", METHOD.get());
@@ -95,30 +97,30 @@ public class HttpUtilsTest {
 
     @Test
     public void testGetWithResponseCharset() {
-        @Cleanup HTTP.HttpResponse r1 = HTTP.get(url("/get")).execute();
+        @Cleanup HttpResponse r1 = HTTP.get(url("/get")).execute();
         assertTrue(r1.ok());
         assertEquals(CHARSET_UTF8, r1.charset().toUpperCase());
 
-        @Cleanup HTTP.HttpResponse r2 = HTTP.get(url("/get_2")).execute();
+        @Cleanup HttpResponse r2 = HTTP.get(url("/get_2")).execute();
         assertTrue(r2.ok());
         assertEquals(CHARSET_UTF8, r2.charset().toUpperCase());
     }
 
     @Test
     public void testGetNonEmpty() {
-        @Cleanup HTTP.HttpResponse r1 = HTTP.get(url("/non_empty")).execute();
+        @Cleanup HttpResponse r1 = HTTP.get(url("/non_empty")).execute();
         assertTrue(r1.ok());
         assertEquals("hello", r1.body().orElse(null));
 //        assertEquals("hello".getBytes().length, response.contentLength());
 
-        @Cleanup HTTP.HttpResponse r2 = HTTP.get(url("/non_empty")).execute();
+        @Cleanup HttpResponse r2 = HTTP.get(url("/non_empty")).execute();
         assertTrue(r2.ok());
         assertTrue(Arrays.equals("hello".getBytes(), r2.bytes().orElse(null)));
     }
 
     @Test
     public void testGetError() {
-        @Cleanup HTTP.HttpResponse response = HTTP.get(url("/not_found")).execute();
+        @Cleanup HttpResponse response = HTTP.get(url("/not_found")).execute();
         assertTrue(response.notFound());
         assertTrue(response.server().contains("Jetty"));
         assertTrue(response.date() > -1);
@@ -131,7 +133,7 @@ public class HttpUtilsTest {
         reqHeaders.put("h1", "v1");
         reqHeaders.put("h2", "v2");
 
-        @Cleanup HTTP.HttpResponse response = HTTP.get(url("/non_empty"))
+        @Cleanup HttpResponse response = HTTP.get(url("/non_empty"))
                 .headers(reqHeaders)
                 .execute();
         assertTrue(response.ok());
@@ -146,7 +148,7 @@ public class HttpUtilsTest {
         RES_HEADERS.put("b", "b");
         RES_HEADERS.put("a", "another");
 
-        @Cleanup HTTP.HttpResponse response = HTTP.get(url("/non_empty")).execute();
+        @Cleanup HttpResponse response = HTTP.get(url("/non_empty")).execute();
         Map<String, List<String>> resHeaders = response.headers();
         assertEquals(resHeaders.size(), 6);
         assertEquals(resHeaders.get("a").size(), 2);
@@ -155,7 +157,7 @@ public class HttpUtilsTest {
 
     @Test
     public void testNumberHeader() {
-        @Cleanup HTTP.HttpResponse response = HTTP.get(url("/non_empty"))
+        @Cleanup HttpResponse response = HTTP.get(url("/non_empty"))
                 .header("h1", 5)
                 .header("h2", 60.2)
                 .execute();
@@ -166,32 +168,32 @@ public class HttpUtilsTest {
 
     @Test
     public void testUserAgentHeader() {
-        @Cleanup HTTP.HttpResponse response = HTTP.get(url("/non_empty")).execute();
+        @Cleanup HttpResponse response = HTTP.get(url("/non_empty")).execute();
         assertTrue(response.ok());
         assertTrue(USER_AGENT.get().startsWith("okhttp/"));
     }
 
     @Test
     public void testAcceptHeader() {
-        @Cleanup HTTP.HttpResponse r1 = HTTP.get(url("/non_empty"))
+        @Cleanup HttpResponse r1 = HTTP.get(url("/non_empty"))
                 .accept("text/plain")
                 .execute();
         assertTrue(r1.ok());
         assertEquals("text/plain", REQ_HEADERS.get("Accept"));
 
-        @Cleanup HTTP.HttpResponse r2 = HTTP.get(url("/non_empty"))
+        @Cleanup HttpResponse r2 = HTTP.get(url("/non_empty"))
                 .acceptJson()
                 .execute();
         assertTrue(r2.ok());
         assertEquals("application/json", REQ_HEADERS.get("Accept"));
 
-        @Cleanup HTTP.HttpResponse r3 = HTTP.get(url("/non_empty"))
+        @Cleanup HttpResponse r3 = HTTP.get(url("/non_empty"))
                 .acceptCharset(CHARSET_UTF8)
                 .execute();
         assertTrue(r3.ok());
         assertEquals(CHARSET_UTF8, REQ_HEADERS.get("Accept-Charset"));
 
-        @Cleanup HTTP.HttpResponse r4 = HTTP.get(url("/empty"))
+        @Cleanup HttpResponse r4 = HTTP.get(url("/empty"))
                 .acceptEncoding("compress")
                 .execute();
         assertTrue(r4.ok());
@@ -200,7 +202,7 @@ public class HttpUtilsTest {
 
     @Test
     public void testIfNoneMatchHeader() {
-        @Cleanup HTTP.HttpResponse response = HTTP.get(url("/non_empty"))
+        @Cleanup HttpResponse response = HTTP.get(url("/non_empty"))
                 .ifNoneMatch("eid")
                 .execute();
         assertTrue(response.ok());
@@ -209,7 +211,7 @@ public class HttpUtilsTest {
 
     @Test
     public void testIfModifiedSinceHeader() {
-        @Cleanup HTTP.HttpResponse response = HTTP.get(url("/non_empty"))
+        @Cleanup HttpResponse response = HTTP.get(url("/non_empty"))
                 .ifModifiedSince(5000)
                 .execute();
         assertTrue(response.ok());
@@ -218,7 +220,7 @@ public class HttpUtilsTest {
 
     @Test
     public void testRefererHeader() {
-        @Cleanup HTTP.HttpResponse response = HTTP.get(url("/non_empty"))
+        @Cleanup HttpResponse response = HTTP.get(url("/non_empty"))
                 .referer("http://heroku.com")
                 .execute();
         assertTrue(response.ok());
@@ -227,7 +229,7 @@ public class HttpUtilsTest {
 
     @Test
     public void testBasicAuthentication() {
-        @Cleanup HTTP.HttpResponse response = HTTP.get(url("/non_empty"))
+        @Cleanup HttpResponse response = HTTP.get(url("/non_empty"))
                 .basic("user", "p4ssw0rd")
                 .execute();
         assertTrue(response.ok());
@@ -238,7 +240,7 @@ public class HttpUtilsTest {
     @Test
     public void testGetHeaderParameter() {
         RES_HEADERS.put("a", "b;c=d");
-        @Cleanup HTTP.HttpResponse r1 = HTTP.get(url("/non_empty")).execute();
+        @Cleanup HttpResponse r1 = HTTP.get(url("/non_empty")).execute();
         assertTrue(r1.ok());
         assertEquals("d", r1.parameter("a", "c"));
         assertNull(r1.parameter("a", "e"));
@@ -246,30 +248,30 @@ public class HttpUtilsTest {
         assertTrue(r1.parameters("b").isEmpty());
 
         RES_HEADERS.put("a", "b;c=d;e=f");
-        @Cleanup HTTP.HttpResponse r2 = HTTP.get(url("/non_empty")).execute();
+        @Cleanup HttpResponse r2 = HTTP.get(url("/non_empty")).execute();
         assertTrue(r2.ok());
         assertEquals("d", r2.parameter("a", "c"));
         assertEquals("f", r2.parameter("a", "e"));
 
         RES_HEADERS.put("a", "b;c=\"d\"");
-        @Cleanup HTTP.HttpResponse r3 = HTTP.get(url("/non_empty")).execute();
+        @Cleanup HttpResponse r3 = HTTP.get(url("/non_empty")).execute();
         assertTrue(r3.ok());
         assertEquals("d", r3.parameter("a", "c"));
 
         RES_HEADERS.put("a", "b;c=\"d\";e=\"f\"");
-        @Cleanup HTTP.HttpResponse r4 = HTTP.get(url("/non_empty")).execute();
+        @Cleanup HttpResponse r4 = HTTP.get(url("/non_empty")).execute();
         assertTrue(r4.ok());
         assertEquals("d", r4.parameter("a", "c"));
         assertEquals("f", r4.parameter("a", "e"));
 
         RES_HEADERS.put("a", "b;c=");
-        @Cleanup HTTP.HttpResponse r5 = HTTP.get(url("/non_empty")).execute();
+        @Cleanup HttpResponse r5 = HTTP.get(url("/non_empty")).execute();
         assertTrue(r5.ok());
         assertNull(r5.parameter("a", "c"));
         assertTrue(r5.parameters("a").isEmpty());
 
         RES_HEADERS.put("a", "b;");
-        @Cleanup HTTP.HttpResponse r6 = HTTP.get(url("/non_empty")).execute();
+        @Cleanup HttpResponse r6 = HTTP.get(url("/non_empty")).execute();
         assertTrue(r6.ok());
         assertNull(r6.parameter("a", "c"));
         assertTrue(r6.parameters("a").isEmpty());
@@ -278,7 +280,7 @@ public class HttpUtilsTest {
     @Test
     public void testGetHeaderParameters() {
         RES_HEADERS.put("a", "value;b=c;d=e");
-        @Cleanup HTTP.HttpResponse r1 = HTTP.get(url("/non_empty")).execute();
+        @Cleanup HttpResponse r1 = HTTP.get(url("/non_empty")).execute();
         assertTrue(r1.ok());
         Map<String, String> params = r1.parameters("a");
         assertNotNull(params);
@@ -287,7 +289,7 @@ public class HttpUtilsTest {
         assertEquals("e", params.get("d"));
 
         RES_HEADERS.put("a", "value;b=\"c\";d=\"e\"");
-        @Cleanup HTTP.HttpResponse r2 = HTTP.get(url("/non_empty")).execute();
+        @Cleanup HttpResponse r2 = HTTP.get(url("/non_empty")).execute();
         assertTrue(r2.ok());
         params = r2.parameters("a");
         assertNotNull(params);
@@ -298,7 +300,7 @@ public class HttpUtilsTest {
 
     @Test
     public void testPostEmpty() throws IOException {
-        @Cleanup HTTP.HttpResponse response = HTTP.post(url("/post"))
+        @Cleanup HttpResponse response = HTTP.post(url("/post"))
                 .contentType("text/plain")
                 .body("")
                 .execute();
@@ -314,7 +316,7 @@ public class HttpUtilsTest {
 
     @Test
     public void testPostBody() throws IOException {
-        @Cleanup HTTP.HttpResponse r1 = HTTP.post(url("/post"))
+        @Cleanup HttpResponse r1 = HTTP.post(url("/post"))
                 .contentType("text/plain", CHARSET_UTF8)
                 .body("hello")
                 .execute();
@@ -323,18 +325,18 @@ public class HttpUtilsTest {
         assertEquals("text/plain; charset=UTF-8", CONTENT_TYPE.get());
 
         File file = createTempFile("hello");
-        @Cleanup HTTP.HttpResponse r2 = HTTP.post(url("/post")).body(file).execute();
+        @Cleanup HttpResponse r2 = HTTP.post(url("/post")).body(file).execute();
         assertTrue(r2.ok());
         assertEquals("hello", BODY.get());
 
-        @Cleanup HTTP.HttpResponse r3 = HTTP.post(url("/post"))
+        @Cleanup HttpResponse r3 = HTTP.post(url("/post"))
                 .body(new FileInputStream(file))
                 .execute();
         assertTrue(r3.ok());
         assertEquals("hello", BODY.get());
 
         byte[] bytes = "hello".getBytes(CHARSET_UTF8);
-        @Cleanup HTTP.HttpResponse r4 = HTTP.post(url("/post")).body(bytes).execute();
+        @Cleanup HttpResponse r4 = HTTP.post(url("/post")).body(bytes).execute();
         assertTrue(r4.ok());
         assertEquals("hello", BODY.get());
         assertEquals(bytes.length, CONTENT_LENGTH.get().intValue());
@@ -345,7 +347,7 @@ public class HttpUtilsTest {
         Map<String, String> data = new LinkedHashMap<>();
         data.put("name", "user");
         data.put("number", "100");
-        @Cleanup HTTP.HttpResponse response = HTTP.post(url("/post"))
+        @Cleanup HttpResponse response = HTTP.post(url("/post"))
                 .form(data)
                 .form("zip", "12345")
                 .execute();
@@ -359,7 +361,7 @@ public class HttpUtilsTest {
         Map<String, String> data = new LinkedHashMap<>();
         data.put("name", "user");
         data.put("number", "100");
-        @Cleanup HTTP.HttpResponse response = HTTP.post(url("/post"))
+        @Cleanup HttpResponse response = HTTP.post(url("/post"))
                 .contentType(HTTP.CONTENT_TYPE_FORM)
                 .form(data)
                 .form("zip", "12345")
@@ -375,10 +377,10 @@ public class HttpUtilsTest {
         data.put("name", "user");
         data.put("number", "100");
 
-        HTTP.HttpRequest request = HTTP.post(url("/post"));
+        HttpRequest request = HTTP.post(url("/post"));
         data.entrySet().forEach(request::form);
 
-        @Cleanup HTTP.HttpResponse response = request.execute();
+        @Cleanup HttpResponse response = request.execute();
         assertTrue(response.ok());
         assertEquals("name=user&number=100", BODY.get());
     }
@@ -388,13 +390,13 @@ public class HttpUtilsTest {
         Map<String, String> inputParams = new HashMap<>();
         inputParams.put("name", "user");
         inputParams.put("number", "100");
-        @Cleanup HTTP.HttpResponse r1 = HTTP.post(url("/post"), inputParams, false).execute();
+        @Cleanup HttpResponse r1 = HTTP.post(url("/post"), inputParams, false).execute();
         assertTrue(r1.ok());
         assertEquals("POST", METHOD.get());
         assertEquals("user", REQ_PARAMS.get("name"));
         assertEquals("100", REQ_PARAMS.get("number"));
 
-        @Cleanup HTTP.HttpResponse r2 = HTTP.post(url("/post"), false, "name", "user", "number", "100").execute();
+        @Cleanup HttpResponse r2 = HTTP.post(url("/post"), false, "name", "user", "number", "100").execute();
         assertTrue(r2.ok());
         assertEquals("POST", METHOD.get());
         assertEquals("user", REQ_PARAMS.get("name"));
@@ -406,13 +408,13 @@ public class HttpUtilsTest {
         Map<String, String> inputParams = new HashMap<>();
         inputParams.put("name", "us er");
         inputParams.put("number", "100");
-        @Cleanup HTTP.HttpResponse r1 = HTTP.post(url("/post"), inputParams, true).execute();
+        @Cleanup HttpResponse r1 = HTTP.post(url("/post"), inputParams, true).execute();
         assertTrue(r1.ok());
         assertEquals("POST", METHOD.get());
         assertEquals("us er", REQ_PARAMS.get("name"));
         assertEquals("100", REQ_PARAMS.get("number"));
 
-        @Cleanup HTTP.HttpResponse r2 = HTTP.post(url("/post"), true, "name", "us er", "number", "100").execute();
+        @Cleanup HttpResponse r2 = HTTP.post(url("/post"), true, "name", "us er", "number", "100").execute();
         assertTrue(r2.ok());
         assertEquals("POST", METHOD.get());
         assertEquals("us er", REQ_PARAMS.get("name"));
@@ -425,7 +427,7 @@ public class HttpUtilsTest {
         inputParams.put(1, 2);
         inputParams.put(3, 4);
 
-        @Cleanup HTTP.HttpResponse response = HTTP.post(url("/post"), inputParams, false).execute();
+        @Cleanup HttpResponse response = HTTP.post(url("/post"), inputParams, false).execute();
         assertTrue(response.ok());
         assertEquals("POST", METHOD.get());
         assertEquals("2", REQ_PARAMS.get("1"));
@@ -437,7 +439,7 @@ public class HttpUtilsTest {
         File file = createTempFile("content1");
         File file2 = createTempFile("content4");
 
-        @Cleanup HTTP.HttpResponse r1 = HTTP.post(url("/post"))
+        @Cleanup HttpResponse r1 = HTTP.post(url("/post"))
                 .part("description", "content2")
                 .part("size", file.length())
                 .part("body", file.getName(), file)
@@ -451,7 +453,7 @@ public class HttpUtilsTest {
         assertTrue(BODY.get().contains("content4\r\n"));
         assertTrue(BODY.get().contains(Long.toString(file.length()) + "\r\n"));
 
-        @Cleanup HTTP.HttpResponse r2 = HTTP.post(url("/post"))
+        @Cleanup HttpResponse r2 = HTTP.post(url("/post"))
                 .part("body", null, "application/json", "contents")
                 .execute();
         assertTrue(r2.ok());
@@ -487,7 +489,7 @@ public class HttpUtilsTest {
         Person person = new Person();
         person.name = "Smith";
         person.age = 42;
-        HTTP.HttpResponse response = HTTP.post(url("/json"))
+        HttpResponse response = HTTP.post(url("/json"))
                 .jsonBody(person)
                 .execute();
         assertTrue(response.ok());
@@ -507,7 +509,7 @@ public class HttpUtilsTest {
 
     @Test
     public void testDeleteEmpty() {
-        @Cleanup HTTP.HttpResponse response = HTTP.delete(url("/empty")).execute();
+        @Cleanup HttpResponse response = HTTP.delete(url("/empty")).execute();
         assertTrue(response.ok());
         assertFalse(response.notFound());
         assertEquals("DELETE", METHOD.get());
@@ -516,7 +518,7 @@ public class HttpUtilsTest {
 
     @Test
     public void testOptionsEmpty() {
-        @Cleanup HTTP.HttpResponse response = HTTP.options(url("/empty")).execute();
+        @Cleanup HttpResponse response = HTTP.options(url("/empty")).execute();
         assertTrue(response.ok());
         assertFalse(response.notFound());
         assertEquals("OPTIONS", METHOD.get());
@@ -525,7 +527,7 @@ public class HttpUtilsTest {
 
     @Test
     public void testHeadEmpty() {
-        @Cleanup HTTP.HttpResponse response = HTTP.head(url("/empty")).execute();
+        @Cleanup HttpResponse response = HTTP.head(url("/empty")).execute();
         assertTrue(response.ok());
         assertFalse(response.notFound());
         assertEquals("HEAD", METHOD.get());
@@ -534,7 +536,7 @@ public class HttpUtilsTest {
 
     @Test
     public void testPutEmpty() {
-        @Cleanup HTTP.HttpResponse response = HTTP.put(url("/empty")).body("").execute();
+        @Cleanup HttpResponse response = HTTP.put(url("/empty")).body("").execute();
         assertTrue(response.ok());
         assertFalse(response.notFound());
         assertFalse(response.noContent());
@@ -544,7 +546,7 @@ public class HttpUtilsTest {
 
     @Test
     public void testTraceEmpty() {
-        @Cleanup HTTP.HttpResponse response = HTTP.trace(url("/empty")).execute();
+        @Cleanup HttpResponse response = HTTP.trace(url("/empty")).execute();
         assertTrue(response.ok());
         assertFalse(response.notFound());
         assertFalse(response.noContent());
@@ -609,13 +611,13 @@ public class HttpUtilsTest {
         assertEquals("http://test.com/1?a=b&c=d", HTTP.append("http://test.com/1?a=b&", "c", "d"));
 
         assertEquals("http://test.com/?foo[]=bar&foo[]=baz", HTTP.append("http://test.com",
-                Collections.singletonMap("foo", new String[]{ "bar", "baz" })));
+                Collections.singletonMap("foo", new String[]{"bar", "baz"})));
         assertEquals("http://test.com/?a[]=1&a[]=2", HTTP.append("http://test.com",
-                Collections.singletonMap("a", new int[]{ 1, 2 })));
-        assertEquals("http://test.com/?a[]=1", HTTP.append("http://test.com", Collections.singletonMap("a", new int[]{ 1 })));
-        assertEquals("http://test.com/?", HTTP.append("http://test.com", Collections.singletonMap("a", new int[]{ })));
+                Collections.singletonMap("a", new int[]{1, 2})));
+        assertEquals("http://test.com/?a[]=1", HTTP.append("http://test.com", Collections.singletonMap("a", new int[]{1})));
+        assertEquals("http://test.com/?", HTTP.append("http://test.com", Collections.singletonMap("a", new int[]{})));
         assertEquals("http://test.com/?foo[]=bar&foo[]=baz&a[]=1&a[]=2",
-                HTTP.append("http://test.com", "foo", new String[]{ "bar", "baz" }, "a", new int[]{ 1, 2 }));
+                HTTP.append("http://test.com", "foo", new String[]{"bar", "baz"}, "a", new int[]{1, 2}));
 
         assertEquals("http://test.com/?foo[]=bar&foo[]=baz", HTTP.append("http://test.com",
                 Collections.singletonMap("foo", Arrays.asList("bar", "baz"))));
@@ -624,7 +626,7 @@ public class HttpUtilsTest {
         assertEquals("http://test.com/?a[]=1", HTTP.append("http://test.com",
                 Collections.singletonMap("a", Collections.singletonList(1))));
         assertEquals("http://test.com/?", HTTP.append("http://test.com",
-                Collections.singletonMap("a", Arrays.asList(new Integer[]{ }))));
+                Collections.singletonMap("a", Arrays.asList(new Integer[]{}))));
         assertEquals("http://test.com/?foo[]=bar&foo[]=baz&a[]=1&a[]=2", HTTP.append("http://test.com",
                 "foo", Arrays.asList("bar", "baz"), "a", Arrays.asList(1, 2)));
     }

@@ -2,20 +2,7 @@ package com.github.beihaifeiwu.sakura.spatial.function.clean;
 
 import com.vividsolutions.jts.algorithm.RayCrossingCounter;
 import com.vividsolutions.jts.algorithm.RobustLineIntersector;
-import com.vividsolutions.jts.geom.Coordinate;
-import com.vividsolutions.jts.geom.CoordinateSequence;
-import com.vividsolutions.jts.geom.CoordinateSequenceFactory;
-import com.vividsolutions.jts.geom.Geometry;
-import com.vividsolutions.jts.geom.GeometryCollection;
-import com.vividsolutions.jts.geom.GeometryFactory;
-import com.vividsolutions.jts.geom.LineString;
-import com.vividsolutions.jts.geom.LinearRing;
-import com.vividsolutions.jts.geom.Location;
-import com.vividsolutions.jts.geom.MultiLineString;
-import com.vividsolutions.jts.geom.MultiPoint;
-import com.vividsolutions.jts.geom.MultiPolygon;
-import com.vividsolutions.jts.geom.Point;
-import com.vividsolutions.jts.geom.Polygon;
+import com.vividsolutions.jts.geom.*;
 import com.vividsolutions.jts.geom.impl.PackedCoordinateSequenceFactory;
 import com.vividsolutions.jts.geom.util.LineStringExtracter;
 import com.vividsolutions.jts.geom.util.PointExtracter;
@@ -27,14 +14,7 @@ import com.vividsolutions.jts.operation.linemerge.LineMerger;
 import com.vividsolutions.jts.operation.polygonize.Polygonizer;
 import com.vividsolutions.jts.operation.union.UnaryUnionOp;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 import static com.vividsolutions.jts.geom.impl.PackedCoordinateSequenceFactory.DOUBLE;
 
@@ -222,11 +202,11 @@ public class MakeValidOp {
             // create a multi-geometry made of a single component
             if (geometry instanceof GeometryCollection && !(result instanceof GeometryCollection)) {
                 if (geometry instanceof MultiPoint && result instanceof Point) {
-                    result = geometry.getFactory().createMultiPoint(new Point[]{ (Point) result });
+                    result = geometry.getFactory().createMultiPoint(new Point[]{(Point) result});
                 } else if (geometry instanceof MultiLineString && result instanceof LineString) {
-                    result = geometry.getFactory().createMultiLineString(new LineString[]{ (LineString) result });
+                    result = geometry.getFactory().createMultiLineString(new LineString[]{(LineString) result});
                 } else if (geometry instanceof MultiPolygon && result instanceof Polygon) {
-                    result = geometry.getFactory().createMultiPolygon(new Polygon[]{ (Polygon) result });
+                    result = geometry.getFactory().createMultiPolygon(new Polygon[]{(Polygon) result});
                 }
             }
             return result;
@@ -553,7 +533,7 @@ public class MakeValidOp {
             for (int i = 1; i < cc.length; i++) {
                 if (!cc[i - 1].equals(cc[i])) {
                     LineString segment = line.getFactory().createLineString(
-                            new Coordinate[]{ new Coordinate(cc[i - 1]), new Coordinate(cc[i]) });
+                            new Coordinate[]{new Coordinate(cc[i - 1]), new Coordinate(cc[i])});
                     set.add(segment);
                 }
             }
@@ -642,7 +622,7 @@ public class MakeValidOp {
      * @param gf     geometryFactory to use
      * @return a list of noded LineStrings
      */
-    @SuppressWarnings({ "unchecked", "SuspiciousMethodCalls" })
+    @SuppressWarnings({"unchecked", "SuspiciousMethodCalls"})
     private Set<LineString> nodeLineString(Coordinate[] coords, GeometryFactory gf) {
         MCIndexNoder noder = new MCIndexNoder();
         noder.setSegmentIntersector(new IntersectionAdder(new RobustLineIntersector()));

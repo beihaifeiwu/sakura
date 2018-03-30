@@ -86,8 +86,9 @@ public class VelocityConfigurer extends VelocityEngineFactory
                 VelocityEngine.VM_LIBRARY, SPRING_MACRO_LIBRARY);
 
         if (logger.isInfoEnabled()) {
-            logger.info("ClasspathResourceLoader with name '" + SPRING_MACRO_RESOURCE_LOADER_NAME +
-                    "' added to configured VelocityEngine");
+            logger.info("ClasspathResourceLoader with name '"
+                    + SPRING_MACRO_RESOURCE_LOADER_NAME
+                    + "' added to configured VelocityEngine");
         }
     }
 

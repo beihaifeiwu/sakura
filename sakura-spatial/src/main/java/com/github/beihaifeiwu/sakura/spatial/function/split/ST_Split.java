@@ -5,24 +5,13 @@ import com.github.beihaifeiwu.sakura.spatial.function.convert.ST_ToMultiSegments
 import com.github.beihaifeiwu.sakura.spatial.function.edit.EditUtilities;
 import com.github.beihaifeiwu.sakura.spatial.utils.CoordinateUtils;
 import com.github.beihaifeiwu.sakura.spatial.utils.GeometryFactories;
-import com.vividsolutions.jts.geom.Coordinate;
-import com.vividsolutions.jts.geom.Geometry;
-import com.vividsolutions.jts.geom.GeometryFactory;
-import com.vividsolutions.jts.geom.LineString;
-import com.vividsolutions.jts.geom.MultiLineString;
-import com.vividsolutions.jts.geom.MultiPolygon;
-import com.vividsolutions.jts.geom.Point;
-import com.vividsolutions.jts.geom.Polygon;
+import com.vividsolutions.jts.geom.*;
 import com.vividsolutions.jts.operation.distance.GeometryLocation;
 import com.vividsolutions.jts.operation.polygonize.Polygonizer;
 import com.vividsolutions.jts.operation.union.UnaryUnionOp;
 import lombok.experimental.UtilityClass;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 /**
  * This function split a line by a line a line by a point a polygon by a line
@@ -126,7 +115,7 @@ public class ST_Split {
         Coordinate lastCoord = coords[coords.length - 1];
         Coordinate coordToSplit = pointToSplit.getCoordinate();
         if ((coordToSplit.distance(firstCoord) <= PRECISION) || (coordToSplit.distance(lastCoord) <= PRECISION)) {
-            return new LineString[]{ line };
+            return new LineString[]{line};
         } else {
             ArrayList<Coordinate> firstLine = new ArrayList<Coordinate>();
             firstLine.add(coords[0]);
@@ -154,7 +143,7 @@ public class ST_Split {
                 GeometryFactory gf = GeometryFactories.default_();
                 LineString lineString1 = gf.createLineString(firstLine.toArray(new Coordinate[firstLine.size()]));
                 LineString lineString2 = gf.createLineString(secondLine.toArray(new Coordinate[secondLine.size()]));
-                return new LineString[]{ lineString1, lineString2 };
+                return new LineString[]{lineString1, lineString2};
             }
         }
         return null;
@@ -297,7 +286,7 @@ public class ST_Split {
         Geometry lines = input.difference(cut);
         //Only to preserve SQL constrains
         if (lines instanceof LineString) {
-            return GeometryFactories.default_().createMultiLineString(new LineString[]{ (LineString) lines.getGeometryN(0) });
+            return GeometryFactories.default_().createMultiLineString(new LineString[]{(LineString) lines.getGeometryN(0)});
         }
         return lines;
     }

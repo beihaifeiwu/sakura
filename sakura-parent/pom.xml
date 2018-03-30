@@ -178,50 +178,23 @@
                         </goals>
                         <configuration>
                             <failBuildInCaseOfConflict>true</failBuildInCaseOfConflict>
+                            <ignoredClassPatterns>
+                                <ignoredClassPattern>javax.servlet.*</ignoredClassPattern>
+                                <ignoredClassPattern>module-info</ignoredClassPattern>
+                                <ignoredClassPattern>org.infinispan.util.*</ignoredClassPattern>
+                            </ignoredClassPatterns>
                             <ignoredResourcePatterns>
                                 <ignoredResourcePattern>.gitkeep</ignoredResourcePattern>
                                 <ignoredResourcePattern>about.html</ignoredResourcePattern>
                                 <ignoredResourcePattern>banner.txt</ignoredResourcePattern>
                                 <ignoredResourcePattern>changelog.txt</ignoredResourcePattern>
+                                <ignoredResourcePattern>features.xml</ignoredResourcePattern>
+                                <ignoredResourcePattern>javax/servlet/LocalStrings.properties</ignoredResourcePattern>
+                                <ignoredResourcePattern>javax/servlet/http/LocalStrings.properties</ignoredResourcePattern>
                                 <ignoredResourcePattern>log4j2.xml</ignoredResourcePattern>
-                                <ignoredResourcePattern>module-info</ignoredResourcePattern>
                                 <ignoredResourcePattern>sakura-exception-mapping.properties</ignoredResourcePattern>
                                 <ignoredResourcePattern>ValidationMessages.properties</ignoredResourcePattern>
                             </ignoredResourcePatterns>
-                            <ignoredDependencies>
-                                <dependency>
-                                    <groupId>aopalliance</groupId>
-                                    <artifactId>aopalliance</artifactId>
-                                </dependency>
-                                <dependency>
-                                    <groupId>net.minidev</groupId>
-                                    <artifactId>accessors-smart</artifactId>
-                                </dependency>
-                                <dependency>
-                                    <groupId>jline</groupId>
-                                    <artifactId>jline</artifactId>
-                                </dependency>
-                                <dependency>
-                                    <groupId>org.elasticsearch</groupId>
-                                    <artifactId>jna</artifactId>
-                                </dependency>
-                                <dependency>
-                                    <groupId>org.infinispan</groupId>
-                                    <artifactId>infinispan-commons</artifactId>
-                                </dependency>
-                                <dependency>
-                                    <groupId>org.apache.tomcat</groupId>
-                                    <artifactId>tomcat-annotations-api</artifactId>
-                                </dependency>
-                                <dependency>
-                                    <groupId>org.apache.tomcat.embed</groupId>
-                                    <artifactId>tomcat-embed-core</artifactId>
-                                </dependency>
-                                <dependency>
-                                    <groupId>org.springframework</groupId>
-                                    <artifactId>spring-jcl</artifactId>
-                                </dependency>
-                            </ignoredDependencies>
                         </configuration>
                     </execution>
                 </executions>

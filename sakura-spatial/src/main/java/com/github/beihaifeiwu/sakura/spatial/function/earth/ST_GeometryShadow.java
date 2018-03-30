@@ -1,12 +1,7 @@
 package com.github.beihaifeiwu.sakura.spatial.function.earth;
 
 import com.github.beihaifeiwu.sakura.spatial.function.edit.ST_UpdateZ;
-import com.vividsolutions.jts.geom.Coordinate;
-import com.vividsolutions.jts.geom.Geometry;
-import com.vividsolutions.jts.geom.GeometryFactory;
-import com.vividsolutions.jts.geom.LineString;
-import com.vividsolutions.jts.geom.Point;
-import com.vividsolutions.jts.geom.Polygon;
+import com.vividsolutions.jts.geom.*;
 import com.vividsolutions.jts.operation.union.CascadedPolygonUnion;
 
 import java.util.ArrayList;
@@ -158,7 +153,7 @@ public class ST_GeometryShadow {
             return point;
         } else {
             startCoord.z = 0;
-            return factory.createLineString(new Coordinate[]{ startCoord, offset });
+            return factory.createLineString(new Coordinate[]{startCoord, offset});
         }
     }
 
@@ -172,7 +167,7 @@ public class ST_GeometryShadow {
      */
     public static double[] shadowOffset(double azimuth, double altitude, double height) {
         double spread = 1 / Math.tan(altitude);
-        return new double[]{ -height * spread * Math.sin(azimuth), -height * spread * Math.cos(azimuth) };
+        return new double[]{-height * spread * Math.sin(azimuth), -height * spread * Math.cos(azimuth)};
     }
 
     /**

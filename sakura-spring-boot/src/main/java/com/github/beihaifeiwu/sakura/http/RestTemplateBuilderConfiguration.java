@@ -54,9 +54,9 @@ public class RestTemplateBuilderConfiguration {
             builder = builder.customizers(customizers);
         }
 
-        ClientHttpRequestFactory clientRequestFactory = this.clientRequestFactory.getIfAvailable();
-        if (clientRequestFactory != null) {
-            builder = builder.requestFactory(() -> clientRequestFactory);
+        ClientHttpRequestFactory factory = this.clientRequestFactory.getIfAvailable();
+        if (factory != null) {
+            builder = builder.requestFactory(() -> factory);
         }
 
         return builder;

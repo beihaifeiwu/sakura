@@ -10,7 +10,7 @@ import org.springframework.ui.freemarker.FreeMarkerConfigurationFactory;
  * Created by liupin on 2017/5/9.
  */
 @Configuration
-@ConditionalOnClass({ freemarker.template.Configuration.class, FreeMarkerConfigurationFactory.class })
+@ConditionalOnClass({freemarker.template.Configuration.class, FreeMarkerConfigurationFactory.class})
 public class FreemarkerConfiguration {
 
     @Bean

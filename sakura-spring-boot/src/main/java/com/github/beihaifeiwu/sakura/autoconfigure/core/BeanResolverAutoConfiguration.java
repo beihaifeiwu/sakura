@@ -22,7 +22,7 @@ import org.springframework.expression.BeanResolver;
  * Created by liupin on 2017/2/6.
  */
 @Configuration
-@PropertySource(value = { SakuraConstants.DEFAULT_SPRING_CONFIG_SOURCE }, ignoreResourceNotFound = true)
+@PropertySource(value = {SakuraConstants.DEFAULT_SPRING_CONFIG_SOURCE}, ignoreResourceNotFound = true)
 @AutoConfigureOrder(Ordered.HIGHEST_PRECEDENCE)
 @EnableAspectJAutoProxy(proxyTargetClass = true)
 @Import(BeanResolverAutoConfiguration.BeanPostProcessorsRegistrar.class)

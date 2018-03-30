@@ -30,10 +30,14 @@ public abstract class AbstractAnnotationBeanPostProcessor implements BeanPostPro
         this.filter = filter;
     }
 
-    protected void withField(Object bean, String beanName, Class<?> targetClass, Field field) {}
+    protected void withField(Object bean, String beanName, Class<?> targetClass, Field field) {
+
+    }
 
 
-    protected void withMethod(Object bean, String beanName, Class<?> targetClass, Method method) {}
+    protected void withMethod(Object bean, String beanName, Class<?> targetClass, Method method) {
+
+    }
 
     @Override
     public final Object postProcessBeforeInitialization(Object bean, String beanName) {

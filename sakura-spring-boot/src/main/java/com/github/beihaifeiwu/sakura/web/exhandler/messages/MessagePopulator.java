@@ -14,11 +14,12 @@ public interface MessagePopulator {
     <E extends Exception> ErrorMessage createAndPopulate(E ex,
                                                          HttpServletRequest req,
                                                          HttpStatus defaultStatus);
+
     /**
      * Interpolates the message template using the given variables.
      *
      * @param messageTemplate The message to interpolate.
-     * @param variables Map of variables that will be accessible for the template.
+     * @param variables       Map of variables that will be accessible for the template.
      * @return An interpolated message.
      */
     @Nullable

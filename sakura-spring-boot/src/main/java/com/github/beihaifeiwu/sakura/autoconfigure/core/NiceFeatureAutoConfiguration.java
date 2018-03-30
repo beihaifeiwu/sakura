@@ -1,7 +1,7 @@
 package com.github.beihaifeiwu.sakura.autoconfigure.core;
 
-import com.github.beihaifeiwu.sakura.core.SakuraConstants;
 import com.github.beihaifeiwu.sakura.common.lang.Threads;
+import com.github.beihaifeiwu.sakura.core.SakuraConstants;
 import org.springframework.boot.autoconfigure.AutoConfigureOrder;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.context.properties.ConfigurationProperties;

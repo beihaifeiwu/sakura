@@ -1,11 +1,6 @@
 package com.github.beihaifeiwu.sakura.spatial.function.properties;
 
-import com.vividsolutions.jts.geom.Coordinate;
-import com.vividsolutions.jts.geom.CoordinateSequence;
-import com.vividsolutions.jts.geom.Geometry;
-import com.vividsolutions.jts.geom.LineString;
-import com.vividsolutions.jts.geom.MultiLineString;
-import com.vividsolutions.jts.geom.Polygon;
+import com.vividsolutions.jts.geom.*;
 
 /**
  * ST_3DLength returns the 3D length (of a LineString) or the 3D perimeter (of a Polygon).

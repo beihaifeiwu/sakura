@@ -1,12 +1,7 @@
 package com.github.beihaifeiwu.sakura.spatial.function.create;
 
 import com.github.beihaifeiwu.sakura.spatial.SpatialException;
-import com.vividsolutions.jts.geom.Coordinate;
-import com.vividsolutions.jts.geom.Geometry;
-import com.vividsolutions.jts.geom.GeometryCollection;
-import com.vividsolutions.jts.geom.LineString;
-import com.vividsolutions.jts.geom.MultiPoint;
-import com.vividsolutions.jts.geom.Point;
+import com.vividsolutions.jts.geom.*;
 
 import java.util.Arrays;
 import java.util.LinkedList;

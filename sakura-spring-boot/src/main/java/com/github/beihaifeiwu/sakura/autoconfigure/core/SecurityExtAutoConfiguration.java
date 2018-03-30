@@ -15,7 +15,7 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
  */
 @Configuration
 @ConditionalOnWebApplication(type = Type.SERVLET)
-@ConditionalOnClass({ AuthenticationManager.class, GlobalAuthenticationConfigurerAdapter.class })
+@ConditionalOnClass({AuthenticationManager.class, GlobalAuthenticationConfigurerAdapter.class})
 @EnableGlobalMethodSecurity(prePostEnabled = true,
         securedEnabled = true, jsr250Enabled = true, proxyTargetClass = true)
 @AutoConfigureBefore(WebMvcAutoConfiguration.class)

@@ -38,8 +38,8 @@ import java.io.IOException;
 @EnableConfigurationProperties(CacheProperties.class)
 @EnableCaching(proxyTargetClass = true)
 @AutoConfigureBefore(CacheAutoConfiguration.class)
-@AutoConfigureAfter({ CouchbaseAutoConfiguration.class, HazelcastAutoConfiguration.class,
-        RedisAutoConfiguration.class })
+@AutoConfigureAfter({CouchbaseAutoConfiguration.class, HazelcastAutoConfiguration.class,
+        RedisAutoConfiguration.class})
 @Import(CacheExtAutoConfiguration.ManagedCacheAnnotationBenPostProcessorRegistrar.class)
 public class CacheExtAutoConfiguration {
 

@@ -105,7 +105,7 @@ public abstract class AbstractRestExceptionHandler<E extends Exception, T> imple
         LOG.error(marker, "{}", sb);
     }
 
-    @SuppressWarnings({ "unchecked", "ConstantConditions" })
+    @SuppressWarnings({"unchecked", "ConstantConditions"})
     private Class<E> determineTargetType() {
         return (Class<E>) GenericTypeResolver.resolveTypeArguments(getClass(), AbstractRestExceptionHandler.class)[0];
     }

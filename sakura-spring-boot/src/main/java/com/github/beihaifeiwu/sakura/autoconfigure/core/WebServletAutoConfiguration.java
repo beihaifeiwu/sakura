@@ -35,8 +35,8 @@ import java.util.List;
  */
 @Configuration
 @ConditionalOnWebApplication(type = Type.SERVLET)
-@AutoConfigureAfter({ NiceFeatureAutoConfiguration.class, JacksonExtAutoConfiguration.class })
-@Import({ HttpCorsConfiguration.class, ShallowEtagConfiguration.class })
+@AutoConfigureAfter({NiceFeatureAutoConfiguration.class, JacksonExtAutoConfiguration.class})
+@Import({HttpCorsConfiguration.class, ShallowEtagConfiguration.class})
 @EnableConfigurationProperties(WebProperties.class)
 public class WebServletAutoConfiguration {
 
@@ -68,7 +68,7 @@ public class WebServletAutoConfiguration {
     }
 
     @Configuration
-    @ConditionalOnClass({ DispatcherServlet.class, HttpRequestHandler.class })
+    @ConditionalOnClass({DispatcherServlet.class, HttpRequestHandler.class})
     static class WebMvcConfiguration implements WebMvcConfigurer {
 
         private final ThreadPoolTaskExecutor executor;

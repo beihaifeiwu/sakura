@@ -9,22 +9,33 @@ import java.lang.reflect.Member;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 
-import static java.lang.reflect.Modifier.*;
+import static java.lang.reflect.Modifier.ABSTRACT;
+import static java.lang.reflect.Modifier.FINAL;
+import static java.lang.reflect.Modifier.PRIVATE;
+import static java.lang.reflect.Modifier.STATIC;
 import static org.springframework.util.ReflectionUtils.USER_DECLARED_METHODS;
 
 @Slf4j
 public class AnnotationFilter implements ReflectionUtils.MethodFilter, ReflectionUtils.FieldFilter {
 
-    public static final int FIELDS =
-            Modifier.PUBLIC | Modifier.PROTECTED | PRIVATE |
-                    STATIC | FINAL | Modifier.TRANSIENT |
-                    Modifier.VOLATILE;
+    public static final int FIELDS = Modifier.PUBLIC
+            | Modifier.PROTECTED
+            | Modifier.PRIVATE
+            | Modifier.STATIC
+            | Modifier.FINAL
+            | Modifier.TRANSIENT
+            | Modifier.VOLATILE;
 
-    public static final int METHODS =
-            Modifier.PUBLIC | Modifier.PROTECTED | PRIVATE |
-                    ABSTRACT | STATIC | FINAL |
-                    Modifier.SYNCHRONIZED | Modifier.NATIVE | Modifier.STRICT |
-                    Modifier.TRANSIENT; // TRANSIENT flag is the same as the VARARGS flag
+    public static final int METHODS = Modifier.PUBLIC
+            | Modifier.PROTECTED
+            | Modifier.PRIVATE
+            | Modifier.ABSTRACT
+            | Modifier.STATIC
+            | Modifier.FINAL
+            | Modifier.SYNCHRONIZED
+            | Modifier.NATIVE
+            | Modifier.STRICT
+            | Modifier.TRANSIENT; // TRANSIENT flag is the same as the VARARGS flag
 
     public static final int INJECTABLE_FIELDS = FIELDS ^ (FINAL | STATIC);
     public static final int INSTANCE_FIELDS = FIELDS ^ STATIC;

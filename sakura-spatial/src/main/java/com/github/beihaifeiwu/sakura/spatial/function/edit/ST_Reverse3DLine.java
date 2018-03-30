@@ -1,11 +1,7 @@
 package com.github.beihaifeiwu.sakura.spatial.function.edit;
 
 import com.github.beihaifeiwu.sakura.spatial.utils.GeometryFactories;
-import com.vividsolutions.jts.geom.CoordinateSequence;
-import com.vividsolutions.jts.geom.CoordinateSequences;
-import com.vividsolutions.jts.geom.Geometry;
-import com.vividsolutions.jts.geom.LineString;
-import com.vividsolutions.jts.geom.MultiLineString;
+import com.vividsolutions.jts.geom.*;
 
 /**
  * Returns a 1 dimension geometry with vertex order reversed according the start

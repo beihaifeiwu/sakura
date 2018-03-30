@@ -34,7 +34,9 @@ public class OkHttpProperties {
         private Mode mode = Mode.NONE;
 
         public enum Mode {
-            NONE, TEMPORARY, PERSISTENT
+            NONE,
+            TEMPORARY,
+            PERSISTENT
         }
     }
 
@@ -45,7 +47,10 @@ public class OkHttpProperties {
         private org.slf4j.event.Level logLevel = org.slf4j.event.Level.DEBUG;
 
         public enum Level {
-            NONE, BASIC, HEADERS, BODY
+            NONE,
+            BASIC,
+            HEADERS,
+            BODY
         }
     }
 

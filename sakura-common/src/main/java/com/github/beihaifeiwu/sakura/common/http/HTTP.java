@@ -1,29 +1,17 @@
 package com.github.beihaifeiwu.sakura.common.http;
 
-import com.github.beihaifeiwu.sakura.common.jackson.JSON;
 import com.github.beihaifeiwu.sakura.common.lang.EX;
-import com.google.common.io.ByteStreams;
-import com.google.common.io.CharStreams;
-import lombok.NonNull;
-import lombok.SneakyThrows;
+import lombok.experimental.UtilityClass;
 import lombok.extern.slf4j.Slf4j;
-import okhttp3.*;
+import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
-import okio.BufferedSink;
-import okio.Okio;
-import okio.Source;
-import org.apache.commons.lang3.StringUtils;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import javax.net.ssl.*;
-import java.io.*;
+import java.io.IOException;
 import java.lang.reflect.Array;
-import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.nio.charset.Charset;
 import java.security.GeneralSecurityException;
 import java.security.SecureRandom;
 import java.security.cert.X509Certificate;
@@ -35,14 +23,12 @@ import java.time.format.DateTimeParseException;
 import java.util.*;
 import java.util.Map.Entry;
 import java.util.concurrent.TimeUnit;
-import java.util.function.Consumer;
-
-import static java.net.HttpURLConnection.*;
 
 /**
  * Created by liupin on 2017/5/9.
  */
 @Slf4j
+@UtilityClass
 public final class HTTP {
 
     public static final String CHARSET_UTF8 = "UTF-8";
@@ -50,7 +36,6 @@ public final class HTTP {
 
     public static final String CONTENT_TYPE_FORM = "application/x-www-form-urlencoded";
     public static final String CONTENT_TYPE_JSON = "application/json";
-    public static final String CONTENT_TYPE_MSGPACK = "application/x-msgpack";
 
     public static final String ENCODING_GZIP = "gzip";
 
@@ -83,15 +68,14 @@ public final class HTTP {
     public static final String METHOD_PUT = "PUT";
     public static final String METHOD_TRACE = "TRACE";
 
-    private static final ZoneId GMT = ZoneId.of("GMT");
+    public static final String[] EMPTY_STRINGS = new String[0];
+    public static final ZoneId GMT = ZoneId.of("GMT");
 
     private static final DateTimeFormatter[] DATE_FORMATTERS = new DateTimeFormatter[]{
             DateTimeFormatter.RFC_1123_DATE_TIME,
             DateTimeFormatter.ofPattern("EEEE, dd-MMM-yy HH:mm:ss zz", Locale.US),
             DateTimeFormatter.ofPattern("EEE MMM dd HH:mm:ss yyyy", Locale.US).withZone(GMT)
     };
-
-    private static final String[] EMPTY_STRINGS = new String[0];
 
     private static X509TrustManager trustManager;
     private static SSLSocketFactory trustedFactory;
@@ -125,7 +109,6 @@ public final class HTTP {
     public static void setOkHttpClient(final OkHttpClient okHttpClient) {
         HTTP.okHttpClient = okHttpClient;
     }
-
 
     public static HttpRequest get(CharSequence url) {
         return new HttpRequest(url, METHOD_GET);
@@ -284,7 +267,9 @@ public final class HTTP {
      */
     public static String append(final CharSequence url, final Map<?, ?> params) {
         final String baseUrl = url.toString();
-        if (params == null || params.isEmpty()) return baseUrl;
+        if (params == null || params.isEmpty()) {
+            return baseUrl;
+        }
 
         final StringBuilder result = new StringBuilder(baseUrl);
 
@@ -317,7 +302,9 @@ public final class HTTP {
      */
     public static String append(final CharSequence url, final Object... params) {
         final String baseUrl = url.toString();
-        if (params == null || params.length == 0) return baseUrl;
+        if (params == null || params.length == 0) {
+            return baseUrl;
+        }
 
         if (params.length % 2 != 0) {
             throw new IllegalArgumentException("Must specify an even number of parameter names/values");
@@ -386,7 +373,7 @@ public final class HTTP {
 
     private static SSLSocketFactory getTrustedFactory() {
         if (trustedFactory == null) {
-            final TrustManager[] trustAllCerts = new TrustManager[]{ getTrustManager() };
+            final TrustManager[] trustAllCerts = new TrustManager[]{getTrustManager()};
             try {
                 SSLContext context = SSLContext.getInstance("TLS");
                 context.init(null, trustAllCerts, new SecureRandom());
@@ -455,676 +442,6 @@ public final class HTTP {
                 result.append(value);
             }
         }
-    }
-
-    public static class HttpRequest {
-
-        private final URL url;
-        private final String method;
-
-        private MediaType contentType;
-        private Headers.Builder headers = new Headers.Builder();
-        private RequestBody requestBody;
-        private MultipartBody.Builder multipartBody;
-        private FormBody.Builder formBody;
-
-        public HttpRequest(@NonNull CharSequence url, @NonNull String method) {
-            try {
-                this.url = new URL(url.toString());
-            } catch (MalformedURLException e) {
-                throw EX.wrap(e);
-            }
-            this.method = method;
-        }
-
-        public HttpRequest(@NonNull URL url, @NonNull String method) {
-            this.url = url;
-            this.method = method;
-        }
-
-        @Override
-        public String toString() {
-            return method + ' ' + url;
-        }
-
-        public HttpRequest header(final String name, final String value) {
-            this.headers.set(name, value);
-            return this;
-        }
-
-        public HttpRequest header(final String name, final Number value) {
-            return header(name, value != null ? value.toString() : null);
-        }
-
-        public HttpRequest headers(final Map<String, String> headers) {
-            if (headers != null && !headers.isEmpty()) {
-                headers.forEach(this::header);
-            }
-            return this;
-        }
-
-        public HttpRequest userAgent(final String userAgent) {
-            return header(HEADER_USER_AGENT, userAgent);
-        }
-
-        public HttpRequest referer(final String referer) {
-            return header(HEADER_REFERER, referer);
-        }
-
-        public HttpRequest accept(final String accept) {
-            return header(HEADER_ACCEPT, accept);
-        }
-
-        public HttpRequest acceptCharset(final String acceptCharset) {
-            return header(HEADER_ACCEPT_CHARSET, acceptCharset);
-        }
-
-        public HttpRequest acceptEncoding(final String acceptEncoding) {
-            return header(HEADER_ACCEPT_ENCODING, acceptEncoding);
-        }
-
-        public HttpRequest acceptGzipEncoding() {
-            return acceptEncoding(ENCODING_GZIP);
-        }
-
-        public HttpRequest acceptJson() {
-            return accept(CONTENT_TYPE_JSON);
-        }
-
-        public HttpRequest authorization(final String authorization) {
-            return header(HEADER_AUTHORIZATION, authorization);
-        }
-
-        public HttpRequest proxyAuthorization(final String proxyAuthorization) {
-            return header(HEADER_PROXY_AUTHORIZATION, proxyAuthorization);
-        }
-
-        public HttpRequest basic(final String name, final String password) {
-            return authorization("Basic " + Base64.getEncoder().encodeToString((name + ':' + password).getBytes()));
-        }
-
-        public HttpRequest proxyBasic(final String name, final String password) {
-            return proxyAuthorization("Basic " + Base64.getEncoder().encodeToString((name + ':' + password).getBytes()));
-        }
-
-        public HttpRequest ifModifiedSince(final long ifModifiedSince) {
-            header(HEADER_IF_MODIFIED_SINCE, formatDate(ifModifiedSince));
-            return this;
-        }
-
-        public HttpRequest ifNoneMatch(final String ifNoneMatch) {
-            return header(HEADER_IF_NONE_MATCH, ifNoneMatch);
-        }
-
-        public HttpRequest contentType(final String contentType) {
-            return contentType(contentType, null);
-        }
-
-        public HttpRequest contentType(final String contentType, final String charset) {
-            String mediaType;
-            if (!StringUtils.isEmpty(charset)) {
-                final String separator = "; " + PARAM_CHARSET + '=';
-                mediaType = contentType + separator + charset;
-            } else {
-                mediaType = contentType;
-            }
-            this.contentType = MediaType.parse(mediaType);
-            return this;
-        }
-
-        public HttpRequest part(final String name, final String part) {
-            return part(name, null, part);
-        }
-
-        public HttpRequest part(final String name, final String filename, final String part) {
-            return part(name, filename, null, part);
-        }
-
-        public HttpRequest part(final String name, final String filename, final String contentType, final String part) {
-            addPart(name, filename, contentType, part);
-            return this;
-        }
-
-        public HttpRequest part(final String name, final Number part) {
-            return part(name, null, part);
-        }
-
-        public HttpRequest part(final String name, final String filename, final Number part) {
-            return part(name, filename, part != null ? part.toString() : null);
-        }
-
-        public HttpRequest part(final String name, final File part) {
-            return part(name, null, part);
-        }
-
-        public HttpRequest part(final String name, final String filename, final File part) {
-            return part(name, filename, null, part);
-        }
-
-        public HttpRequest part(final String name, final String filename, final String contentType, final File part) {
-            addPart(name, filename, contentType, part);
-            return this;
-        }
-
-        public HttpRequest part(final String name, final InputStream part) {
-            return part(name, null, part);
-        }
-
-        public HttpRequest part(final String name, final String filename, final InputStream part) {
-            return part(name, filename, null, part);
-        }
-
-        public HttpRequest part(final String name, final String filename, final String contentType, final InputStream part) {
-            addPart(name, filename, contentType, part);
-            return this;
-        }
-
-        public HttpRequest body(final File input) {
-            this.requestBody = createRequestBody(input);
-            return this;
-        }
-
-        public HttpRequest body(final byte[] input) {
-            this.requestBody = createRequestBody(input == null ? new byte[0] : input);
-            return this;
-        }
-
-        public HttpRequest body(final InputStream input) {
-            this.requestBody = createRequestBody(input);
-            return this;
-        }
-
-        public HttpRequest body(final CharSequence value) {
-            this.requestBody = createRequestBody(value);
-            return this;
-        }
-
-        public HttpRequest jsonBody(final Object value) {
-            if (this.contentType == null) {
-                contentType(CONTENT_TYPE_JSON, CHARSET_UTF8);
-            }
-            return body(JSON.writeAsString(value));
-        }
-
-        /**
-         * Write the values in the map as form data to the request requestBody
-         * <p>
-         * The pairs specified will be URL-encoded in specified Charset and sent with the
-         * 'application/x-www-form-urlencoded' content-type
-         */
-        public HttpRequest form(final Map<?, ?> values) {
-            for (Entry<?, ?> entry : values.entrySet()) {
-                form(entry);
-            }
-            return this;
-        }
-
-        public HttpRequest form(final Entry<?, ?> entry) {
-            return form(entry.getKey(), entry.getValue());
-        }
-
-        public HttpRequest form(final Object name, final Object value) {
-            if (formBody == null) {
-                if (contentType == null) {
-                    contentType(CONTENT_TYPE_FORM, CHARSET_UTF8);
-                }
-                final Charset charset = contentType == null ? null : contentType.charset();
-                formBody = charset == null ? new FormBody.Builder() : new FormBody.Builder(charset);
-            }
-            formBody.addEncoded(Objects.toString(name), Objects.toString(value));
-            return this;
-        }
-
-        @SneakyThrows
-        public HttpResponse execute() {
-            Request.Builder builder = new Request.Builder();
-            builder.url(url);
-            builder.headers(headers.build());
-            if (requestBody != null) {
-                builder.method(method, delegate(requestBody));
-            } else if (formBody != null) {
-                builder.method(method, delegate(formBody.build()));
-            } else if (multipartBody != null) {
-                builder.method(method, delegate(multipartBody.build()));
-            } else {
-                if (Objects.equals(METHOD_POST, method)) {
-                    requestBody = RequestBody.create(contentType, "");
-                }
-                builder.method(method, requestBody);
-            }
-            Call call = getOkHttpClient().newCall(builder.build());
-            return new HttpResponse(call.execute());
-        }
-
-        private RequestBody delegate(RequestBody origin) {
-            return new RequestBody() {
-                @Nullable
-                @Override
-                public MediaType contentType() {
-                    return contentType != null ? contentType : origin.contentType();
-                }
-
-                @Override
-                public long contentLength() throws IOException {
-                    return origin.contentLength();
-                }
-
-                @Override
-                public void writeTo(@Nonnull BufferedSink sink) throws IOException {
-                    origin.writeTo(sink);
-                }
-            };
-        }
-
-        private <T> void addPart(String name, String filename, String contentType, @NonNull T part) {
-            MediaType mediaType = parseMediaType(contentType);
-            RequestBody requestBody = createRequestBody(mediaType, part);
-            if (multipartBody == null) {
-                this.multipartBody = new MultipartBody.Builder();
-            }
-            multipartBody.addFormDataPart(name, filename, requestBody);
-        }
-
-        private <T> RequestBody createRequestBody(@NonNull T body) {
-            String contentType = null;
-            if (this.headers != null) {
-                contentType = this.headers.get(HEADER_CONTENT_TYPE);
-            }
-            MediaType mediaType = parseMediaType(contentType);
-            return createRequestBody(mediaType, body);
-        }
-
-        private MediaType parseMediaType(final String contentType) {
-            MediaType mediaType = null;
-            if (!StringUtils.isEmpty(contentType)) {
-                mediaType = MediaType.parse(contentType);
-            }
-            return mediaType;
-        }
-
-        private RequestBody createRequestBody(MediaType mediaType, @NonNull Object body) {
-            Class<?> type = body.getClass();
-            if (String.class.isAssignableFrom(type)) {
-                return RequestBody.create(mediaType, (String) body);
-            }
-            if (CharSequence.class.isAssignableFrom(type)) {
-                return RequestBody.create(mediaType, body.toString());
-            }
-            if (byte[].class.isAssignableFrom(type)) {
-                return RequestBody.create(mediaType, (byte[]) body);
-            }
-            if (File.class.isAssignableFrom(type)) {
-                return RequestBody.create(mediaType, (File) body);
-            }
-            if (InputStream.class.isAssignableFrom(type)) {
-                return new RequestBody() {
-                    @Nullable
-                    @Override
-                    public MediaType contentType() {
-                        return mediaType;
-                    }
-
-                    @Override
-                    public void writeTo(@Nonnull BufferedSink sink) throws IOException {
-                        try (Source source = Okio.source((InputStream) body)) {
-                            sink.writeAll(source);
-                        }
-                    }
-                };
-            }
-            throw EX.wrap("Cannot create request requestBody instance for %s", body);
-        }
-
-    }
-
-    public static class HttpResponse implements AutoCloseable {
-
-        private final Response response;
-
-        public HttpResponse(@NonNull Response response) {
-            this.response = response;
-
-        }
-
-        public URL url() {
-            return response.request().url().url();
-        }
-
-        public String method() {
-            return response.request().method();
-        }
-
-        public int code() {
-            return response.code();
-        }
-
-        public boolean ok() {
-            return HTTP_OK == code();
-        }
-
-        public boolean created() {
-            return HTTP_CREATED == code();
-        }
-
-        public boolean noContent() {
-            return HTTP_NO_CONTENT == code();
-        }
-
-        public boolean serverError() {
-            return HTTP_INTERNAL_ERROR == code();
-        }
-
-        public boolean badRequest() {
-            return HTTP_BAD_REQUEST == code();
-        }
-
-        public boolean notFound() {
-            return HTTP_NOT_FOUND == code();
-        }
-
-        public boolean notModified() {
-            return HTTP_NOT_MODIFIED == code();
-        }
-
-        public String message() {
-            return response.message();
-        }
-
-        public String header(final String name) {
-            return response.header(name);
-        }
-
-        public String[] headers(final String name) {
-            List<String> headers = response.headers(name);
-            if (headers == null || headers.isEmpty()) {
-                return EMPTY_STRINGS;
-            }
-            return headers.toArray(new String[headers.size()]);
-        }
-
-        public Map<String, List<String>> headers() {
-            return response.headers().toMultimap();
-        }
-
-        /**
-         * Get a date header from the response falling back to returning -1 if the
-         * header is missing or parsing fails
-         *
-         * @param name
-         * @return date, -1 on failures
-         */
-        public long dateHeader(final String name) {
-            return dateHeader(name, -1L);
-        }
-
-        public long dateHeader(final String name, final long defaultValue) {
-            String dateString = header(name);
-            long result = parseDate(dateString);
-            return result != -1 ? result : defaultValue;
-        }
-
-        /**
-         * Get an integer header from the response falling back to returning -1 if the
-         * header is missing or parsing fails
-         *
-         * @param name
-         * @return header value as an integer, -1 when missing or parsing fails
-         */
-        public long longHeader(final String name) {
-            return longHeader(name, -1L);
-        }
-
-        public long longHeader(final String name, final long defaultValue) {
-            String longString = header(name);
-            if (StringUtils.isEmpty(longString)) {
-                return defaultValue;
-            }
-            try {
-                return Long.parseLong(longString);
-            } catch (Exception ignore) {
-            }
-            return defaultValue;
-        }
-
-        /**
-         * Get all parameters from header value in response
-         * <p>
-         * This will be all key=value pairs after the first ';' that are separated by a ';'
-         */
-        public Map<String, String> parameters(final String headerName) {
-            return getParams(header(headerName));
-        }
-
-        public String parameter(final String headerName, final String paramName) {
-            return getParam(header(headerName), paramName);
-        }
-
-        public String charset() {
-            return responseBody()
-                    .map(ResponseBody::contentType)
-                    .map(MediaType::charset)
-                    .map(Charset::displayName)
-                    .orElseGet(() -> parameter(HEADER_CONTENT_TYPE, PARAM_CHARSET));
-        }
-
-        public long date() {
-            return dateHeader(HEADER_DATE);
-        }
-
-        public String contentEncoding() {
-            return header(HEADER_CONTENT_ENCODING);
-        }
-
-        public String server() {
-            return header(HEADER_SERVER);
-        }
-
-        public String cacheControl() {
-            return header(HEADER_CACHE_CONTROL);
-        }
-
-        public String eTag() {
-            return header(HEADER_ETAG);
-        }
-
-        public long expires() {
-            return dateHeader(HEADER_EXPIRES);
-        }
-
-        public long lastModified() {
-            return dateHeader(HEADER_LAST_MODIFIED);
-        }
-
-        public String location() {
-            return header(HEADER_LOCATION);
-        }
-
-        public String contentType() {
-            return responseBody()
-                    .map(ResponseBody::contentType)
-                    .map(MediaType::toString)
-                    .orElseGet(() -> header(HEADER_CONTENT_TYPE));
-        }
-
-        public long contentLength() {
-            return responseBody()
-                    .map(ResponseBody::contentLength)
-                    .orElseGet(() -> longHeader(HEADER_CONTENT_LENGTH));
-        }
-
-        public Optional<String> body() {
-            return responseBody().map(EX.unchecked(ResponseBody::string));
-        }
-
-        public Optional<byte[]> bytes() {
-            return responseBody().map(EX.unchecked(ResponseBody::bytes));
-        }
-
-        public <T> Optional<T> json(final Class<T> type) {
-            return body().map(s -> JSON.readObject(s, type));
-        }
-
-        public <T> Optional<List<T>> jsonArray(final Class<T> type) {
-            return body().map(s -> JSON.readArray(s, type));
-        }
-
-        public Optional<InputStream> stream() {
-            return responseBody().map(EX.unchecked(ResponseBody::byteStream));
-        }
-
-        public Optional<Reader> reader() {
-            return responseBody().map(EX.unchecked(ResponseBody::charStream));
-        }
-
-        public HttpResponse body(final Consumer<String> consumer) {
-            body().ifPresent(consumer);
-            return this;
-        }
-
-        @SneakyThrows
-        public HttpResponse receive(final File file) {
-            try (FileOutputStream outputStream = new FileOutputStream(file)) {
-                return receive(outputStream);
-            }
-        }
-
-        @SneakyThrows
-        public HttpResponse receive(final OutputStream output) {
-            try (ResponseBody body = response.body()) {
-                if (body != null) {
-                    try (InputStream inputStream = body.byteStream()) {
-                        ByteStreams.copy(inputStream, output);
-                    }
-                }
-            }
-            return this;
-        }
-
-        @SneakyThrows
-        public HttpResponse receive(final Appendable appendable) {
-            receive(CharStreams.asWriter(appendable));
-            return this;
-        }
-
-        @SneakyThrows
-        public HttpResponse receive(final Writer writer) {
-            try (ResponseBody body = response.body()) {
-                if (body != null) {
-                    try (Reader reader = body.charStream()) {
-                        CharStreams.copy(reader, writer);
-                    }
-                }
-            }
-            return this;
-        }
-
-        @SneakyThrows
-        @Override
-        public void close() {
-            if (response != null) {
-                response.close();
-            }
-        }
-
-        Optional<ResponseBody> responseBody() {
-            return Optional.ofNullable(response.body());
-        }
-
-        /**
-         * Get parameter values from header value
-         */
-        Map<String, String> getParams(final String header) {
-            if (header == null || header.length() == 0) {
-                return Collections.emptyMap();
-            }
-
-            final int headerLength = header.length();
-            int start = header.indexOf(';') + 1;
-            if (start == 0 || start == headerLength) {
-                return Collections.emptyMap();
-            }
-
-            int end = header.indexOf(';', start);
-            if (end == -1) {
-                end = headerLength;
-            }
-
-            Map<String, String> params = new LinkedHashMap<>();
-            while (start < end) {
-                int nameEnd = header.indexOf('=', start);
-
-                if (nameEnd != -1 && nameEnd < end) {
-                    String name = header.substring(start, nameEnd).trim();
-                    if (name.length() > 0) {
-                        String value = header.substring(nameEnd + 1, end).trim();
-                        int length = value.length();
-                        if (length != 0) {
-                            if (length > 2 && '"' == value.charAt(0)
-                                    && '"' == value.charAt(length - 1)) {
-                                params.put(name, value.substring(1, length - 1));
-                            } else {
-                                params.put(name, value);
-                            }
-                        }
-                    }
-                }
-
-                start = end + 1;
-                end = header.indexOf(';', start);
-                if (end == -1) {
-                    end = headerLength;
-                }
-            }
-
-            return params;
-        }
-
-
-        /**
-         * Get parameter value from header value
-         */
-        String getParam(final String value, final String paramName) {
-            if (value == null || value.length() == 0) {
-                return null;
-            }
-
-            final int length = value.length();
-            int start = value.indexOf(';') + 1;
-            if (start == 0 || start == length) {
-                return null;
-            }
-
-            int end = value.indexOf(';', start);
-            if (end == -1) {
-                end = length;
-            }
-
-            while (start < end) {
-                int nameEnd = value.indexOf('=', start);
-                if (nameEnd != -1 && nameEnd < end
-                        && paramName.equals(value.substring(start, nameEnd).trim())) {
-                    String paramValue = value.substring(nameEnd + 1, end).trim();
-                    int valueLength = paramValue.length();
-                    if (valueLength != 0) {
-                        if (valueLength > 2 && '"' == paramValue.charAt(0)
-                                && '"' == paramValue.charAt(valueLength - 1)) {
-                            return paramValue.substring(1, valueLength - 1);
-                        } else {
-                            return paramValue;
-                        }
-                    }
-                }
-
-                start = end + 1;
-                end = value.indexOf(';', start);
-                if (end == -1) {
-                    end = length;
-                }
-            }
-
-            return null;
-        }
-
     }
 
 }

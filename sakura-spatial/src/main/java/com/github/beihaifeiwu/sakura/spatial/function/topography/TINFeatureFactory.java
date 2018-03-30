@@ -1,4 +1,3 @@
-
 package com.github.beihaifeiwu.sakura.spatial.function.topography;
 
 import com.vividsolutions.jts.geom.Coordinate;

@@ -19,7 +19,7 @@ import java.util.Properties;
  */
 @Slf4j
 @Configuration
-@ConditionalOnClass({ VelocityEngine.class, VelocityEngineFactory.class })
+@ConditionalOnClass({VelocityEngine.class, VelocityEngineFactory.class})
 @EnableConfigurationProperties(VelocityProperties.class)
 public class VelocityConfiguration {
 

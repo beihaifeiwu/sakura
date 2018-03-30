@@ -60,7 +60,9 @@ public class Threads {
     }
 
     public static void shutdown(ExecutorService... executors) {
-        if (executors == null || executors.length <= 0) return;
+        if (executors == null || executors.length <= 0) {
+            return;
+        }
 
         for (ExecutorService executor : executors) {
             if (executor != null && !executor.isTerminated()) {

@@ -139,7 +139,7 @@ public class TriMarkers extends Triangle {
     }
 
     Coordinate[] getRing() {
-        return new Coordinate[]{ p0, p1, p2, p0 };
+        return new Coordinate[]{p0, p1, p2, p0};
     }
 
     Coordinate getVertice(int idvert) {

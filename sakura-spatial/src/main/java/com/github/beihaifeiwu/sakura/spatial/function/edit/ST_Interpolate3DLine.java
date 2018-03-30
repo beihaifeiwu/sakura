@@ -1,12 +1,7 @@
 package com.github.beihaifeiwu.sakura.spatial.function.edit;
 
 import com.github.beihaifeiwu.sakura.spatial.utils.GeometryFactories;
-import com.vividsolutions.jts.geom.Coordinate;
-import com.vividsolutions.jts.geom.CoordinateSequence;
-import com.vividsolutions.jts.geom.CoordinateSequenceFilter;
-import com.vividsolutions.jts.geom.Geometry;
-import com.vividsolutions.jts.geom.LineString;
-import com.vividsolutions.jts.geom.MultiLineString;
+import com.vividsolutions.jts.geom.*;
 
 /**
  * Interpolate a 1 dimension geometry according its start and end z values.

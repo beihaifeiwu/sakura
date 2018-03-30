@@ -44,7 +44,7 @@ public class WebProperties {
 
         private boolean writeWeakEtag = false;
 
-        private String[] includePaths = new String[]{ "/**" };
+        private String[] includePaths = new String[]{"/**"};
 
         private String[] excludePaths;
     }

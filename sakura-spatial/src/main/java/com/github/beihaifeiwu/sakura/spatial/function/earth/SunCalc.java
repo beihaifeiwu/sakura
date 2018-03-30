@@ -25,7 +25,7 @@ public final class SunCalc {
     private static final double C1 = RAD * 1.9148;
     private static final double C2 = RAD * 0.0200;
     private static final double C3 = RAD * 0.0003;
-    private static final double P = RAD * 102.9372;// perihelion of the Earth
+    private static final double P = RAD * 102.9372; // perihelion of the Earth
     // obliquity of the Earth
     //The mean obliquity of the ecliptic is calculated by a formula of Laskar (1986),
     //given in Jean Meeus: "Astronomical Algorithms", p. 135.

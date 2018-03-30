@@ -1,7 +1,7 @@
 package com.github.beihaifeiwu.sakura.convert;
 
-import com.github.beihaifeiwu.sakura.core.SpringBeans;
 import com.github.beihaifeiwu.sakura.common.lang.EX;
+import com.github.beihaifeiwu.sakura.core.SpringBeans;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,15 +20,15 @@ public class ConversionServiceConfigurerInitializer implements InitializingBean 
 
     @Override
     public void afterPropertiesSet() throws Exception {
-        List<ConversionService> conversionServices = SpringBeans.getBeans(this.conversionServices);
-        List<ConversionServiceConfigurer> configurers = SpringBeans.getBeans(this.configurers);
+        List<ConversionService> serviceList = SpringBeans.getBeans(this.conversionServices);
+        List<ConversionServiceConfigurer> configurerList = SpringBeans.getBeans(this.configurers);
 
-        if (CollectionUtils.isEmpty(conversionServices)
-                || CollectionUtils.isEmpty(configurers)) {
+        if (CollectionUtils.isEmpty(serviceList)
+                || CollectionUtils.isEmpty(configurerList)) {
             return;
         }
-        for (ConversionServiceConfigurer configurer : configurers) {
-            conversionServices.forEach(EX.unchecked(configurer::configure));
+        for (ConversionServiceConfigurer configurer : configurerList) {
+            serviceList.forEach(EX.unchecked(configurer::configure));
         }
     }
 

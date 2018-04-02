@@ -31,7 +31,7 @@ public class EX {
         if (t instanceof InterruptedException) {
             Thread.currentThread().interrupt();
         }
-        throw new MySpringException(t);
+        throw new UncheckedException(t);
     };
 
     public static void rethrow(Throwable cause) {
@@ -60,15 +60,15 @@ public class EX {
             message = String.format(format, args);
         }
         if (message == null && cause == null) {
-            return new MySpringException();
+            return new UncheckedException();
         }
         if (message == null) {
-            return new MySpringException(cause);
+            return new UncheckedException(cause);
         }
         if (cause == null) {
-            return new MySpringException(message);
+            return new UncheckedException(message);
         }
-        return new MySpringException(message, cause);
+        return new UncheckedException(message, cause);
     }
 
 
@@ -252,21 +252,21 @@ public class EX {
         return Unchecked.doubleUnaryOperator(operator, THROWABLE_TO_RUNTIME_EXCEPTION);
     }
 
-    public static class MySpringException extends RuntimeException {
+    public static class UncheckedException extends RuntimeException {
 
-        public MySpringException() {
+        public UncheckedException() {
             super();
         }
 
-        public MySpringException(String message) {
+        public UncheckedException(String message) {
             super(message);
         }
 
-        public MySpringException(String message, Throwable cause) {
+        public UncheckedException(String message, Throwable cause) {
             super(message, cause);
         }
 
-        public MySpringException(Throwable cause) {
+        public UncheckedException(Throwable cause) {
             super(cause);
         }
     }

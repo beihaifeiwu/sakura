@@ -97,7 +97,9 @@
         <!-- 检查左大括号位置 -->
         <module name="LeftCurly"/>
         <!-- 检查代码块是否缺失{} -->
-        <module name="NeedBraces"/>
+        <module name="NeedBraces">
+            <property name="allowSingleLineStatement" value="true"/>
+        </module>
         <!-- 检查右大括号位置 -->
         <module name="RightCurly"/>
 

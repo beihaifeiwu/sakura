@@ -1,9 +1,0 @@
-
-${AnsiColor.BRIGHT_GREEN}   _____            _________            .__
-${AnsiColor.BRIGHT_GREEN}  /     \ ___.__.  /   _____/____________|__| ____    ____
-${AnsiColor.BRIGHT_GREEN} /  \ /  <   |  |  \_____  \\____ \_  __ \  |/    \  / ___\
-${AnsiColor.BRIGHT_GREEN}/    Y    \___  |  /        \  |_> >  | \/  |   |  \/ /_/  >
-${AnsiColor.BRIGHT_GREEN}\____|__  / ____| /_______  /   __/|__|  |__|___|  /\___  /
-${AnsiColor.BRIGHT_GREEN}        \/\/              \/|__|                 \//_____/
-${AnsiColor.GREEN}     :: MySpring :: ${application.version} ::
-${AnsiColor.DEFAULT}

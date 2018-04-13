@@ -1,2 +1,2 @@
-com.github.beihaifeiwu.sakura.common.jackson.FuzzyEnumModule
-com.github.beihaifeiwu.sakura.common.jackson.GuavaExtrasModule
+sakura.common.jackson.FuzzyEnumModule
+sakura.common.jackson.GuavaExtrasModule

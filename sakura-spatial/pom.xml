@@ -4,7 +4,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
         <artifactId>sakura-parent</artifactId>
-        <groupId>com.github.beihaifeiwu.sakura</groupId>
+        <groupId>io.github.sakura</groupId>
         <version>1.0.0-SNAPSHOT</version>
         <relativePath>../sakura-parent</relativePath>
     </parent>
@@ -15,7 +15,7 @@
 
     <dependencies>
         <dependency>
-            <groupId>com.github.beihaifeiwu.sakura</groupId>
+            <groupId>io.github.sakura</groupId>
             <artifactId>sakura-common</artifactId>
         </dependency>
         <dependency>

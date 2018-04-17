@@ -1,5 +1,6 @@
 package sakura.spring.autoconfigure;
 
+import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.support.BeanDefinitionRegistry;
 import org.springframework.beans.factory.support.RootBeanDefinition;
 import org.springframework.boot.autoconfigure.AutoConfigureBefore;
@@ -35,6 +36,7 @@ public class CacheExtAutoConfiguration {
             String beanName = defaultBeanName(beanClass);
             RootBeanDefinition beanDefinition = new RootBeanDefinition(beanClass);
             beanDefinition.setSynthetic(true);
+            beanDefinition.setRole(BeanDefinition.ROLE_INFRASTRUCTURE);
             registry.registerBeanDefinition(beanName, beanDefinition);
         }
 

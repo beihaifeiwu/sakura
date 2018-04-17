@@ -92,7 +92,7 @@
             <artifactId>logging-interceptor</artifactId>
         </dependency>
 
-        <!-- Optional Dependencies -->
+        <!-- Optional -->
         <dependency>
             <groupId>com.vividsolutions</groupId>
             <artifactId>jts</artifactId>
@@ -102,6 +102,13 @@
             <groupId>org.apache.logging.log4j</groupId>
             <artifactId>log4j-slf4j-impl</artifactId>
             <optional>true</optional>
+        </dependency>
+
+        <!-- Test  -->
+        <dependency>
+            <groupId>io.projectreactor</groupId>
+            <artifactId>reactor-test</artifactId>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 

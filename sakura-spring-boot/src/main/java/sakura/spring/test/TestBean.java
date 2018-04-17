@@ -1,5 +1,7 @@
 package sakura.spring.test;
 
+import org.springframework.beans.factory.config.BeanDefinition;
+
 import java.lang.annotation.*;
 
 /**
@@ -11,5 +13,7 @@ import java.lang.annotation.*;
 public @interface TestBean {
 
     String value() default "";
+
+    String scope() default BeanDefinition.SCOPE_SINGLETON;
 
 }

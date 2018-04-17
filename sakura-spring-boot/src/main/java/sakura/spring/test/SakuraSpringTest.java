@@ -8,10 +8,12 @@ import org.springframework.beans.factory.support.BeanDefinitionRegistry;
 import org.springframework.beans.factory.support.RootBeanDefinition;
 import org.springframework.boot.autoconfigure.AutoConfigurationImportSelector;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.context.SpringBootTestContextBootstrapper;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.core.annotation.AnnotationAttributes;
 import org.springframework.core.type.AnnotationMetadata;
+import org.springframework.test.context.BootstrapWith;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import sakura.spring.core.AbstractBeanRegistrar;
@@ -26,6 +28,7 @@ import java.util.Set;
 @RunWith(SakuraSpringTest.SakuraSpringRunner.class)
 @ContextConfiguration(classes = SakuraSpringTest.TestConfiguration.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
+@BootstrapWith(SakuraSpringTest.SakuraSpringBootstrapper.class)
 public abstract class SakuraSpringTest {
 
     private static Class<?> testClass;
@@ -44,10 +47,12 @@ public abstract class SakuraSpringTest {
             Set<Class<?>> classes = getTestBeanClass();
             for (Class<?> beanClass : classes) {
                 if (isRegistered(beanClass)) continue;
-                String beanName = beanClass.getAnnotation(TestBean.class).value();
+                TestBean annotation = beanClass.getAnnotation(TestBean.class);
+                String beanName = annotation.value();
                 beanName = StringUtils.isBlank(beanName) ? defaultBeanName(beanClass) : beanName;
                 RootBeanDefinition beanDefinition = new RootBeanDefinition(beanClass);
                 beanDefinition.setSynthetic(true);
+                beanDefinition.setScope(annotation.scope());
                 registry.registerBeanDefinition(beanName, beanDefinition);
             }
         }
@@ -107,6 +112,10 @@ public abstract class SakuraSpringTest {
             }
             return config.exclude().length > 0 && StringUtils.startsWithAny(name, config.exclude());
         }
+
+    }
+
+    public static class SakuraSpringBootstrapper extends SpringBootTestContextBootstrapper {
 
     }
 

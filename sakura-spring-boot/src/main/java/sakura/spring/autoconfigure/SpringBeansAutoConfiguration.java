@@ -24,8 +24,8 @@ import sakura.spring.core.SpringStuffCollector;
 @Configuration
 @PropertySource(value = {SakuraConstants.DEFAULT_SPRING_CONFIG_SOURCE}, ignoreResourceNotFound = true)
 @AutoConfigureOrder(Ordered.HIGHEST_PRECEDENCE)
-@Import(BeanResolverAutoConfiguration.BeanRegistrar.class)
-public class BeanResolverAutoConfiguration
+@Import(SpringBeansAutoConfiguration.BeanRegistrar.class)
+public class SpringBeansAutoConfiguration
         implements ApplicationContextAware, EnvironmentAware, ApplicationEventPublisherAware {
 
     private ApplicationContext applicationContext;

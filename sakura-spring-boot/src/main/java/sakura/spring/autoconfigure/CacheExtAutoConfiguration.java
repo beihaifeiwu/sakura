@@ -1,8 +1,8 @@
 package sakura.spring.autoconfigure;
 
+import lombok.val;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.support.BeanDefinitionRegistry;
-import org.springframework.beans.factory.support.RootBeanDefinition;
 import org.springframework.boot.autoconfigure.AutoConfigureBefore;
 import org.springframework.boot.autoconfigure.cache.CacheAutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
@@ -33,8 +33,8 @@ public class CacheExtAutoConfiguration {
             if (isRegistered(beanClass)) {
                 return;
             }
-            String beanName = defaultBeanName(beanClass);
-            RootBeanDefinition beanDefinition = new RootBeanDefinition(beanClass);
+            val beanName = getBeanName(beanClass);
+            val beanDefinition = getBeanDefinition(beanClass);
             beanDefinition.setSynthetic(true);
             beanDefinition.setRole(BeanDefinition.ROLE_INFRASTRUCTURE);
             registry.registerBeanDefinition(beanName, beanDefinition);

@@ -1,4 +1,4 @@
-package sakura.common.jackson;
+package sakura.common.jackson.module;
 
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.JsonParser;

@@ -1,13 +1,24 @@
-package sakura.common.utils;
+package sakura.common.lang;
 
 import com.google.common.base.CharMatcher;
 import lombok.experimental.UtilityClass;
+
+import java.lang.reflect.Field;
+import java.util.Optional;
 
 /**
  * Helper methods for enum types.
  */
 @UtilityClass
-public class EnumUtils {
+public class Enums {
+
+    public static Field getField(Enum<?> enumValue) {
+        return com.google.common.base.Enums.getField(enumValue);
+    }
+
+    public static <T extends Enum<T>> Optional<T> getIfPresent(Class<T> enumClass, String value) {
+        return com.google.common.base.Enums.getIfPresent(enumClass, value).toJavaUtil();
+    }
 
     /**
      * Convert a string to an enum with more permissive rules than {@link Enum} valueOf().

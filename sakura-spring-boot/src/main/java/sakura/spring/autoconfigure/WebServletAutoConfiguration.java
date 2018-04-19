@@ -35,7 +35,7 @@ import java.util.List;
  */
 @Configuration
 @ConditionalOnWebApplication(type = Type.SERVLET)
-@AutoConfigureAfter({NiceFeatureAutoConfiguration.class, JacksonExtAutoConfiguration.class})
+@AutoConfigureAfter({SpringToolsAutoConfiguration.class, JacksonExtAutoConfiguration.class})
 @Import({HttpCorsConfiguration.class, ShallowEtagConfiguration.class})
 @EnableConfigurationProperties(WebProperties.class)
 public class WebServletAutoConfiguration {

@@ -1,21 +1,20 @@
 package sakura.spring.test;
 
+import lombok.val;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.reflect.FieldUtils;
 import org.junit.runner.RunWith;
 import org.junit.runners.model.InitializationError;
 import org.springframework.beans.factory.support.BeanDefinitionRegistry;
-import org.springframework.beans.factory.support.RootBeanDefinition;
 import org.springframework.boot.autoconfigure.AutoConfigurationImportSelector;
+import org.springframework.boot.autoconfigure.AutoConfigurationPackages;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.context.SpringBootTestContextBootstrapper;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.core.annotation.AnnotationAttributes;
 import org.springframework.core.type.AnnotationMetadata;
-import org.springframework.test.context.BootstrapWith;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.util.ClassUtils;
 import sakura.spring.core.AbstractBeanRegistrar;
 
 import java.util.HashSet;
@@ -25,33 +24,40 @@ import java.util.Set;
 /**
  * Created by haomu on 2018/4/13.
  */
-@RunWith(SakuraSpringTest.SakuraSpringRunner.class)
+@RunWith(SakuraSpringTest.TestRunner.class)
 @ContextConfiguration(classes = SakuraSpringTest.TestConfiguration.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
-@BootstrapWith(SakuraSpringTest.SakuraSpringBootstrapper.class)
 public abstract class SakuraSpringTest {
 
     private static Class<?> testClass;
 
     @Configuration
-    @Import({TestBeanRegistrar.class, TestAutoSelector.class})
+    @Import({TestRegistrar.class, TestSelector.class})
     public static class TestConfiguration {
 
     }
 
-    public static class TestBeanRegistrar extends AbstractBeanRegistrar {
+    public static class TestRegistrar extends AbstractBeanRegistrar {
 
         @Override
         protected void doRegister(AnnotationMetadata annotationMetadata,
                                   BeanDefinitionRegistry registry) {
+            registerBasePackages(registry);
+            registerBeans(registry);
+        }
+
+        private void registerBasePackages(BeanDefinitionRegistry registry) {
+            String packageName = ClassUtils.getPackageName(testClass);
+            AutoConfigurationPackages.register(registry, packageName);
+        }
+
+        private void registerBeans(BeanDefinitionRegistry registry) {
             Set<Class<?>> classes = getTestBeanClass();
             for (Class<?> beanClass : classes) {
                 if (isRegistered(beanClass)) continue;
-                TestBean annotation = beanClass.getAnnotation(TestBean.class);
-                String beanName = annotation.value();
-                beanName = StringUtils.isBlank(beanName) ? defaultBeanName(beanClass) : beanName;
-                RootBeanDefinition beanDefinition = new RootBeanDefinition(beanClass);
-                beanDefinition.setSynthetic(true);
+                val annotation = beanClass.getAnnotation(TestBean.class);
+                val beanName = getBeanName(beanClass, annotation.value());
+                val beanDefinition = getBeanDefinition(beanClass);
                 beanDefinition.setScope(annotation.scope());
                 registry.registerBeanDefinition(beanName, beanDefinition);
             }
@@ -73,7 +79,7 @@ public abstract class SakuraSpringTest {
 
     }
 
-    public static class TestAutoSelector extends AutoConfigurationImportSelector {
+    public static class TestSelector extends AutoConfigurationImportSelector {
 
         TestAutoConfig config = testClass.getAnnotation(TestAutoConfig.class);
 
@@ -91,7 +97,7 @@ public abstract class SakuraSpringTest {
 
         @Override
         protected AnnotationAttributes getAttributes(AnnotationMetadata metadata) {
-            AnnotationAttributes attributes = new AnnotationAttributes();
+            val attributes = new AnnotationAttributes();
             attributes.put("exclude", new String[0]);
             attributes.put("excludeName", new String[0]);
             return attributes;
@@ -115,17 +121,13 @@ public abstract class SakuraSpringTest {
 
     }
 
-    public static class SakuraSpringBootstrapper extends SpringBootTestContextBootstrapper {
+    public static class TestRunner extends SpringJUnit4ClassRunner {
 
-    }
-
-    public static class SakuraSpringRunner extends SpringJUnit4ClassRunner {
-
-        public SakuraSpringRunner(Class<?> clazz) throws InitializationError, IllegalAccessException {
+        public TestRunner(Class<?> clazz) throws InitializationError {
             super(clazz);
 
             if (SakuraSpringTest.class.isAssignableFrom(clazz)) {
-                FieldUtils.writeStaticField(clazz, "testClass", clazz, true);
+                SakuraSpringTest.testClass = clazz;
             }
 
         }

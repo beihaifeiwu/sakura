@@ -1,2 +1,3 @@
-sakura.common.jackson.FuzzyEnumModule
-sakura.common.jackson.GuavaExtrasModule
+sakura.common.jackson.module.FuzzyEnumModule
+sakura.common.jackson.module.GuavaExtrasModule
+sakura.common.jackson.module.JTSExtrasModule

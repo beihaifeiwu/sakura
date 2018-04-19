@@ -1,6 +1,7 @@
 package sakura.common.lang;
 
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
+import com.google.common.util.concurrent.Uninterruptibles;
 import lombok.experimental.UtilityClass;
 import lombok.extern.slf4j.Slf4j;
 
@@ -82,4 +83,25 @@ public class Threads {
             }
         }
     }
+
+    public static String currentName() {
+        return Thread.currentThread().getName();
+    }
+
+    public static void sleepQuitely(long sleepFor, TimeUnit unit) {
+        if (sleepFor <= 0) return;
+        if (unit == null) unit = TimeUnit.MILLISECONDS;
+        try {
+            unit.sleep(sleepFor);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        }
+    }
+
+    public static void sleepDeadly(long sleepFor, TimeUnit unit) {
+        if (sleepFor <= 0) return;
+        if (unit == null) unit = TimeUnit.MILLISECONDS;
+        Uninterruptibles.sleepUninterruptibly(sleepFor, unit);
+    }
+
 }

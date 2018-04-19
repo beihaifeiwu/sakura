@@ -26,7 +26,7 @@ import java.util.concurrent.Executor;
 @EnableAsync(proxyTargetClass = true)
 @EnableRetry(proxyTargetClass = true)
 @EnableScheduling
-public class NiceFeatureAutoConfiguration {
+public class SpringToolsAutoConfiguration {
 
     @Bean
     @ConditionalOnMissingBean(ThreadPoolTaskExecutor.class)
@@ -77,7 +77,5 @@ public class NiceFeatureAutoConfiguration {
             return executor;
         }
     }
-
-
 
 }

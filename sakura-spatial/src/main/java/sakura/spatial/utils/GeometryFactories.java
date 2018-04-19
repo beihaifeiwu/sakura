@@ -21,7 +21,7 @@ public class GeometryFactories {
         return factory(0);
     }
 
-    public static GeometryFactory WGS84() {
+    public static GeometryFactory wgs84() {
         return factory(CRS.WGS84);
     }
 

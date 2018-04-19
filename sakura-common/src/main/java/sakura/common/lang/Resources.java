@@ -1,6 +1,7 @@
 package sakura.common.lang;
 
 import lombok.experimental.UtilityClass;
+import sakura.common.utils.ClassLoaderWrapper;
 
 import java.io.*;
 import java.net.URL;

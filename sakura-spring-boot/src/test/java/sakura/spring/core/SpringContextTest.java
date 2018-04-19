@@ -8,10 +8,13 @@ import org.springframework.context.event.EventListener;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.lang.Nullable;
+import org.springframework.util.ClassUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.Validator;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 import sakura.spring.test.SakuraSpringWebTest;
+import sakura.spring.test.TestAutoConfig;
+import sakura.spring.test.TestBean;
 
 import javax.validation.ValidatorFactory;
 import java.util.ArrayList;
@@ -27,6 +30,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 /**
  * Created by liupin on 2017/7/21.
  */
+@TestAutoConfig(exclude = "Security")
 public class SpringContextTest extends SakuraSpringWebTest {
 
     @Test
@@ -53,9 +57,9 @@ public class SpringContextTest extends SakuraSpringWebTest {
     public void autoConfigureRelated() {
         List<String> basePackages = SpringContext.basePackages();
         System.out.println("Base packages: " + basePackages);
-//        assertThat(basePackages)
-//                .isNotEmpty()
-//                .contains(ClassUtils.getPackageName(CoreTestApplication.class));
+        assertThat(basePackages)
+                .isNotEmpty()
+                .contains(ClassUtils.getPackageName(SpringContextTest.class));
     }
 
     @Test
@@ -102,7 +106,7 @@ public class SpringContextTest extends SakuraSpringWebTest {
                 .anySatisfy(Resource::isFile)
                 .extracting(Resource::getFilename)
                 .allSatisfy(r -> StringUtils.startsWithIgnoreCase(r, "application-"))
-                .contains("application-data.properties", "application-security.properties");
+                .contains("application-sakura-default.properties", "application-security.properties");
     }
 
     @Test
@@ -157,6 +161,7 @@ public class SpringContextTest extends SakuraSpringWebTest {
         }
     }
 
+    @TestBean
     public static class EventListenerDemo {
 
         @EventListener

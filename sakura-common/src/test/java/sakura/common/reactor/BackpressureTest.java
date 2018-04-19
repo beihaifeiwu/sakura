@@ -8,6 +8,7 @@ import org.reactivestreams.Subscription;
 import reactor.core.publisher.BaseSubscriber;
 import reactor.core.publisher.Flux;
 import reactor.core.scheduler.Schedulers;
+import sakura.common.lang.Threads;
 import sakura.common.reactor.event.MyEvent;
 import sakura.common.reactor.event.MyEventListener;
 import sakura.common.reactor.event.MyEventSource;
@@ -95,7 +96,7 @@ public class BackpressureTest {
 
     private void generateEvent() {
         for (int i = 0; i < 20; i++) {
-            Uninterruptibles.sleepUninterruptibly(10, TimeUnit.MILLISECONDS);
+            Threads.sleepDeadly(10, TimeUnit.MILLISECONDS);
             eventSource.newEvent(new MyEvent(new Date(), "Event-" + i));
         }
         eventSource.eventStopped();
@@ -112,7 +113,7 @@ public class BackpressureTest {
         protected void hookOnNext(MyEvent event) {
             System.out.println("                      receive <<< " + event.getMessage());
             // 订阅者处理每个元素的时间，单位毫秒
-            Uninterruptibles.sleepUninterruptibly(30, TimeUnit.MILLISECONDS);
+            Threads.sleepDeadly(30, TimeUnit.MILLISECONDS);
             request(1);     // 每处理完1个数据，就再请求1个
         }
 

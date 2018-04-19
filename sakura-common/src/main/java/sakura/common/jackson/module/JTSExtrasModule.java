@@ -1,4 +1,4 @@
-package sakura.spatial.jackson;
+package sakura.common.jackson.module;
 
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.JsonParser;
@@ -7,13 +7,14 @@ import com.fasterxml.jackson.core.Version;
 import com.fasterxml.jackson.databind.*;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.vividsolutions.jts.geom.Coordinate;
+import sakura.common.lang.CLS;
 
 import java.io.IOException;
 
 /**
  * Created by liupin on 2017/8/7.
  */
-public class JtsExtrasModule extends SimpleModule {
+public class JTSExtrasModule extends SimpleModule {
 
     @Override
     public String getModuleName() {
@@ -27,8 +28,10 @@ public class JtsExtrasModule extends SimpleModule {
 
     @Override
     public void setupModule(SetupContext context) {
-        addSerializer(Coordinate.class, new CoordinateSerializer());
-        addDeserializer(Coordinate.class, new CoordinateDeserializer());
+        if (CLS.isPresent("com.vividsolutions.jts.geom.Coordinate")) {
+            addSerializer(Coordinate.class, new CoordinateSerializer());
+            addDeserializer(Coordinate.class, new CoordinateDeserializer());
+        }
         super.setupModule(context);
     }
 

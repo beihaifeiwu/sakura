@@ -233,7 +233,7 @@ public final class HTTP {
         try {
             parsed = new URL(url.toString());
         } catch (IOException e) {
-            throw EX.wrap(e);
+            throw EX.unchecked(e);
         }
 
         String host = parsed.getHost();
@@ -251,7 +251,7 @@ public final class HTTP {
             }
             return encoded;
         } catch (URISyntaxException e) {
-            throw EX.wrap(e, "Parsing URI failed");
+            throw EX.unchecked(e, "Parsing URI failed");
         }
     }
 
@@ -379,7 +379,7 @@ public final class HTTP {
                 context.init(null, trustAllCerts, new SecureRandom());
                 trustedFactory = context.getSocketFactory();
             } catch (GeneralSecurityException e) {
-                throw EX.wrap(e, "Security exception configuring SSL context");
+                throw EX.unchecked(e, "Security exception configuring SSL context");
             }
         }
         return trustedFactory;

@@ -43,7 +43,7 @@ public class HttpRequest {
         try {
             this.url = new URL(url.toString());
         } catch (MalformedURLException e) {
-            throw EX.wrap(e);
+            throw EX.unchecked(e);
         }
         this.method = method;
     }
@@ -343,7 +343,7 @@ public class HttpRequest {
                 }
             };
         }
-        throw EX.wrap("Cannot create request requestBody instance for %s", body);
+        throw EX.unchecked("Cannot create request requestBody instance for %s", body);
     }
 
 }

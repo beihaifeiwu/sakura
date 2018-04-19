@@ -36,7 +36,7 @@ public class RenamingModelAttributeMethodProcessor extends ServletModelAttribute
             BINDING_RESULT_FIELD = DataBinder.class.getDeclaredField("bindingResult");
             BINDING_RESULT_FIELD.setAccessible(true);
         } catch (NoSuchFieldException e) {
-            throw EX.wrap(e);
+            throw EX.unchecked(e);
         }
     }
 

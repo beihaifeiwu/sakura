@@ -1,7 +1,8 @@
-package sakura.common.lang;
+package sakura.common.utils;
 
 import lombok.Getter;
 import lombok.Setter;
+import sakura.common.lang.annotation.Nullable;
 
 import java.io.InputStream;
 import java.net.URL;
@@ -20,7 +21,7 @@ public class ClassLoaderWrapper {
         this(null);
     }
 
-    public ClassLoaderWrapper(ClassLoader defaultClassLoader) {
+    public ClassLoaderWrapper(@Nullable ClassLoader defaultClassLoader) {
         this.defaultClassLoader = defaultClassLoader;
         try {
             this.systemClassLoader = ClassLoader.getSystemClassLoader();
@@ -90,7 +91,7 @@ public class ClassLoaderWrapper {
      * @return - the class
      * @throws ClassNotFoundException Duh.
      */
-    public Class<?> classForName(String name, ClassLoader classLoader) throws ClassNotFoundException {
+    public Class<?> classForName(String name, @Nullable ClassLoader classLoader) throws ClassNotFoundException {
         return classForName(name, getClassLoaders(classLoader));
     }
 
@@ -161,7 +162,7 @@ public class ClassLoaderWrapper {
         throw new ClassNotFoundException("Cannot find class: " + name);
     }
 
-    private ClassLoader[] getClassLoaders(ClassLoader classLoader) {
+    private ClassLoader[] getClassLoaders(@Nullable ClassLoader classLoader) {
         return new ClassLoader[]{
                 classLoader,
                 defaultClassLoader,

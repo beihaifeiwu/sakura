@@ -21,7 +21,7 @@ import static org.junit.Assert.assertTrue;
 /**
  * Created by liupin on 2017/3/31.
  */
-public class JacksonExtAutoConfigurationTest {
+public class JacksonAutoConfigTest {
 
     private AnnotationConfigApplicationContext context;
 
@@ -47,7 +47,7 @@ public class JacksonExtAutoConfigurationTest {
     }
 
     @Test
-    public void testsJacksonAutoConfiguredWithCustomProperties() {
+    public void testsJacksonProperties() {
         TestPropertyValues.of("spring.jackson.default-property-inclusion=non_null").applyTo(context);
         TestPropertyValues.of("spring.jackson.deserialization.accept-float-as-int=false").applyTo(context);
         TestPropertyValues.of("spring.jackson.deserialization.fail-on-unknown-properties=false").applyTo(context);

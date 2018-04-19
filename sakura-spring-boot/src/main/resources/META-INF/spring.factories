@@ -1,11 +1,11 @@
 # Auto Configure
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-  sakura.spring.autoconfigure.BeanResolverAutoConfiguration,\
   sakura.spring.autoconfigure.CacheExtAutoConfiguration,\
   sakura.spring.autoconfigure.HttpClientAutoConfiguration,\
   sakura.spring.autoconfigure.JacksonExtAutoConfiguration,\
-  sakura.spring.autoconfigure.NiceFeatureAutoConfiguration,\
   sakura.spring.autoconfigure.SecurityExtAutoConfiguration,\
+  sakura.spring.autoconfigure.SpringBeansAutoConfiguration,\
+  sakura.spring.autoconfigure.SpringToolsAutoConfiguration,\
   sakura.spring.autoconfigure.TemplateAutoConfiguration,\
   sakura.spring.autoconfigure.WebServletAutoConfiguration
 

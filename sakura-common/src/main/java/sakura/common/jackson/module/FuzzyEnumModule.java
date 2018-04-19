@@ -1,4 +1,4 @@
-package sakura.common.jackson;
+package sakura.common.jackson.module;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.core.JsonParser;
@@ -7,7 +7,7 @@ import com.fasterxml.jackson.databind.*;
 import com.fasterxml.jackson.databind.deser.Deserializers;
 import com.fasterxml.jackson.databind.deser.std.StdScalarDeserializer;
 import com.fasterxml.jackson.databind.introspect.AnnotatedMethod;
-import sakura.common.utils.EnumUtils;
+import sakura.common.lang.Enums;
 
 import java.io.IOException;
 import java.lang.annotation.Annotation;
@@ -61,7 +61,7 @@ public class FuzzyEnumModule extends Module {
 
         @Override
         public Enum<?> deserialize(JsonParser jp, DeserializationContext ctxt) throws IOException {
-            Enum<?> constant = EnumUtils.fromStringFuzzy(jp.getText(), constants);
+            Enum<?> constant = Enums.fromStringFuzzy(jp.getText(), constants);
             if (constant != null) {
                 return constant;
             }

@@ -1,8 +1,8 @@
 package sakura.common.reactor;
 
-import com.google.common.util.concurrent.Uninterruptibles;
 import org.junit.Test;
 import reactor.core.publisher.Flux;
+import sakura.common.lang.Threads;
 import sakura.common.reactor.event.MyEvent;
 import sakura.common.reactor.event.MyEventListener;
 import sakura.common.reactor.event.MyEventSource;
@@ -27,7 +27,7 @@ public class FluxSinkTest {
         final AtomicInteger count = new AtomicInteger(1);
         Flux.generate(sink -> {
             sink.next(count.get() + " : " + new Date());
-            Uninterruptibles.sleepUninterruptibly(1, TimeUnit.SECONDS);
+            Threads.sleepQuitely(1, TimeUnit.SECONDS);
             if (count.getAndIncrement() >= 5) {
                 sink.complete();
             }
@@ -40,7 +40,7 @@ public class FluxSinkTest {
                 () -> 1,                // 初始化状态值
                 (count, sink) -> {
                     sink.next(count + " : " + new Date());
-                    Uninterruptibles.sleepUninterruptibly(1, TimeUnit.SECONDS);
+                    Threads.sleepQuitely(1, TimeUnit.SECONDS);
                     if (count >= 5) {
                         sink.complete();
                     }
@@ -68,7 +68,7 @@ public class FluxSinkTest {
 
         for (int i = 0; i < 20; i++) {
             Random random = new Random();
-            Uninterruptibles.sleepUninterruptibly(random.nextInt(1000), TimeUnit.MILLISECONDS);
+            Threads.sleepQuitely(random.nextInt(1000), TimeUnit.MILLISECONDS);
             eventSource.newEvent(new MyEvent(new Date(), "Event-" + i));
         }
         eventSource.eventStopped();

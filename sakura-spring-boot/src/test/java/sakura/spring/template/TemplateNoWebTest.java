@@ -11,20 +11,10 @@ import java.util.Map;
 /**
  * Created by liupin on 2017/5/9.
  */
-public class TemplateServiceNoWebTest extends SakuraSpringTest {
+public class TemplateNoWebTest extends SakuraSpringTest {
 
     @Autowired
     private TemplateService templateService;
-
-    @Test
-    public void testBeetl() throws IOException {
-        System.out.println("********************** Beetl *******************");
-        Map<String, Object> model = Maps.newHashMap();
-        model.put("title", "Beetl");
-        model.put("greeting", "Hi Beetl");
-        String result = templateService.render("greeting.btl", model);
-        System.out.println(result);
-    }
 
     @Test
     public void testFreemarker() throws IOException {

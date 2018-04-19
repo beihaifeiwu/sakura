@@ -1,10 +1,10 @@
 package sakura.common.reactor;
 
-import com.google.common.util.concurrent.Uninterruptibles;
 import org.junit.Test;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.core.scheduler.Schedulers;
+import sakura.common.lang.Threads;
 
 import java.time.Duration;
 import java.util.concurrent.CountDownLatch;
@@ -28,19 +28,18 @@ public class ScheduleTest {
     }
 
     @Test
-    public void testParallelFlux() throws InterruptedException {
+    public void testParallelFlux() {
         Flux.range(1, 10)
                 .publishOn(Schedulers.parallel())
                 .log().subscribe();
-        TimeUnit.MILLISECONDS.sleep(10);
+        Threads.sleepQuitely(10, TimeUnit.MILLISECONDS);
 
         Flux.range(1, 10)
                 .parallel(2)
                 .runOn(Schedulers.parallel())
                 .log()
                 .subscribe();
-
-        TimeUnit.MILLISECONDS.sleep(10);
+        Threads.sleepQuitely(10, TimeUnit.MILLISECONDS);
     }
 
     @Test
@@ -69,7 +68,7 @@ public class ScheduleTest {
     }
 
     private String getStringSync() {
-        Uninterruptibles.sleepUninterruptibly(1, TimeUnit.SECONDS);
+        Threads.sleepQuitely(1, TimeUnit.SECONDS);
         return "Hello, Reactor!";
     }
 

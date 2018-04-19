@@ -46,7 +46,7 @@ public class ProcessorTest {
         co.subscribe(System.out::println);
 
         System.out.println("订阅者完成订阅操作");
-        Threads.sleepQuitely(500, TimeUnit.MILLISECONDS);
+        Threads.sleepQuietly(500, TimeUnit.MILLISECONDS);
         System.out.println("还没有连接上");
 
         co.connect();
@@ -62,7 +62,7 @@ public class ProcessorTest {
 
         autoCo.subscribe(System.out::println);
         System.out.println("第一个订阅者完成订阅操作");
-        Threads.sleepQuitely(500, TimeUnit.MILLISECONDS);
+        Threads.sleepQuietly(500, TimeUnit.MILLISECONDS);
         System.out.println("第二个订阅者完成订阅操作");
         autoCo.subscribe(System.out::println);
     }
@@ -78,33 +78,33 @@ public class ProcessorTest {
         System.out.println("第一个订阅者订阅");
         Disposable sub1 = refCounted.subscribe(l -> System.out.println("sub1: " + l));
 
-        Threads.sleepQuitely(200, TimeUnit.MILLISECONDS);
+        Threads.sleepQuietly(200, TimeUnit.MILLISECONDS);
         System.out.println("第二个订阅者订阅");
         Disposable sub2 = refCounted.subscribe(l -> System.out.println("sub2: " + l));
 
-        Threads.sleepQuitely(200, TimeUnit.MILLISECONDS);
+        Threads.sleepQuietly(200, TimeUnit.MILLISECONDS);
         System.out.println("第一个订阅者取消订阅");
         sub1.dispose();
 
-        Threads.sleepQuitely(200, TimeUnit.MILLISECONDS);
+        Threads.sleepQuietly(200, TimeUnit.MILLISECONDS);
         System.out.println("第二个订阅者取消订阅");
         sub2.dispose();
 
-        Threads.sleepQuitely(200, TimeUnit.MILLISECONDS);
+        Threads.sleepQuietly(200, TimeUnit.MILLISECONDS);
         System.out.println("第三个订阅者订阅");
         Disposable sub3 = refCounted.subscribe(l -> System.out.println("sub3: " + l));
 
-        Threads.sleepQuitely(200, TimeUnit.MILLISECONDS);
+        Threads.sleepQuietly(200, TimeUnit.MILLISECONDS);
         System.out.println("第三个订阅者取消订阅");
         sub3.dispose();
 
-        Threads.sleepQuitely(1500, TimeUnit.MILLISECONDS);
+        Threads.sleepQuietly(1500, TimeUnit.MILLISECONDS);
         System.out.println("第四个订阅者订阅");
         Disposable sub4 = refCounted.subscribe(l -> System.out.println("sub4: " + l));
-        Threads.sleepQuitely(200, TimeUnit.MILLISECONDS);
+        Threads.sleepQuietly(200, TimeUnit.MILLISECONDS);
         System.out.println("第五个订阅者订阅");
         Disposable sub5 = refCounted.subscribe(l -> System.out.println("sub5: " + l));
-        Threads.sleepQuitely(200, TimeUnit.MILLISECONDS);
+        Threads.sleepQuietly(200, TimeUnit.MILLISECONDS);
     }
 
 }

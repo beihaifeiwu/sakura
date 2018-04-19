@@ -88,7 +88,7 @@ public class Threads {
         return Thread.currentThread().getName();
     }
 
-    public static void sleepQuitely(long sleepFor, TimeUnit unit) {
+    public static void sleepQuietly(long sleepFor, TimeUnit unit) {
         if (sleepFor <= 0) return;
         if (unit == null) unit = TimeUnit.MILLISECONDS;
         try {

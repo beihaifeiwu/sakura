@@ -64,7 +64,7 @@ public class OperatorTest {
                 .map(i -> 10 / (3 - i))
                 .retry(1)
                 .subscribe(System.out::println, System.err::println);
-        Threads.sleepQuitely(100, TimeUnit.MILLISECONDS);  // 确保序列执行完
+        Threads.sleepQuietly(100, TimeUnit.MILLISECONDS);  // 确保序列执行完
     }
 
     @Test

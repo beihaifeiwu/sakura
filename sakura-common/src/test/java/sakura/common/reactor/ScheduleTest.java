@@ -32,14 +32,14 @@ public class ScheduleTest {
         Flux.range(1, 10)
                 .publishOn(Schedulers.parallel())
                 .log().subscribe();
-        Threads.sleepQuitely(10, TimeUnit.MILLISECONDS);
+        Threads.sleepQuietly(10, TimeUnit.MILLISECONDS);
 
         Flux.range(1, 10)
                 .parallel(2)
                 .runOn(Schedulers.parallel())
                 .log()
                 .subscribe();
-        Threads.sleepQuitely(10, TimeUnit.MILLISECONDS);
+        Threads.sleepQuietly(10, TimeUnit.MILLISECONDS);
     }
 
     @Test
@@ -68,7 +68,7 @@ public class ScheduleTest {
     }
 
     private String getStringSync() {
-        Threads.sleepQuitely(1, TimeUnit.SECONDS);
+        Threads.sleepQuietly(1, TimeUnit.SECONDS);
         return "Hello, Reactor!";
     }
 

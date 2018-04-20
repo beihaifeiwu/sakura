@@ -11,7 +11,6 @@ import okio.Source;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -269,7 +268,6 @@ public class HttpRequest {
 
     private RequestBody delegate(RequestBody origin) {
         return new RequestBody() {
-            @Nullable
             @Override
             public MediaType contentType() {
                 return contentType != null ? contentType : origin.contentType();
@@ -329,7 +327,6 @@ public class HttpRequest {
         }
         if (InputStream.class.isAssignableFrom(type)) {
             return new RequestBody() {
-                @Nullable
                 @Override
                 public MediaType contentType() {
                     return mediaType;

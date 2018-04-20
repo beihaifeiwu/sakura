@@ -1,4 +1,4 @@
-package sakura.common.utils;
+package sakura.common.util;
 
 import org.apache.commons.lang3.Validate;
 import sakura.common.lang.Strings;

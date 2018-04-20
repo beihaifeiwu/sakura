@@ -10,6 +10,7 @@ import okhttp3.MediaType;
 import okhttp3.Response;
 import okhttp3.ResponseBody;
 import org.apache.commons.lang3.StringUtils;
+import sakura.common.lang.Functions;
 
 import java.io.*;
 import java.net.URL;
@@ -199,11 +200,11 @@ public class HttpResponse implements AutoCloseable {
     }
 
     public Optional<String> body() {
-        return responseBody().map(EX.unchecked(ResponseBody::string));
+        return responseBody().map(Functions.unchecked(ResponseBody::string));
     }
 
     public Optional<byte[]> bytes() {
-        return responseBody().map(EX.unchecked(ResponseBody::bytes));
+        return responseBody().map(Functions.unchecked(ResponseBody::bytes));
     }
 
     public <T> Optional<T> json(final Class<T> type) {
@@ -215,11 +216,11 @@ public class HttpResponse implements AutoCloseable {
     }
 
     public Optional<InputStream> stream() {
-        return responseBody().map(EX.unchecked(ResponseBody::byteStream));
+        return responseBody().map(Functions.unchecked(ResponseBody::byteStream));
     }
 
     public Optional<Reader> reader() {
-        return responseBody().map(EX.unchecked(ResponseBody::charStream));
+        return responseBody().map(Functions.unchecked(ResponseBody::charStream));
     }
 
     public HttpResponse body(final Consumer<String> consumer) {

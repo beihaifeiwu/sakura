@@ -1,4 +1,4 @@
-package sakura.common.utils;
+package sakura.common.util;
 
 import lombok.Getter;
 import lombok.Setter;

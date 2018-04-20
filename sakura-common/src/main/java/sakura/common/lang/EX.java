@@ -12,25 +12,19 @@ import java.io.UncheckedIOException;
 @UtilityClass
 public class EX {
 
-    public static void rethrow(Throwable t) {
-        if (t instanceof Error) {
-            throw (Error) t;
-        }
-        if (t instanceof RuntimeException) {
-            throw (RuntimeException) t;
-        }
-        if (t instanceof IOException) {
-            throw new UncheckedIOException((IOException) t);
-        }
+    public static RuntimeException rethrow(Throwable t) {
         // Clients will not expect needing to handle this.
         if (t instanceof InterruptedException) {
             Thread.currentThread().interrupt();
         }
-        throw new UncheckedException(t);
+        throw unchecked(t);
     }
 
-    public static RuntimeException unchecked(Throwable cause) {
-        return unchecked(cause, null, (Object) null);
+    public static RuntimeException unchecked(Throwable t) {
+        if (t instanceof Error) throw (Error) t;
+        if (t instanceof RuntimeException) return (RuntimeException) t;
+        if (t instanceof IOException) return new UncheckedIOException((IOException) t);
+        return new UncheckedException(t);
     }
 
     public static RuntimeException unchecked(String format, Object... args) {
@@ -42,15 +36,9 @@ public class EX {
         if (format != null && args != null && args.length > 0) {
             message = String.format(format, args);
         }
-        if (message == null && cause == null) {
-            return new UncheckedException();
-        }
-        if (message == null) {
-            return new UncheckedException(cause);
-        }
-        if (cause == null) {
-            return new UncheckedException(message);
-        }
+        if (message == null && cause == null) return new UncheckedException();
+        if (message == null) return unchecked(cause);
+        if (cause == null) return new UncheckedException(message);
         return new UncheckedException(message, cause);
     }
 

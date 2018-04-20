@@ -1,7 +1,7 @@
 package sakura.common.lang;
 
 import lombok.experimental.UtilityClass;
-import sakura.common.utils.ClassLoaderWrapper;
+import sakura.common.util.ClassLoaderWrapper;
 
 /**
  * Created by haomu on 2018/4/17.
@@ -24,11 +24,18 @@ public class CLS {
     }
 
     public static boolean isPresent(String className, ClassLoader classLoader) {
+        return forName(className, classLoader) != null;
+    }
+
+    public static Class<?> forName(String className) {
+        return forName(className, null);
+    }
+
+    public static Class<?> forName(String className, ClassLoader classLoader) {
         try {
-            classLoaderWrapper.classForName(className, classLoader);
-            return true;
-        } catch (Exception e) {
-            return false;
+            return classLoaderWrapper.classForName(className, classLoader);
+        } catch (ClassNotFoundException e) {
+            return null;
         }
     }
 

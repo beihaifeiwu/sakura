@@ -2,6 +2,7 @@ package sakura.common.lang;
 
 import com.google.common.base.CharMatcher;
 import lombok.experimental.UtilityClass;
+import sakura.common.lang.annotation.Nullable;
 
 import java.lang.reflect.Field;
 import java.util.Optional;
@@ -34,6 +35,7 @@ public class Enums {
      * @param constants The list of constants for the {@link Enum} to which you wish to convert.
      * @return The enum or null, if no enum constant matched the input value.
      */
+    @Nullable
     public static Enum<?> fromStringFuzzy(String value, Enum<?>[] constants) {
         final String text = CharMatcher.whitespace()
                 .removeFrom(value)

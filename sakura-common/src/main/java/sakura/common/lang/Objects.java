@@ -3,6 +3,7 @@ package sakura.common.lang;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Iterators;
 import lombok.experimental.UtilityClass;
+import sakura.common.lang.annotation.Nullable;
 
 import java.lang.reflect.Array;
 import java.util.*;
@@ -13,7 +14,7 @@ import java.util.*;
 @UtilityClass
 public class Objects {
 
-    public static boolean isEmpty(Object o) {
+    public static boolean isEmpty(@Nullable Object o) {
         if (o == null) return true;
         if (o instanceof CharSequence) return ((CharSequence) o).length() == 0;
         if (o.getClass().isArray()) return Array.getLength(o) == 0;
@@ -24,11 +25,11 @@ public class Objects {
         return false;
     }
 
-    public static boolean isNotEmpty(Object o) {
+    public static boolean isNotEmpty(@Nullable Object o) {
         return !isEmpty(o);
     }
 
-    public static Object[] toArray(Object o) {
+    public static Object[] toArray(@Nullable Object o) {
         if (o == null) return new Object[0];
         if (o instanceof Object[]) return (Object[]) o;
         if (o instanceof Collection) return ((Collection) o).toArray();
@@ -48,7 +49,7 @@ public class Objects {
         return new Object[]{o};
     }
 
-    public static Iterable<?> toIterable(Object o) {
+    public static Iterable<?> toIterable(@Nullable Object o) {
         if (o == null) return Collections.emptyList();
         if (o instanceof Iterable) return (Iterable<?>) o;
         if (o instanceof Map) return ((Map) o).entrySet();
@@ -67,15 +68,15 @@ public class Objects {
         return Collections.singleton(o);
     }
 
-    public static boolean equals(Object a, Object b) {
+    public static boolean equals(@Nullable Object a, @Nullable Object b) {
         return (a == b) || (a != null && a.equals(b));
     }
 
-    public static boolean deepEquals(Object a, Object b) {
+    public static boolean deepEquals(@Nullable Object a, @Nullable Object b) {
         return java.util.Objects.deepEquals(a, b);
     }
 
-    public static int hashCode(Object o) {
+    public static int hashCode(@Nullable Object o) {
         return o != null ? o.hashCode() : 0;
     }
 
@@ -83,15 +84,15 @@ public class Objects {
         return Arrays.hashCode(values);
     }
 
-    public static String toString(Object o) {
+    public static String toString(@Nullable Object o) {
         return String.valueOf(o);
     }
 
-    public static String toString(Object o, String nullDefault) {
+    public static String toString(@Nullable Object o, String nullDefault) {
         return (o != null) ? o.toString() : nullDefault;
     }
 
-    public static <T> int compare(T a, T b, Comparator<? super T> c) {
+    public static <T> int compare(@Nullable T a, @Nullable T b, Comparator<? super T> c) {
         return (a == b) ? 0 : c.compare(a, b);
     }
 

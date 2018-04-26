@@ -4,6 +4,8 @@ package sakura.common.util;
  * Copyright Terracotta, Inc.
  */
 
+import sakura.common.lang.annotation.Nullable;
+
 import java.text.ParseException;
 import java.util.*;
 
@@ -1050,6 +1052,7 @@ public final class CronExpression {
         }
     }
 
+    @Nullable
     TreeSet<Integer> getSet(final int type) {
         switch (type) {
             case SECOND:
@@ -1120,7 +1123,7 @@ public final class CronExpression {
     // Computation Functions
     //
     ////////////////////////////////////////////////////////////////////////////
-
+    @Nullable
     public Date getTimeAfter(Date afterTime) {
 
         // Computation is based on Gregorian year only.
@@ -1543,6 +1546,7 @@ public final class CronExpression {
      * NOT YET IMPLEMENTED: Returns the time before the given time
      * that the <code>CronExpression</code> matches.
      */
+    @Nullable
     public Date getTimeBefore(final Date endTime) {
         // FUTURE_TODO: implement QUARTZ-423
         return null;
@@ -1552,6 +1556,7 @@ public final class CronExpression {
      * NOT YET IMPLEMENTED: Returns the final time that the
      * <code>CronExpression</code> will match.
      */
+    @Nullable
     public Date getFinalFireTime() {
         // FUTURE_TODO: implement QUARTZ-423
         return null;

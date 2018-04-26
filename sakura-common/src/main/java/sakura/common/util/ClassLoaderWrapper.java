@@ -2,14 +2,22 @@ package sakura.common.util;
 
 import lombok.Getter;
 import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
+import lombok.val;
 import sakura.common.lang.annotation.Nullable;
 
+import java.io.IOException;
 import java.io.InputStream;
+import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLClassLoader;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 /**
  * A class to wrap access to multiple class loaders making them work as one
  */
+@Slf4j
 @Getter
 @Setter
 public class ClassLoaderWrapper {
@@ -26,136 +34,72 @@ public class ClassLoaderWrapper {
         try {
             this.systemClassLoader = ClassLoader.getSystemClassLoader();
         } catch (SecurityException ignored) {
-            // AccessControlException on Google App Engine
         }
     }
 
-    /**
-     * Get a resource as a URL using the current class path
-     *
-     * @param resource - the resource to locate
-     * @return the resource or null
-     */
-    public URL getResourceAsURL(String resource) {
-        return getResourceAsURL(resource, getClassLoaders(null));
+    public Set<URL> getResources(String name, @Nullable ClassLoader classLoader) {
+        val urls = new LinkedHashSet<URL>();
+        val classLoaders = getClassLoaders(classLoader);
+        if ("".equals(name)) {
+            for (ClassLoader loader : classLoaders) {
+                addAllClassLoaderJarRoots(loader, urls);
+            }
+            return urls;
+        }
+
+        for (ClassLoader loader : classLoaders) {
+            addAllClassLoaderResources(loader, name, urls);
+        }
+        if (systemClassLoader == null) {
+            try {
+                val resources = ClassLoader.getSystemResources(name);
+                while (resources.hasMoreElements()) {
+                    urls.add(resources.nextElement());
+                }
+            } catch (IOException ignored) {
+            }
+        }
+
+        return urls;
     }
 
-    /**
-     * Get a resource from the classpath, starting with a specific class loader
-     *
-     * @param resource    - the resource to find
-     * @param classLoader - the first classloader to try
-     * @return the stream or null
-     */
-    public URL getResourceAsURL(String resource, ClassLoader classLoader) {
-        return getResourceAsURL(resource, getClassLoaders(classLoader));
+    @Nullable
+    public URL getResourceAsURL(String resource, @Nullable ClassLoader classLoader) {
+        URL url = null;
+        for (ClassLoader loader : getClassLoaders(classLoader)) {
+            if (loader == null) continue;
+            url = loader.getResource(resource);
+            if (url == null) url = loader.getResource("/" + resource);
+            if (url != null) break;
+        }
+        if (systemClassLoader == null && url == null) {
+            url = ClassLoader.getSystemResource(resource);
+        }
+        return url;
     }
 
-    /**
-     * Get a resource from the classpath
-     *
-     * @param resource - the resource to find
-     * @return the stream or null
-     */
-    public InputStream getResourceAsStream(String resource) {
-        return getResourceAsStream(resource, getClassLoaders(null));
+    @Nullable
+    public InputStream getResourceAsStream(String resource, @Nullable ClassLoader classLoader) {
+        InputStream stream = null;
+        for (ClassLoader loader : getClassLoaders(classLoader)) {
+            if (loader == null) continue;
+            stream = loader.getResourceAsStream(resource);
+            if (stream == null) stream = loader.getResourceAsStream("/" + resource);
+            if (stream != null) break;
+        }
+        if (systemClassLoader == null && stream == null) {
+            stream = ClassLoader.getSystemResourceAsStream(resource);
+        }
+        return stream;
     }
 
-    /**
-     * Get a resource from the classpath, starting with a specific class loader
-     *
-     * @param resource    - the resource to find
-     * @param classLoader - the first class loader to try
-     * @return the stream or null
-     */
-    public InputStream getResourceAsStream(String resource, ClassLoader classLoader) {
-        return getResourceAsStream(resource, getClassLoaders(classLoader));
-    }
-
-    /**
-     * Find a class on the classpath (or die trying)
-     *
-     * @param name - the class to look for
-     * @return - the class
-     * @throws ClassNotFoundException Duh.
-     */
-    public Class<?> classForName(String name) throws ClassNotFoundException {
-        return classForName(name, getClassLoaders(null));
-    }
-
-    /**
-     * Find a class on the classpath, starting with a specific classloader (or die trying)
-     *
-     * @param name        - the class to look for
-     * @param classLoader - the first classloader to try
-     * @return - the class
-     * @throws ClassNotFoundException Duh.
-     */
     public Class<?> classForName(String name, @Nullable ClassLoader classLoader) throws ClassNotFoundException {
-        return classForName(name, getClassLoaders(classLoader));
-    }
-
-    /**
-     * Try to get a resource from a group of classloaders
-     *
-     * @param resource    - the resource to get
-     * @param classLoader - the classloaders to examine
-     * @return the resource or null
-     */
-    private InputStream getResourceAsStream(String resource, ClassLoader[] classLoader) {
-        for (ClassLoader cl : classLoader) {
-            if (null != cl) {
-                // try to find the resource as passed
-                InputStream returnValue = cl.getResourceAsStream(resource);
-                // now, some class loaders want this leading "/", so we'll add it and try again if we didn't find the resource
-                if (null == returnValue) returnValue = cl.getResourceAsStream("/" + resource);
-                if (null != returnValue) return returnValue;
-            }
-        }
-        return null;
-    }
-
-    /**
-     * Get a resource as a URL using the current class path
-     *
-     * @param resource    - the resource to locate
-     * @param classLoader - the class loaders to examine
-     * @return the resource or null
-     */
-    private URL getResourceAsURL(String resource, ClassLoader[] classLoader) {
-        URL url;
-        for (ClassLoader cl : classLoader) {
-            if (null != cl) {
-                // look for the resource as passed in...
-                url = cl.getResource(resource);
-                // ...but some class loaders want this leading "/", so we'll add it
-                // and try again if we didn't find the resource
-                if (null == url) url = cl.getResource("/" + resource);
-                // "It's always in the last place I look for it!"
-                // ... because only an idiot would keep looking for it after finding it, so stop looking already.
-                if (null != url) return url;
-            }
-        }
-        // didn't find it anywhere.
-        return null;
-    }
-
-    /**
-     * Attempt to load a class from a group of classloaders
-     *
-     * @param name        - the class to load
-     * @param classLoader - the group of classloaders to examine
-     * @return the class
-     * @throws ClassNotFoundException - Remember the wisdom of Judge Smails: Well, the world needs ditch diggers, too.
-     */
-    private Class<?> classForName(String name, ClassLoader[] classLoader) throws ClassNotFoundException {
-        for (ClassLoader cl : classLoader) {
+        for (ClassLoader cl : getClassLoaders(classLoader)) {
             if (null != cl) {
                 try {
                     Class<?> c = Class.forName(name, true, cl);
                     if (null != c) return c;
-                } catch (ClassNotFoundException e) {
-                    // we'll ignore this until all classloaders fail to locate the class
+                } catch (ClassNotFoundException ignore) {
                 }
             }
         }
@@ -169,6 +113,54 @@ public class ClassLoaderWrapper {
                 Thread.currentThread().getContextClassLoader(),
                 getClass().getClassLoader(),
                 systemClassLoader};
+    }
+
+    private void addAllClassLoaderResources(@Nullable ClassLoader classLoader, String name, Set<URL> resources) {
+        if (classLoader == null) return;
+        try {
+            val enumeration = classLoader.getResources(name);
+            while (enumeration.hasMoreElements()) {
+                resources.add(enumeration.nextElement());
+            }
+        } catch (IOException ignore) {
+        }
+        try {
+            val enumeration = classLoader.getResources("/" + name);
+            while (enumeration.hasMoreElements()) {
+                resources.add(enumeration.nextElement());
+            }
+        } catch (IOException ignore) {
+        }
+    }
+
+    private void addAllClassLoaderJarRoots(@Nullable ClassLoader classLoader, Set<URL> jarRoots) {
+        if (classLoader == null) return;
+        if (classLoader instanceof URLClassLoader) {
+            try {
+                for (URL url : ((URLClassLoader) classLoader).getURLs()) {
+                    try {
+                        String str = url.toString();
+                        if (str.endsWith(".jar")) {
+                            jarRoots.add(new URL("jar:" + str + "!/"));
+                        } else {
+                            jarRoots.add(url);
+                        }
+                    } catch (MalformedURLException e) {
+                        log.debug("Cannot search for matching files underneath [{}] " +
+                                "because it cannot be converted to a valid 'jar:' URL: {}", url, e.getMessage());
+                    }
+                }
+            } catch (Exception e) {
+                log.debug("Cannot introspect jar files since ClassLoader [{}] " +
+                        "does not support 'getURLs()': {}", classLoader, e.getMessage());
+            }
+        }
+        try {
+            addAllClassLoaderJarRoots(classLoader.getParent(), jarRoots);
+        } catch (Exception e) {
+            log.debug("Cannot introspect jar files in parent ClassLoader since [{}] " +
+                    "does not support 'getParent()':", classLoader, e.getMessage());
+        }
     }
 
 }

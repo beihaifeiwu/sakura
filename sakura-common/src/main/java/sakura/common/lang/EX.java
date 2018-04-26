@@ -1,6 +1,7 @@
 package sakura.common.lang;
 
 import lombok.experimental.UtilityClass;
+import sakura.common.lang.annotation.Nullable;
 import sakura.common.lang.exception.UncheckedException;
 
 import java.io.IOException;
@@ -27,11 +28,11 @@ public class EX {
         return new UncheckedException(t);
     }
 
-    public static RuntimeException unchecked(String format, Object... args) {
+    public static RuntimeException unchecked(String format, @Nullable Object... args) {
         return unchecked(null, format, args);
     }
 
-    public static RuntimeException unchecked(Throwable cause, String format, Object... args) {
+    public static RuntimeException unchecked(@Nullable Throwable cause, @Nullable String format, @Nullable Object... args) {
         String message = format;
         if (format != null && args != null && args.length > 0) {
             message = String.format(format, args);

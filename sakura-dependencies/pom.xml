@@ -29,6 +29,7 @@
         <checkstyle.version>8.5</checkstyle.version>
         <classmate.version>1.3.3</classmate.version>
         <curator.version>4.0.1</curator.version>
+        <disruptor.version>3.4.2</disruptor.version>
         <findbugs.version>3.0.2</findbugs.version>
         <geojson-jackson.version>1.8</geojson-jackson.version>
         <guava.version>24.1-jre</guava.version>
@@ -191,6 +192,12 @@
                 <groupId>org.apache.curator</groupId>
                 <artifactId>curator-test</artifactId>
                 <version>${curator.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.lmax</groupId>
+                <artifactId>disruptor</artifactId>
+                <version>${disruptor.version}</version>
             </dependency>
 
             <dependency>

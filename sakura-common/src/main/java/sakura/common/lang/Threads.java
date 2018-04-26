@@ -4,6 +4,7 @@ import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import com.google.common.util.concurrent.Uninterruptibles;
 import lombok.experimental.UtilityClass;
 import lombok.extern.slf4j.Slf4j;
+import sakura.common.lang.annotation.Nullable;
 
 import java.util.concurrent.*;
 
@@ -60,7 +61,7 @@ public class Threads {
         return Executors.newScheduledThreadPool(processors() * times, factory);
     }
 
-    public static void shutdown(ExecutorService... executors) {
+    public static void shutdown(@Nullable ExecutorService... executors) {
         if (executors == null || executors.length <= 0) {
             return;
         }
@@ -88,7 +89,7 @@ public class Threads {
         return Thread.currentThread().getName();
     }
 
-    public static void sleepQuietly(long sleepFor, TimeUnit unit) {
+    public static void sleepQuietly(long sleepFor, @Nullable TimeUnit unit) {
         if (sleepFor <= 0) return;
         if (unit == null) unit = TimeUnit.MILLISECONDS;
         try {
@@ -98,7 +99,7 @@ public class Threads {
         }
     }
 
-    public static void sleepDeadly(long sleepFor, TimeUnit unit) {
+    public static void sleepDeadly(long sleepFor, @Nullable TimeUnit unit) {
         if (sleepFor <= 0) return;
         if (unit == null) unit = TimeUnit.MILLISECONDS;
         Uninterruptibles.sleepUninterruptibly(sleepFor, unit);

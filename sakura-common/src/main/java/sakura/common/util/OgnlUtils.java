@@ -4,6 +4,7 @@ import lombok.experimental.UtilityClass;
 import lombok.extern.slf4j.Slf4j;
 import ognl.*;
 import sakura.common.lang.Objects;
+import sakura.common.lang.annotation.Nullable;
 
 import java.io.StringReader;
 import java.math.BigDecimal;
@@ -19,6 +20,7 @@ public class OgnlUtils {
 
     private static final Map<String, Node> EXPRESSION_CACHE = new ConcurrentHashMap<>();
 
+    @Nullable
     public static Object getValue(String expression, Object root) {
         try {
             return Ognl.getValue(parseExpression(expression), root);

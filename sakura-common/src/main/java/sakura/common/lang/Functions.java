@@ -1,5 +1,6 @@
 package sakura.common.lang;
 
+import lombok.experimental.UtilityClass;
 import org.jooq.lambda.Unchecked;
 import org.jooq.lambda.fi.lang.CheckedRunnable;
 import org.jooq.lambda.fi.util.CheckedComparator;
@@ -11,6 +12,7 @@ import java.util.function.*;
 /**
  * Created by haomu on 2018/4/19.
  */
+@UtilityClass
 public class Functions {
     
     public static Runnable unchecked(CheckedRunnable runnable) {

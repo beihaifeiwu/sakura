@@ -2,6 +2,7 @@ package sakura.common.util;
 
 import org.apache.commons.lang3.Validate;
 import sakura.common.lang.Strings;
+import sakura.common.lang.annotation.Nullable;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -90,7 +91,7 @@ public class AntPathMatcher {
      * Set the path separator to use for pattern parsing.
      * <p>Default is "/", as in Ant.
      */
-    public void setPathSeparator(String pathSeparator) {
+    public void setPathSeparator(@Nullable String pathSeparator) {
         this.pathSeparator = (pathSeparator != null ? pathSeparator : DEFAULT_PATH_SEPARATOR);
         this.pathSeparatorPatternCache = new PathSeparatorPatternCache(this.pathSeparator);
     }
@@ -149,6 +150,14 @@ public class AntPathMatcher {
         return doMatch(pattern, path, false, null);
     }
 
+    public String getRootDir(String pattern) {
+        int end = pattern.length();
+        while (end > 0 && isPattern(pattern.substring(0, end))) {
+            end = pattern.lastIndexOf('/', end - 2) + 1;
+        }
+        return pattern.substring(0, end);
+    }
+
     /**
      * Actually match the given {@code path} against the given {@code pattern}.
      *
@@ -158,7 +167,7 @@ public class AntPathMatcher {
      *                  as far as the given base path goes is sufficient)
      * @return {@code true} if the supplied {@code path} matched, {@code false} if it didn't
      */
-    protected boolean doMatch(String pattern, String path, boolean fullMatch, Map<String, String> uriTemplateVariables) {
+    protected boolean doMatch(String pattern, String path, boolean fullMatch, @Nullable Map<String, String> uriTemplateVariables) {
         if (path.startsWith(this.pathSeparator) != pattern.startsWith(this.pathSeparator)) {
             return false;
         }
@@ -642,7 +651,7 @@ public class AntPathMatcher {
          *
          * @return {@code true} if the string matches against the pattern, or {@code false} otherwise.
          */
-        public boolean matchStrings(String str, Map<String, String> uriTemplateVariables) {
+        public boolean matchStrings(String str, @Nullable Map<String, String> uriTemplateVariables) {
             Matcher matcher = this.pattern.matcher(str);
             if (matcher.matches()) {
                 if (uriTemplateVariables != null) {
@@ -768,7 +777,7 @@ public class AntPathMatcher {
 
             private Integer length;
 
-            public PatternInfo(String pattern) {
+            public PatternInfo(@Nullable String pattern) {
                 this.pattern = pattern;
                 if (this.pattern != null) {
                     initCounters();

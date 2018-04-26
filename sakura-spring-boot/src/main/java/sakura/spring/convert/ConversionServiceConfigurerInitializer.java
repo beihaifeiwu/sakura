@@ -1,11 +1,11 @@
 package sakura.spring.convert;
 
-import sakura.common.lang.EX;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.util.CollectionUtils;
+import sakura.common.lang.Functions;
 import sakura.spring.core.SpringBeans;
 
 import java.util.List;
@@ -28,7 +28,7 @@ public class ConversionServiceConfigurerInitializer implements InitializingBean 
             return;
         }
         for (ConversionServiceConfigurer configurer : configurerList) {
-            serviceList.forEach(EX.unchecked(configurer::configure));
+            serviceList.forEach(Functions.unchecked(configurer::configure));
         }
     }
 

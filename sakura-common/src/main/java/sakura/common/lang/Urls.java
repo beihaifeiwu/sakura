@@ -4,6 +4,7 @@ import lombok.NonNull;
 import lombok.experimental.UtilityClass;
 import lombok.val;
 import org.apache.commons.lang3.Validate;
+import sakura.common.lang.annotation.Nullable;
 
 import java.io.IOException;
 import java.lang.reflect.Array;
@@ -138,7 +139,7 @@ public class Urls {
         }
     }
 
-    private static void addParam(Object key, Object value, StringBuilder result) {
+    private static void addParam(Object key, @Nullable Object value, StringBuilder result) {
         if (value != null && value.getClass().isArray()) {
             int length = Array.getLength(value);
             List<Object> list = new ArrayList<>(length);

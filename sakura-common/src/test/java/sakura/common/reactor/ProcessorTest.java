@@ -28,18 +28,18 @@ public class ProcessorTest {
         queue.run();
 
         queue.subscribe(Subscribers.oneByOne(i -> {
-            Threads.sleepQuietly(Duration.ofMillis(500));
+            Threads.sleepQuietly(Duration.ofMillis(200));
             System.out.println("                     Receive event: " + i);
         }));
 
-        for (int i = 0; i < 16; i++) {
+        for (int i = 1; i <= 16; i++) {
             queue.onNext(i);
             System.out.println("Produce event: " + i);
-            Threads.sleepDeadly(Duration.ofMillis(200));
+            Threads.sleepDeadly(Duration.ofMillis(100));
         }
 
         queue.onComplete();
-        queue.awaitAndShutdown(Duration.ofSeconds(5));
+        queue.awaitAndShutdown(Duration.ofSeconds(2));
     }
 
     @Test

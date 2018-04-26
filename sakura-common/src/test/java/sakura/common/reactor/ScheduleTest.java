@@ -68,7 +68,7 @@ public class ScheduleTest {
     }
 
     private String getStringSync() {
-        Threads.sleepQuietly(1, TimeUnit.SECONDS);
+        Threads.sleepQuietly(100, TimeUnit.MILLISECONDS);
         return "Hello, Reactor!";
     }
 

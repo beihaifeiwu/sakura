@@ -27,7 +27,7 @@ public class FluxSinkTest {
         final AtomicInteger count = new AtomicInteger(1);
         Flux.generate(sink -> {
             sink.next(count.get() + " : " + new Date());
-            Threads.sleepQuietly(1, TimeUnit.SECONDS);
+            Threads.sleepQuietly(100, TimeUnit.MILLISECONDS);
             if (count.getAndIncrement() >= 5) {
                 sink.complete();
             }
@@ -40,7 +40,7 @@ public class FluxSinkTest {
                 () -> 1,                // 初始化状态值
                 (count, sink) -> {
                     sink.next(count + " : " + new Date());
-                    Threads.sleepQuietly(1, TimeUnit.SECONDS);
+                    Threads.sleepQuietly(100, TimeUnit.MILLISECONDS);
                     if (count >= 5) {
                         sink.complete();
                     }
@@ -68,7 +68,7 @@ public class FluxSinkTest {
 
         for (int i = 0; i < 20; i++) {
             Random random = new Random();
-            Threads.sleepQuietly(random.nextInt(1000), TimeUnit.MILLISECONDS);
+            Threads.sleepQuietly(random.nextInt(100), TimeUnit.MILLISECONDS);
             eventSource.newEvent(new MyEvent(new Date(), "Event-" + i));
         }
         eventSource.eventStopped();

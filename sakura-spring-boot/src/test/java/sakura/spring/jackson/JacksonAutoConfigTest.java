@@ -49,7 +49,7 @@ public class JacksonAutoConfigTest {
     @Test
     public void testsJacksonProperties() {
         TestPropertyValues.of("spring.jackson.default-property-inclusion=non_null").applyTo(context);
-        TestPropertyValues.of("spring.jackson.deserialization.accept-float-as-int=false").applyTo(context);
+        TestPropertyValues.of("spring.jackson.deserialization.accept-float-as-int=true").applyTo(context);
         TestPropertyValues.of("spring.jackson.deserialization.fail-on-unknown-properties=false").applyTo(context);
         TestPropertyValues.of("spring.jackson.serialization.indent_output=true").applyTo(context);
         TestPropertyValues.of("spring.jackson.mapper.use-static-typing=false").applyTo(context);
@@ -59,7 +59,7 @@ public class JacksonAutoConfigTest {
         assertNotNull(mapper);
         assertEquals(mapper, Jackson.getObjectMapper());
         assertEquals(mapper.getSerializationConfig().getDefaultPropertyInclusion().getValueInclusion(), JsonInclude.Include.NON_NULL);
-        assertFalse(mapper.getDeserializationConfig().isEnabled(DeserializationFeature.ACCEPT_FLOAT_AS_INT));
+        assertTrue(mapper.getDeserializationConfig().isEnabled(DeserializationFeature.ACCEPT_FLOAT_AS_INT));
         assertFalse(mapper.getDeserializationConfig().isEnabled(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES));
         assertTrue(mapper.getSerializationConfig().isEnabled(SerializationFeature.INDENT_OUTPUT));
         assertFalse(mapper.isEnabled(MapperFeature.USE_STATIC_TYPING));

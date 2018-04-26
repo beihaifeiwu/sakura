@@ -142,7 +142,7 @@ public class OperatorTest {
         String desc = "Zip two sources together, that is to say wait for all the sources to emit one element and combine these elements once into a Tuple2.";
         CountDownLatch latch = new CountDownLatch(3);
         Flux.zip(Flux.fromArray(desc.split("\\s+")),
-                Flux.interval(Duration.ofMillis(200)))
+                Flux.interval(Duration.ofMillis(100)))
                 .doOnNext(t -> latch.countDown())
                 .subscribe(t -> System.out.println(t.getT1()));
         latch.await(10, TimeUnit.SECONDS);

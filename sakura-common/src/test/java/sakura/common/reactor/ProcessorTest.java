@@ -28,14 +28,14 @@ public class ProcessorTest {
         queue.run();
 
         queue.subscribe(Subscribers.oneByOne(i -> {
-            Threads.sleepQuietly(Duration.ofMillis(200));
+            Threads.sleepQuietly(Duration.ofMillis(20));
             System.out.println("                     Receive event: " + i);
         }));
 
         for (int i = 1; i <= 16; i++) {
             queue.onNext(i);
             System.out.println("Produce event: " + i);
-            Threads.sleepDeadly(Duration.ofMillis(100));
+            Threads.sleepDeadly(Duration.ofMillis(10));
         }
 
         queue.onComplete();
@@ -73,7 +73,7 @@ public class ProcessorTest {
         co.subscribe(System.out::println);
 
         System.out.println("订阅者完成订阅操作");
-        Threads.sleepQuietly(500, TimeUnit.MILLISECONDS);
+        Threads.sleepQuietly(100, TimeUnit.MILLISECONDS);
         System.out.println("还没有连接上");
 
         co.connect();
@@ -89,49 +89,49 @@ public class ProcessorTest {
 
         autoCo.subscribe(System.out::println);
         System.out.println("第一个订阅者完成订阅操作");
-        Threads.sleepQuietly(500, TimeUnit.MILLISECONDS);
+        Threads.sleepQuietly(100, TimeUnit.MILLISECONDS);
         System.out.println("第二个订阅者完成订阅操作");
         autoCo.subscribe(System.out::println);
     }
 
     @Test
     public void testConnectableFluxRefConnect() {
-        Flux<Long> source = Flux.interval(Duration.ofMillis(100))
+        Flux<Long> source = Flux.interval(Duration.ofMillis(10))
                 .doOnSubscribe(s -> System.out.println("上游收到订阅"))
                 .doOnCancel(() -> System.out.println("上游发布者断开连接"));
 
-        Flux<Long> refCounted = source.publish().refCount(2, Duration.ofSeconds(1));
+        Flux<Long> refCounted = source.publish().refCount(2, Duration.ofMillis(100));
 
         System.out.println("第一个订阅者订阅");
         Disposable sub1 = refCounted.subscribe(l -> System.out.println("sub1: " + l));
 
-        Threads.sleepQuietly(200, TimeUnit.MILLISECONDS);
+        Threads.sleepQuietly(20, TimeUnit.MILLISECONDS);
         System.out.println("第二个订阅者订阅");
         Disposable sub2 = refCounted.subscribe(l -> System.out.println("sub2: " + l));
 
-        Threads.sleepQuietly(200, TimeUnit.MILLISECONDS);
+        Threads.sleepQuietly(20, TimeUnit.MILLISECONDS);
         System.out.println("第一个订阅者取消订阅");
         sub1.dispose();
 
-        Threads.sleepQuietly(200, TimeUnit.MILLISECONDS);
+        Threads.sleepQuietly(20, TimeUnit.MILLISECONDS);
         System.out.println("第二个订阅者取消订阅");
         sub2.dispose();
 
-        Threads.sleepQuietly(200, TimeUnit.MILLISECONDS);
+        Threads.sleepQuietly(20, TimeUnit.MILLISECONDS);
         System.out.println("第三个订阅者订阅");
         Disposable sub3 = refCounted.subscribe(l -> System.out.println("sub3: " + l));
 
-        Threads.sleepQuietly(200, TimeUnit.MILLISECONDS);
+        Threads.sleepQuietly(20, TimeUnit.MILLISECONDS);
         System.out.println("第三个订阅者取消订阅");
         sub3.dispose();
 
-        Threads.sleepQuietly(1500, TimeUnit.MILLISECONDS);
+        Threads.sleepQuietly(150, TimeUnit.MILLISECONDS);
         System.out.println("第四个订阅者订阅");
         Disposable sub4 = refCounted.subscribe(l -> System.out.println("sub4: " + l));
-        Threads.sleepQuietly(200, TimeUnit.MILLISECONDS);
+        Threads.sleepQuietly(20, TimeUnit.MILLISECONDS);
         System.out.println("第五个订阅者订阅");
         Disposable sub5 = refCounted.subscribe(l -> System.out.println("sub5: " + l));
-        Threads.sleepQuietly(200, TimeUnit.MILLISECONDS);
+        Threads.sleepQuietly(20, TimeUnit.MILLISECONDS);
     }
 
 }

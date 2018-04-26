@@ -5,6 +5,8 @@ import reactor.core.Disposable;
 import reactor.core.publisher.ConnectableFlux;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.UnicastProcessor;
+import reactor.core.publisher.WorkQueueProcessor;
+import reactor.util.concurrent.WaitStrategy;
 import sakura.common.lang.Threads;
 
 import java.time.Duration;
@@ -16,7 +18,32 @@ import java.util.concurrent.TimeUnit;
 public class ProcessorTest {
 
     @Test
-    public void testHotSequence() {
+    public void testWorkQueue() {
+        WorkQueueProcessor<Integer> queue = WorkQueueProcessor.<Integer>builder()
+                .autoCancel(true)
+                .waitStrategy(WaitStrategy.blocking())
+                .bufferSize(8)
+                .name("Event")
+                .build();
+        queue.run();
+
+        queue.subscribe(Subscribers.oneByOne(i -> {
+            Threads.sleepQuietly(Duration.ofMillis(500));
+            System.out.println("                     Receive event: " + i);
+        }));
+
+        for (int i = 0; i < 16; i++) {
+            queue.onNext(i);
+            System.out.println("Produce event: " + i);
+            Threads.sleepDeadly(Duration.ofMillis(200));
+        }
+
+        queue.onComplete();
+        queue.awaitAndShutdown(Duration.ofSeconds(5));
+    }
+
+    @Test
+    public void testUnicast() {
         UnicastProcessor<String> hotSource = UnicastProcessor.create();
 
         Flux<String> hotFlux = hotSource.publish()

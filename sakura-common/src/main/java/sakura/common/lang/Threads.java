@@ -6,6 +6,7 @@ import lombok.experimental.UtilityClass;
 import lombok.extern.slf4j.Slf4j;
 import sakura.common.lang.annotation.Nullable;
 
+import java.time.Duration;
 import java.util.concurrent.*;
 
 /**
@@ -89,6 +90,10 @@ public class Threads {
         return Thread.currentThread().getName();
     }
 
+    public static void sleepQuietly(Duration duration) {
+        sleepQuietly(duration.toNanos(), TimeUnit.NANOSECONDS);
+    }
+
     public static void sleepQuietly(long sleepFor, @Nullable TimeUnit unit) {
         if (sleepFor <= 0) return;
         if (unit == null) unit = TimeUnit.MILLISECONDS;
@@ -97,6 +102,10 @@ public class Threads {
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
         }
+    }
+
+    public static void sleepDeadly(Duration duration) {
+        sleepDeadly(duration.toNanos(), TimeUnit.NANOSECONDS);
     }
 
     public static void sleepDeadly(long sleepFor, @Nullable TimeUnit unit) {

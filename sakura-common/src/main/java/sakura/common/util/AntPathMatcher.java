@@ -66,7 +66,7 @@ public class AntPathMatcher {
     private boolean trimTokens = false;
     private volatile Boolean cachePatterns;
 
-    private final Map<String, String[]> tokenizedPatternCache = new ConcurrentHashMap<String, String[]>(256);
+    private final Map<String, String[]> tokenizedPatternCache = new ConcurrentHashMap<>(256);
     final Map<String, AntPathStringMatcher> stringMatcherCache = new ConcurrentHashMap<>(256);
 
     /**

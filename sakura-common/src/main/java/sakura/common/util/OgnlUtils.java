@@ -18,7 +18,7 @@ import java.util.concurrent.ConcurrentHashMap;
 @UtilityClass
 public class OgnlUtils {
 
-    private static final Map<String, Node> EXPRESSION_CACHE = new ConcurrentHashMap<>();
+    private static final Map<String, Node> EXPRESSION_CACHE = new ConcurrentHashMap<>(256);
 
     @Nullable
     public static Object getValue(String expression, Object root) {

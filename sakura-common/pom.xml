@@ -47,6 +47,12 @@
             <version>6.0</version>
         </dependency>
 
+        <!-- jodd -->
+        <dependency>
+            <groupId>org.jodd</groupId>
+            <artifactId>jodd-core</artifactId>
+        </dependency>
+
         <!-- jool -->
         <dependency>
             <groupId>org.jooq</groupId>

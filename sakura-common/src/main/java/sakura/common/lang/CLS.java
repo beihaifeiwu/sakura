@@ -1,5 +1,6 @@
 package sakura.common.lang;
 
+import com.google.common.primitives.Primitives;
 import lombok.Cleanup;
 import lombok.experimental.UtilityClass;
 import lombok.extern.slf4j.Slf4j;
@@ -31,6 +32,15 @@ public class CLS {
 
     public static void setDefaultClassLoader(ClassLoader defaultClassLoader) {
         WRAPPER.setDefaultClassLoader(defaultClassLoader);
+    }
+
+    public static boolean isPrimitiveWrapper(Class<?> type) {
+        return Primitives.isWrapperType(type);
+    }
+
+    public static boolean isPrimitiveOrWrapper(@Nullable Class<?> type) {
+        if (type == null) return false;
+        return type.isPrimitive() || isPrimitiveWrapper(type);
     }
 
     @Nullable

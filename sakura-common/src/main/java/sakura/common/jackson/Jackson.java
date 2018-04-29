@@ -108,6 +108,9 @@ public class Jackson {
     }
 
     public static <T> T convertValue(Object fromValue, Class<T> toValueType) {
+        if (fromValue instanceof String) {
+            return readObject((String) fromValue, toValueType);
+        }
         return getObjectMapper().convertValue(fromValue, toValueType);
     }
 

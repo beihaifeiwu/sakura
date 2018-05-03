@@ -4,6 +4,7 @@ import lombok.Data;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.Collections;
 import java.util.Vector;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -28,6 +29,14 @@ public class OgnlUtilsTest {
         assertThat(getValue("vector.size()", root)).isEqualTo(4);
         assertThat(getValue("array.{? #this.name == 'Alex' }[1].id", root)).isEqualTo("004");
         assertThat(getValue("vector.{^ #this.name == 'Alex' }[0].id", root)).isEqualTo("001");
+
+        root.exp = "array[0].name";
+        assertThat(getValue("(exp)(#this)", root)).isEqualTo("Michael");
+
+        assertThat(getValue("#num", root, Collections.singletonMap("num", 5))).isEqualTo(5);
+        assertThat(getValue("#num", root, Collections.singletonMap("num", "5"), Integer.class))
+                .isInstanceOf(Integer.class)
+                .isEqualTo(5);
     }
 
     @Test
@@ -57,6 +66,7 @@ public class OgnlUtilsTest {
     private static class Root {
         private Object[] array;
         private Vector<Part> vector;
+        private String exp;
 
         Root() {
             vector = new Vector<>();

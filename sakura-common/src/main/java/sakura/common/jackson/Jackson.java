@@ -126,6 +126,14 @@ public class Jackson {
         return getTypeFactory().constructType(typeRef);
     }
 
+    public static JavaType parametricType(Class<?> parametrized, Class<?>... parameterClasses) {
+        return getTypeFactory().constructParametricType(parametrized, parameterClasses);
+    }
+
+    public static JavaType parametricType(Class<?> rawType, JavaType... parameterTypes) {
+        return getTypeFactory().constructParametricType(rawType, parameterTypes);
+    }
+
     public static ArrayType arrayType(Class<?> elementType) {
         return getTypeFactory().constructArrayType(elementType);
     }

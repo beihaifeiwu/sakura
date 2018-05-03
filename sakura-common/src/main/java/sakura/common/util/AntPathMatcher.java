@@ -1,11 +1,12 @@
 package sakura.common.util;
 
+import jodd.cache.Cache;
 import org.apache.commons.lang3.Validate;
+import sakura.common.lang.Caches;
 import sakura.common.lang.Strings;
 import sakura.common.lang.annotation.Nullable;
 
 import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -55,7 +56,6 @@ import java.util.regex.Pattern;
 public class AntPathMatcher {
 
     public static final String DEFAULT_PATH_SEPARATOR = "/";
-    private static final int CACHE_TURNOFF_THRESHOLD = 65536;
     private static final Pattern VARIABLE_PATTERN = Pattern.compile("\\{[^/]+?\\}");
     private static final char[] WILDCARD_CHARS = {'*', '?', '{'};
 
@@ -66,8 +66,8 @@ public class AntPathMatcher {
     private boolean trimTokens = false;
     private volatile Boolean cachePatterns;
 
-    private final Map<String, String[]> tokenizedPatternCache = new ConcurrentHashMap<>(256);
-    final Map<String, AntPathStringMatcher> stringMatcherCache = new ConcurrentHashMap<>(256);
+    private final Cache<String, String[]> tokenizedPatternCache = Caches.newLRUCache(256);
+    final Cache<String, AntPathStringMatcher> stringMatcherCache = Caches.newLRUCache(256);
 
     /**
      * Create a new instance with the {@link #DEFAULT_PATH_SEPARATOR}.
@@ -360,13 +360,6 @@ public class AntPathMatcher {
         }
         if (tokenized == null) {
             tokenized = tokenizePath(pattern);
-            if (cachePatterns == null && this.tokenizedPatternCache.size() >= CACHE_TURNOFF_THRESHOLD) {
-                // Try to adapt to the runtime situation that we're encountering:
-                // There are obviously too many different patterns coming in here...
-                // So let's turn off the cache since the patterns are unlikely to be reoccurring.
-                deactivatePatternCache();
-                return tokenized;
-            }
             if (cachePatterns == null || cachePatterns) {
                 this.tokenizedPatternCache.put(pattern, tokenized);
             }
@@ -417,13 +410,6 @@ public class AntPathMatcher {
         }
         if (matcher == null) {
             matcher = new AntPathStringMatcher(pattern, this.caseSensitive);
-            if (cachePatterns == null && this.stringMatcherCache.size() >= CACHE_TURNOFF_THRESHOLD) {
-                // Try to adapt to the runtime situation that we're encountering:
-                // There are obviously too many different patterns coming in here...
-                // So let's turn off the cache since the patterns are unlikely to be reoccurring.
-                deactivatePatternCache();
-                return matcher;
-            }
             if (cachePatterns == null || cachePatterns) {
                 this.stringMatcherCache.put(pattern, matcher);
             }

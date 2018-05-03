@@ -1,29 +1,39 @@
 package sakura.common.util;
 
+import jodd.cache.Cache;
 import lombok.experimental.UtilityClass;
 import lombok.extern.slf4j.Slf4j;
 import ognl.*;
+import sakura.common.lang.Caches;
 import sakura.common.lang.Objects;
 import sakura.common.lang.annotation.Nullable;
 
 import java.io.StringReader;
 import java.math.BigDecimal;
+import java.util.Collections;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 /**
+ * http://commons.apache.org/proper/commons-ognl/language-guide.html
+ * <p>
  * Created by haomu on 2018/4/20.
  */
 @Slf4j
 @UtilityClass
 public class OgnlUtils {
 
-    private static final Map<String, Node> EXPRESSION_CACHE = new ConcurrentHashMap<>(256);
+    private static final Cache<String, Node> EXPRESSION_CACHE = Caches.newLRUCache(256);
+
+    private static final TypeConverter TYPE_CONVERTER = new DefaultTypeConverter();
 
     @Nullable
-    public static Object getValue(String expression, Object root) {
+    public static Object getValue(String expression,
+                                  Object root, @Nullable Map context, @Nullable Class resultType) {
         try {
-            return Ognl.getValue(parseExpression(expression), root);
+            Object parsedExp = parseExpression(expression);
+            context = context == null ? Collections.EMPTY_MAP : context;
+            Map ctx = Ognl.addDefaultContext(root, null, TYPE_CONVERTER, context);
+            return Ognl.getValue(parsedExp, ctx, root, resultType);
         } catch (ExpressionSyntaxException e) {
             log.error("Parse expression failed: {}", expression, e);
         } catch (Exception ignore) {
@@ -31,8 +41,23 @@ public class OgnlUtils {
         return null;
     }
 
-    public static boolean getBoolean(String expression, Object root) {
-        Object value = getValue(expression, root);
+    @Nullable
+    public static Object getValue(String expression, Object root, @Nullable Map context) {
+        return getValue(expression, root, context, null);
+    }
+
+    @Nullable
+    public static Object getValue(String expression, Object root, @Nullable Class resultType) {
+        return getValue(expression, root, null, resultType);
+    }
+
+    @Nullable
+    public static Object getValue(String expression, Object root) {
+        return getValue(expression, root, null, null);
+    }
+
+    public static boolean getBoolean(String expression, Object root, @Nullable Map context) {
+        Object value = getValue(expression, root, context);
         if (value instanceof Boolean) {
             return (Boolean) value;
         }
@@ -42,9 +67,17 @@ public class OgnlUtils {
         return value != null;
     }
 
-    public static Iterable<?> getIterable(String expression, Object root) {
-        Object value = getValue(expression, root);
+    public static boolean getBoolean(String expression, Object root) {
+        return getBoolean(expression, root, null);
+    }
+
+    public static Iterable<?> getIterable(String expression, Object root, @Nullable Map context) {
+        Object value = getValue(expression, root, context);
         return Objects.toIterable(value);
+    }
+
+    public static Iterable<?> getIterable(String expression, Object root) {
+        return getIterable(expression, root, null);
     }
 
     private static Object parseExpression(String expression) throws OgnlException {

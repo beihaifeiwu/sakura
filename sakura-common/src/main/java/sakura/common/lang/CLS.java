@@ -24,7 +24,7 @@ import java.util.Set;
 public class CLS {
 
     private static final ClassLoaderWrapper WRAPPER = new ClassLoaderWrapper(CLS.class.getClassLoader());
-    private static final AntPathMatcher MATCHER = new AntPathMatcher();
+    private static final Lazy<AntPathMatcher> MATCHER = Lazy.of(AntPathMatcher::new);
 
     public static ClassLoader getDefaultClassLoader() {
         return WRAPPER.getDefaultClassLoader();
@@ -94,10 +94,11 @@ public class CLS {
     }
 
     public static Set<URL> findResources(String pattern) {
-        if (!MATCHER.isPattern(pattern)) return getResources(pattern);
+        val matcher = MATCHER.get();
+        if (!matcher.isPattern(pattern)) return getResources(pattern);
 
         val resources = new LinkedHashSet<URL>();
-        val rootDir = MATCHER.getRootDir(pattern);
+        val rootDir = matcher.getRootDir(pattern);
         val subPattern = pattern.substring(rootDir.length());
         val rootResources = getResources(rootDir);
 
@@ -108,7 +109,7 @@ public class CLS {
                 for (int i = 0; i < files.length; i++) {
                     @Cleanup val file = files[i];
                     val subName = dir.getName().getRelativeName(file.getName());
-                    if (MATCHER.match(subPattern, subName)) {
+                    if (matcher.match(subPattern, subName)) {
                         resources.add(file.getURL());
                     }
                 }

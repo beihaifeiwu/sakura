@@ -8,12 +8,11 @@ import lombok.val;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.Validate;
 import org.apache.commons.vfs2.FileObject;
-import org.apache.commons.vfs2.FileSystemException;
 import org.apache.commons.vfs2.FileSystemManager;
 import org.apache.commons.vfs2.VFS;
 import org.jooq.lambda.fi.util.function.CheckedConsumer;
 import org.jooq.lambda.fi.util.function.CheckedFunction;
-import sakura.common.lang.EX;
+import sakura.common.lang.Lazy;
 import sakura.common.lang.Objects;
 import sakura.common.lang.annotation.Nullable;
 
@@ -34,15 +33,7 @@ import java.util.List;
 @UtilityClass
 public class VFSUtils {
 
-    public static final FileSystemManager FILE_SYSTEM_MANAGER;
-
-    static {
-        try {
-            FILE_SYSTEM_MANAGER = VFS.getManager();
-        } catch (FileSystemException e) {
-            throw EX.unchecked(e, "Init vfs fileSystemManager fail.");
-        }
-    }
+    private static final Lazy<FileSystemManager> FILE_SYSTEM_MANAGER = Lazy.of(VFS::getManager);
 
     public static FileObject getFile(URL url) {
         return getFile(url.toString());
@@ -50,7 +41,7 @@ public class VFSUtils {
 
     @SneakyThrows
     public static FileObject getFile(String filePath) {
-        return FILE_SYSTEM_MANAGER.resolveFile(filePath);
+        return FILE_SYSTEM_MANAGER.get().resolveFile(filePath);
     }
 
     @SneakyThrows

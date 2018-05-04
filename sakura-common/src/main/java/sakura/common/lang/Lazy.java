@@ -42,4 +42,5 @@ public final class Lazy<T> {
     public static <V> Lazy<V> of(@NonNull CheckedSupplier<V> supplier) {
         return new Lazy<>(supplier);
     }
+
 }

@@ -1,10 +1,10 @@
 package sakura.common.util;
 
-import jodd.cache.Cache;
 import lombok.experimental.UtilityClass;
 import lombok.extern.slf4j.Slf4j;
 import ognl.*;
-import sakura.common.lang.Caches;
+import sakura.common.cache.Cache;
+import sakura.common.cache.Caches;
 import sakura.common.lang.Objects;
 import sakura.common.lang.annotation.Nullable;
 

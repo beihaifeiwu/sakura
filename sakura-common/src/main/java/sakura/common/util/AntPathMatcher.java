@@ -1,8 +1,8 @@
 package sakura.common.util;
 
-import jodd.cache.Cache;
 import org.apache.commons.lang3.Validate;
-import sakura.common.lang.Caches;
+import sakura.common.cache.Cache;
+import sakura.common.cache.Caches;
 import sakura.common.lang.Strings;
 import sakura.common.lang.annotation.Nullable;
 

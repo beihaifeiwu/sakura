@@ -2,9 +2,11 @@ package sakura.common.lang;
 
 import com.google.common.primitives.Primitives;
 import lombok.Cleanup;
+import lombok.SneakyThrows;
 import lombok.experimental.UtilityClass;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
+import org.apache.commons.lang3.reflect.ConstructorUtils;
 import org.apache.commons.vfs2.AllFileSelector;
 import sakura.common.lang.annotation.Nullable;
 import sakura.common.util.AntPathMatcher;
@@ -63,6 +65,17 @@ public class CLS {
 
     public static boolean isPresent(String className, @Nullable ClassLoader classLoader) {
         return forName(className, classLoader) != null;
+    }
+
+    @SneakyThrows
+    public static <T> T newInstance(Class<T> type, @Nullable Object... args) {
+        T result;
+        if (Objects.isEmpty(args)) {
+            result = type.newInstance();
+        } else {
+            result = ConstructorUtils.invokeConstructor(type, args);
+        }
+        return result;
     }
 
     @Nullable

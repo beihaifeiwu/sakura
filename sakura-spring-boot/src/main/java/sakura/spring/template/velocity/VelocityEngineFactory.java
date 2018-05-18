@@ -161,7 +161,7 @@ public class VelocityEngineFactory {
      * <p>If this is enabled, VelocityEngineFactory will try to resolve the
      * specified "resourceLoaderPath" as file system resource (which will work
      * for expanded class path resources and ServletContext resources too).
-     * <p>Default is "true". Turn this off to always load via SpringResourceLoader
+     * <p>Default is "true". Turn this off to always getPlugin via SpringResourceLoader
      * (i.e. as stream, without hot detection of template changes), which might
      * be necessary if some of your templates reside in an expanded classes
      * directory while others reside in jar files.
@@ -241,7 +241,7 @@ public class VelocityEngineFactory {
      * <p>Called by {@code createVelocityEngine()}.
      *
      * @param velocityEngine     the VelocityEngine to configure
-     * @param resourceLoaderPath the path to load Velocity resources from
+     * @param resourceLoaderPath the path to getPlugin Velocity resources from
      * @see org.apache.velocity.runtime.resource.loader.FileResourceLoader
      * @see SpringResourceLoader
      * @see #initSpringResourceLoader
@@ -249,7 +249,7 @@ public class VelocityEngineFactory {
      */
     protected void initVelocityResourceLoader(VelocityEngine velocityEngine, String resourceLoaderPath) {
         if (isPreferFileSystemAccess()) {
-            // Try to load via the file system, fall back to SpringResourceLoader
+            // Try to getPlugin via the file system, fall back to SpringResourceLoader
             // (for hot detection of template changes, if possible).
             try {
                 StringBuilder resolvedPath = new StringBuilder();
@@ -278,7 +278,7 @@ public class VelocityEngineFactory {
                 initSpringResourceLoader(velocityEngine, resourceLoaderPath);
             }
         } else {
-            // Always load via SpringResourceLoader
+            // Always getPlugin via SpringResourceLoader
             // (without hot detection of template changes).
             if (logger.isDebugEnabled()) {
                 logger.debug("File system access not preferred: using SpringResourceLoader");
@@ -292,7 +292,7 @@ public class VelocityEngineFactory {
      * <p>Called by {@code initVelocityResourceLoader}.
      *
      * @param velocityEngine     the VelocityEngine to configure
-     * @param resourceLoaderPath the path to load Velocity resources from
+     * @param resourceLoaderPath the path to getPlugin Velocity resources from
      * @see SpringResourceLoader
      * @see #initVelocityResourceLoader
      */

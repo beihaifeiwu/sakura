@@ -71,7 +71,7 @@ public class VelocityConfigurer extends VelocityEngineFactory
 
     /**
      * Provides a ClasspathResourceLoader in addition to any default or user-defined
-     * loader in order to load the spring Velocity macros from the class path.
+     * loader in order to getPlugin the spring Velocity macros from the class path.
      *
      * @see org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader
      */

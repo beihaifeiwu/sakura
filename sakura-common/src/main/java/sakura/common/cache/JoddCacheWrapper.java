@@ -33,9 +33,14 @@ public class JoddCacheWrapper<K, V> implements Cache<K, V> {
     public V get(K key, Function<K, V> function) {
         V v = cache.get(key);
         if (v == null) {
-            v = function.apply(key);
-            if (v != null) {
-                cache.put(key, v);
+            synchronized (this) {
+                v = cache.get(key);
+                if (v == null) {
+                    v = function.apply(key);
+                    if (v != null) {
+                        cache.put(key, v);
+                    }
+                }
             }
         }
         return v;

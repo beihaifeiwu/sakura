@@ -13,7 +13,7 @@ import static org.junit.Assert.*;
 public class CLSTest {
 
     @Test
-    public void test() {
+    public void testGetResources() {
         val classLoader = CLS.getDefaultClassLoader();
         assertEquals(classLoader, CLS.class.getClassLoader());
 

@@ -117,7 +117,7 @@ public class JCacheFeatureTest extends SakuraSpringTest {
 
         @CacheResult(cacheName = "test")
         String loadByInput(@CacheKey String key, Object noBigDeal) {
-            System.out.println("Start load for " + key + " (" + noBigDeal + ")");
+            System.out.println("Start getPlugin for " + key + " (" + noBigDeal + ")");
             Uninterruptibles.sleepUninterruptibly(1100, TimeUnit.MILLISECONDS);
             return key;
         }

@@ -1,0 +1,3 @@
+cat=sakura.common.plugin.Animal$Cat
+dog=sakura.common.plugin.Animal$Dog
+bird=sakura.common.plugin.Animal$Bird

@@ -31,7 +31,7 @@ import java.util.concurrent.ScheduledFuture;
 @UtilityClass
 public class SpringContext {
 
-    /********************  lazy load constant properties  ***********************/
+    /********************  lazy getPlugin constant properties  ***********************/
 
     private static final Lazy<Boolean> IS_SSL_ENABLED = Lazy.of(() -> {
         Boolean isEnabled = SpringBeans.getBean(AbstractReactiveWebServerFactory.class)

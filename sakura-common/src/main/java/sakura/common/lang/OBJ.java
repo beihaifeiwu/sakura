@@ -12,7 +12,7 @@ import java.util.*;
  * Created by haomu on 2018/4/18.
  */
 @UtilityClass
-public class Objects {
+public class OBJ {
 
     public static boolean isEmpty(@Nullable Object o) {
         if (o == null) return true;
@@ -73,7 +73,7 @@ public class Objects {
     }
 
     public static boolean deepEquals(@Nullable Object a, @Nullable Object b) {
-        return java.util.Objects.deepEquals(a, b);
+        return Objects.deepEquals(a, b);
     }
 
     public static int hashCode(@Nullable Object o) {

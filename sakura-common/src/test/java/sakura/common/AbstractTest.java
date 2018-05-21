@@ -2,9 +2,10 @@ package sakura.common;
 
 import org.junit.AssumptionViolatedException;
 import org.junit.Rule;
+import org.junit.rules.ExpectedException;
 import org.junit.rules.Stopwatch;
 import org.junit.runner.Description;
-import sakura.common.lang.Time;
+import sakura.common.lang.TIME;
 
 /**
  * Created by haomu on 2018/5/18.
@@ -12,7 +13,10 @@ import sakura.common.lang.Time;
 public abstract class AbstractTest {
 
     @Rule
-    public Stopwatch stopwatch = new Stopwatch() {
+    public final ExpectedException exception = ExpectedException.none();
+
+    @Rule
+    public final Stopwatch stopwatch = new Stopwatch() {
         @Override
         protected void succeeded(long nanos, Description description) {
             logInfo(description, "succeeded", nanos);
@@ -31,7 +35,7 @@ public abstract class AbstractTest {
 
     private static void logInfo(Description description, String status, long nanos) {
         String testName = description.getMethodName();
-        System.out.println(String.format("Test %s %s, spent %s", testName, status, Time.humanReadable(nanos)));
+        System.out.println(String.format("Test %s %s, spent %s", testName, status, TIME.humanReadable(nanos)));
     }
 
 }

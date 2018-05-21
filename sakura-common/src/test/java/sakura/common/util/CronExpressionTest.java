@@ -1,6 +1,7 @@
 package sakura.common.util;
 
 import org.junit.Test;
+import sakura.common.AbstractTest;
 
 import java.util.Calendar;
 
@@ -10,7 +11,7 @@ import static org.junit.Assert.assertTrue;
 /**
  * Created by haomu on 2018/4/23.
  */
-public class CronExpressionTest {
+public class CronExpressionTest extends AbstractTest {
 
     @Test
     public void testIsSatisfiedBy() throws Exception {

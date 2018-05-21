@@ -3,7 +3,7 @@ package sakura.common.util;
 import org.apache.commons.lang3.Validate;
 import sakura.common.cache.Cache;
 import sakura.common.cache.Caches;
-import sakura.common.lang.Strings;
+import sakura.common.lang.STR;
 import sakura.common.lang.annotation.Nullable;
 
 import java.util.*;
@@ -64,7 +64,6 @@ public class AntPathMatcher {
 
     private boolean caseSensitive = true;
     private boolean trimTokens = false;
-    private volatile Boolean cachePatterns;
 
     private final Cache<String, String[]> tokenizedPatternCache = Caches.newLRUCache(256);
     final Cache<String, AntPathStringMatcher> stringMatcherCache = Caches.newLRUCache(256);
@@ -113,30 +112,6 @@ public class AntPathMatcher {
     public void setTrimTokens(boolean trimTokens) {
         this.trimTokens = trimTokens;
     }
-
-    /**
-     * Specify whether to cache parsed pattern metadata for patterns passed
-     * into this matcher's {@link #match} method. A value of {@code true}
-     * activates an unlimited pattern cache; a value of {@code false} turns
-     * the pattern cache off completely.
-     * <p>Default is for the cache to be on, but with the variant to automatically
-     * turn it off when encountering too many patterns to cache at runtime
-     * (the threshold is 65536), assuming that arbitrary permutations of patterns
-     * are coming in, with little chance for encountering a recurring pattern.
-     *
-     * @see #getStringMatcher(String)
-     * @since 4.0.1
-     */
-    public void setCachePatterns(boolean cachePatterns) {
-        this.cachePatterns = cachePatterns;
-    }
-
-    private void deactivatePatternCache() {
-        this.cachePatterns = false;
-        this.tokenizedPatternCache.clear();
-        this.stringMatcherCache.clear();
-    }
-
 
     public boolean isPattern(String path) {
         return (path.indexOf('*') != -1 || path.indexOf('?') != -1);
@@ -346,23 +321,16 @@ public class AntPathMatcher {
 
     /**
      * Tokenize the given path pattern into parts, based on this matcher's settings.
-     * <p>Performs caching based on {@link #setCachePatterns}, delegating to
-     * {@link #tokenizePath(String)} for the actual tokenization algorithm.
+     * <p>Delegating to {@link #tokenizePath(String)} for the actual tokenization algorithm.
      *
      * @param pattern the pattern to tokenize
      * @return the tokenized pattern parts
      */
     protected String[] tokenizePattern(String pattern) {
-        String[] tokenized = null;
-        Boolean cachePatterns = this.cachePatterns;
-        if (cachePatterns == null || cachePatterns) {
-            tokenized = this.tokenizedPatternCache.get(pattern);
-        }
+        String[] tokenized = this.tokenizedPatternCache.get(pattern);
         if (tokenized == null) {
             tokenized = tokenizePath(pattern);
-            if (cachePatterns == null || cachePatterns) {
-                this.tokenizedPatternCache.put(pattern, tokenized);
-            }
+            this.tokenizedPatternCache.put(pattern, tokenized);
         }
         return tokenized;
     }
@@ -374,7 +342,7 @@ public class AntPathMatcher {
      * @return the tokenized path parts
      */
     protected String[] tokenizePath(String path) {
-        return Strings.tokenize(path, this.pathSeparator, this.trimTokens, true);
+        return STR.tokenize(path, this.pathSeparator, this.trimTokens, true);
     }
 
     /**
@@ -391,8 +359,7 @@ public class AntPathMatcher {
     /**
      * Build or retrieve an {@link AntPathStringMatcher} for the given pattern.
      * <p>The default implementation checks this AntPathMatcher's internal cache
-     * (see {@link #setCachePatterns}), creating a new AntPathStringMatcher instance
-     * if no cached copy is found.
+     * , creating a new AntPathStringMatcher instance if no cached copy is found.
      * <p>When encountering too many patterns to cache at runtime (the threshold is 65536),
      * it turns the default cache off, assuming that arbitrary permutations of patterns
      * are coming in, with little chance for encountering a recurring pattern.
@@ -400,19 +367,12 @@ public class AntPathMatcher {
      *
      * @param pattern the pattern to match against (never {@code null})
      * @return a corresponding AntPathStringMatcher (never {@code null})
-     * @see #setCachePatterns
      */
     protected AntPathStringMatcher getStringMatcher(String pattern) {
-        AntPathStringMatcher matcher = null;
-        Boolean cachePatterns = this.cachePatterns;
-        if (cachePatterns == null || cachePatterns) {
-            matcher = this.stringMatcherCache.get(pattern);
-        }
+        AntPathStringMatcher matcher = this.stringMatcherCache.get(pattern);
         if (matcher == null) {
             matcher = new AntPathStringMatcher(pattern, this.caseSensitive);
-            if (cachePatterns == null || cachePatterns) {
-                this.stringMatcherCache.put(pattern, matcher);
-            }
+            this.stringMatcherCache.put(pattern, matcher);
         }
         return matcher;
     }
@@ -431,8 +391,8 @@ public class AntPathMatcher {
      * does <strong>not</strong> enforce this.
      */
     public String extractPathWithinPattern(String pattern, String path) {
-        String[] patternParts = Strings.tokenize(pattern, this.pathSeparator, this.trimTokens, true);
-        String[] pathParts = Strings.tokenize(path, this.pathSeparator, this.trimTokens, true);
+        String[] patternParts = STR.tokenize(pattern, this.pathSeparator, this.trimTokens, true);
+        String[] pathParts = STR.tokenize(path, this.pathSeparator, this.trimTokens, true);
         StringBuilder builder = new StringBuilder();
         boolean pathStarted = false;
 
@@ -491,13 +451,13 @@ public class AntPathMatcher {
      * @throws IllegalArgumentException if the two patterns cannot be combined
      */
     public String combine(String pattern1, String pattern2) {
-        if (Strings.isBlank(pattern1) && Strings.isBlank(pattern2)) {
+        if (STR.isBlank(pattern1) && STR.isBlank(pattern2)) {
             return "";
         }
-        if (Strings.isBlank(pattern1)) {
+        if (STR.isBlank(pattern1)) {
             return pattern2;
         }
-        if (Strings.isBlank(pattern2)) {
+        if (STR.isBlank(pattern2)) {
             return pattern1;
         }
 

@@ -13,7 +13,7 @@ import org.apache.commons.vfs2.VFS;
 import org.jooq.lambda.fi.util.function.CheckedConsumer;
 import org.jooq.lambda.fi.util.function.CheckedFunction;
 import sakura.common.lang.Lazy;
-import sakura.common.lang.Objects;
+import sakura.common.lang.OBJ;
 import sakura.common.lang.annotation.Nullable;
 
 import java.io.InputStream;
@@ -103,12 +103,12 @@ public class VFSUtils {
     }
 
     public static void writeStringToFile(String filePath, CharSequence data, @Nullable Charset encoding) {
-        if (Objects.isEmpty(data)) return;
+        if (OBJ.isEmpty(data)) return;
         write(filePath, out -> IOUtils.write(data, out, encoding));
     }
 
     public static void writeStringToFile(String filePath, CharSequence data) {
-        if (Objects.isEmpty(data)) return;
+        if (OBJ.isEmpty(data)) return;
         write(filePath, out -> IOUtils.write(data, out, StandardCharsets.UTF_8));
     }
 
@@ -121,7 +121,7 @@ public class VFSUtils {
     }
 
     public static void writeByteArrayToFile(String filePath, byte[] data) {
-        if (Objects.isEmpty(data)) return;
+        if (OBJ.isEmpty(data)) return;
         write(filePath, out -> IOUtils.write(data, out));
     }
 

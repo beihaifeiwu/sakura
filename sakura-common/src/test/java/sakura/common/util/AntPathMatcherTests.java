@@ -1,8 +1,7 @@
 package sakura.common.util;
 
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
+import sakura.common.AbstractTest;
 
 import java.util.*;
 
@@ -14,13 +13,9 @@ import static org.junit.Assert.*;
  * <p>
  * Copy from Spring Project
  */
-public class AntPathMatcherTests {
+public class AntPathMatcherTests extends AbstractTest {
 
     private final AntPathMatcher pathMatcher = new AntPathMatcher();
-
-    @Rule
-    public final ExpectedException exception = ExpectedException.none();
-
 
     @Test
     public void match() {
@@ -585,33 +580,7 @@ public class AntPathMatcherTests {
     }
 
     @Test
-    public void defaultCacheSetting() {
-        match();
-        assertTrue(pathMatcher.stringMatcherCache.size() > 20);
-
-        for (int i = 0; i < 65536; i++) {
-            pathMatcher.match("test" + i, "test");
-        }
-        // Cache turned off because it went beyond the threshold
-        assertTrue(pathMatcher.stringMatcherCache.isEmpty());
-    }
-
-    @Test
-    public void cachePatternsSetToTrue() {
-        pathMatcher.setCachePatterns(true);
-        match();
-        assertTrue(pathMatcher.stringMatcherCache.size() > 20);
-
-        for (int i = 0; i < 65536; i++) {
-            pathMatcher.match("test" + i, "test" + i);
-        }
-        // Cache keeps being alive due to the explicit cache setting
-        assertTrue(pathMatcher.stringMatcherCache.size() > 65536);
-    }
-
-    @Test
     public void preventCreatingStringMatchersIfPathDoesNotStartsWithPatternPrefix() {
-        pathMatcher.setCachePatterns(true);
         assertEquals(0, pathMatcher.stringMatcherCache.size());
 
         pathMatcher.match("test?", "test");
@@ -626,7 +595,6 @@ public class AntPathMatcherTests {
 
     @Test
     public void creatingStringMatchersIfPatternPrefixCannotDetermineIfPathMatch() {
-        pathMatcher.setCachePatterns(true);
         assertEquals(0, pathMatcher.stringMatcherCache.size());
 
         pathMatcher.match("test", "testian");
@@ -639,13 +607,6 @@ public class AntPathMatcherTests {
         pathMatcher.match("/*/dir/{name}.jpg", "/*/dir/lorem.jpg");
 
         assertEquals(7, pathMatcher.stringMatcherCache.size());
-    }
-
-    @Test
-    public void cachePatternsSetToFalse() {
-        pathMatcher.setCachePatterns(false);
-        match();
-        assertTrue(pathMatcher.stringMatcherCache.isEmpty());
     }
 
     @Test

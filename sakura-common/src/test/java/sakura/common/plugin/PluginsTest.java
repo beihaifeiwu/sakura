@@ -39,7 +39,10 @@ public class PluginsTest extends AbstractTest {
         assertNotNull(plugins);
         assertEquals(plugins.size(), 5);
         assertThat(plugins.get(0), instanceOf(Animal.Dog.class));
-        assertThat(plugins.get(plugins.size() - 1), instanceOf(Animal.Bird.class));
+        assertThat(plugins.get(1), instanceOf(Animal.Cat.class));
+        assertThat(plugins.get(2), instanceOf(AnimalFactory.Tiger.class));
+        assertThat(plugins.get(3), instanceOf(AnimalFactory.Lion.class));
+        assertThat(plugins.get(4), instanceOf(Animal.Bird.class));
 
         List<AutoCloseable> closeables = Plugins.getPlugins(AutoCloseable.class, false);
         assertNotNull(closeables);

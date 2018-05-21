@@ -2,6 +2,7 @@ package sakura.common.caches;
 
 import lombok.val;
 import org.junit.Test;
+import sakura.common.AbstractTest;
 import sakura.common.cache.Caches;
 import sakura.common.lang.Threads;
 
@@ -12,7 +13,7 @@ import static org.junit.Assert.*;
 /**
  * Created by haomu on 2018/5/11.
  */
-public class JoddCacheTest {
+public class JoddCacheTest extends AbstractTest {
 
     @Test
     public void testFIFOCache() {

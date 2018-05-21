@@ -13,7 +13,7 @@ import java.util.function.*;
  * Created by haomu on 2018/4/19.
  */
 @UtilityClass
-public class Functions {
+public class FUNC {
     
     public static Runnable unchecked(CheckedRunnable runnable) {
         return Unchecked.runnable(runnable, EX::rethrow);

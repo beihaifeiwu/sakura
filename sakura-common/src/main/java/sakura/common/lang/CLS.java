@@ -70,7 +70,7 @@ public class CLS {
     @SneakyThrows
     public static <T> T newInstance(Class<T> type, @Nullable Object... args) {
         T result;
-        if (Objects.isEmpty(args)) {
+        if (OBJ.isEmpty(args)) {
             result = type.newInstance();
         } else {
             result = ConstructorUtils.invokeConstructor(type, args);

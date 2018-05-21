@@ -1,7 +1,7 @@
 package sakura.common.lang.iterator;
 
 import com.google.common.collect.AbstractIterator;
-import sakura.common.lang.Objects;
+import sakura.common.lang.OBJ;
 import sakura.common.lang.annotation.Nullable;
 
 import java.util.ArrayList;
@@ -22,7 +22,7 @@ public abstract class AbstractBatchIterator<T> extends AbstractIterator<T> {
         if (iterator == null || !iterator.hasNext()) {
             Collection<T> data = computeNextBatch();
 
-            while (END_MARKER != data && Objects.isEmpty(data)) {
+            while (END_MARKER != data && OBJ.isEmpty(data)) {
                 data = computeNextBatch();
             }
 

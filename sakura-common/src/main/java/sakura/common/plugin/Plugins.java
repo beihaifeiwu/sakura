@@ -1,7 +1,7 @@
 package sakura.common.plugin;
 
 import lombok.val;
-import sakura.common.lang.Objects;
+import sakura.common.lang.OBJ;
 import sakura.common.lang.annotation.Nullable;
 import sakura.common.plugin.factory.PluginFactoryWrapper;
 
@@ -31,7 +31,7 @@ public class Plugins {
     }
 
     public static <T> void sort(List<T> plugins) {
-        if (Objects.isNotEmpty(plugins)) {
+        if (OBJ.isNotEmpty(plugins)) {
             plugins.sort(COMPARATOR);
         }
     }

@@ -16,11 +16,15 @@ import static org.junit.Assert.*;
 public class SpiPluginLoaderTest extends AbstractTest {
 
     @Test
-    public void testGetPlugins() {
+    public void testGetName() {
         SpiPluginLoader<Animal> loader = new SpiPluginLoader<>(Animal.class);
         List<String> names = loader.getSupportedPlugins();
         assertThat(names, hasItems("cat", "bird", "dog"));
+    }
 
+    @Test
+    public void testGetPlugin() {
+        SpiPluginLoader<Animal> loader = new SpiPluginLoader<>(Animal.class);
         Animal cat = loader.getPlugin("cat");
         assertNotNull(cat);
         assertThat(cat, instanceOf(Animal.Cat.class));

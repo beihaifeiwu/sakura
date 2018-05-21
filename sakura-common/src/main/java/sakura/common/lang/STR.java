@@ -12,7 +12,7 @@ import java.util.StringTokenizer;
  * Created by haomu on 2018/4/17.
  */
 @UtilityClass
-public class Strings {
+public class STR {
 
     public static boolean isBlank(@Nullable CharSequence cs) {
         return StringUtils.isBlank(cs);

@@ -2,6 +2,11 @@ package sakura.spring.test;
 
 import lombok.val;
 import org.apache.commons.lang3.StringUtils;
+import org.junit.AssumptionViolatedException;
+import org.junit.Rule;
+import org.junit.rules.ExpectedException;
+import org.junit.rules.Stopwatch;
+import org.junit.runner.Description;
 import org.junit.runner.RunWith;
 import org.junit.runners.model.InitializationError;
 import org.springframework.beans.factory.support.BeanDefinitionRegistry;
@@ -15,6 +20,7 @@ import org.springframework.core.type.AnnotationMetadata;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.util.ClassUtils;
+import sakura.common.lang.TIME;
 import sakura.spring.core.AbstractBeanRegistrar;
 
 import java.util.HashSet;
@@ -28,6 +34,32 @@ import java.util.Set;
 @ContextConfiguration(classes = SakuraSpringTest.TestConfiguration.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
 public abstract class SakuraSpringTest {
+
+    @Rule
+    public final ExpectedException exception = ExpectedException.none();
+
+    @Rule
+    public final Stopwatch stopwatch = new Stopwatch() {
+        @Override
+        protected void succeeded(long nanos, Description description) {
+            logInfo(description, "succeeded", nanos);
+        }
+
+        @Override
+        protected void failed(long nanos, Throwable e, Description description) {
+            logInfo(description, "failed", nanos);
+        }
+
+        @Override
+        protected void skipped(long nanos, AssumptionViolatedException e, Description description) {
+            logInfo(description, "skipped", nanos);
+        }
+    };
+
+    private static void logInfo(Description description, String status, long nanos) {
+        String testName = description.getMethodName();
+        System.out.println(String.format("Test %s %s, spent %s", testName, status, TIME.humanReadable(nanos)));
+    }
 
     private static Class<?> testClass;
 

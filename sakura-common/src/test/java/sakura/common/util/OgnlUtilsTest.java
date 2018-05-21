@@ -3,6 +3,7 @@ package sakura.common.util;
 import lombok.Data;
 import org.junit.Before;
 import org.junit.Test;
+import sakura.common.AbstractTest;
 
 import java.util.Collections;
 import java.util.Vector;
@@ -14,7 +15,7 @@ import static sakura.common.util.OgnlUtils.*;
  * Created by haomu on 2018/4/20.
  */
 @SuppressWarnings("unchecked")
-public class OgnlUtilsTest {
+public class OgnlUtilsTest extends AbstractTest {
 
     private Root root;
 

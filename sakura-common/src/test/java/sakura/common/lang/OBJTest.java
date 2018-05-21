@@ -3,17 +3,18 @@ package sakura.common.lang;
 import com.google.common.collect.Iterators;
 import lombok.val;
 import org.junit.Test;
+import sakura.common.AbstractTest;
 
 import java.util.*;
 
 import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.junit.Assert.*;
-import static sakura.common.lang.Objects.*;
+import static sakura.common.lang.OBJ.*;
 
 /**
  * Created by haomu on 2018/5/2.
  */
-public class ObjectsTest {
+public class OBJTest extends AbstractTest {
 
     @Test
     public void testIsEmpty() {

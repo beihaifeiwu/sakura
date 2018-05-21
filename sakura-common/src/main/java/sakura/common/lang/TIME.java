@@ -13,7 +13,7 @@ import static java.util.concurrent.TimeUnit.*;
  * Created by haomu on 2018/4/12.
  */
 @UtilityClass
-public class Time {
+public class TIME {
 
     public static int dayOfYear() {
         return LocalDate.now().getDayOfYear();

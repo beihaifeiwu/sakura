@@ -6,6 +6,7 @@ import lombok.SneakyThrows;
 import lombok.experimental.UtilityClass;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
+import org.apache.commons.lang3.ClassUtils;
 import org.apache.commons.lang3.reflect.ConstructorUtils;
 import org.apache.commons.vfs2.AllFileSelector;
 import sakura.common.lang.annotation.Nullable;
@@ -16,6 +17,7 @@ import sakura.common.util.VFSUtils;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -36,6 +38,9 @@ public class CLS {
         WRAPPER.setDefaultClassLoader(defaultClassLoader);
     }
 
+    // Primitive
+    // ----------------------------------------------------------------------
+
     public static boolean isPrimitiveWrapper(Class<?> type) {
         return Primitives.isWrapperType(type);
     }
@@ -44,6 +49,9 @@ public class CLS {
         if (type == null) return false;
         return type.isPrimitive() || isPrimitiveWrapper(type);
     }
+
+    // Name
+    // ----------------------------------------------------------------------
 
     @Nullable
     public static Class<?> forName(String className) {
@@ -67,6 +75,9 @@ public class CLS {
         return forName(className, classLoader) != null;
     }
 
+    // Instance
+    // ----------------------------------------------------------------------
+
     @SneakyThrows
     public static <T> T newInstance(Class<T> type, @Nullable Object... args) {
         T result;
@@ -77,6 +88,50 @@ public class CLS {
         }
         return result;
     }
+
+    // Assignable
+    // ----------------------------------------------------------------------
+
+    public static boolean isAssignable(@Nullable Class<?> cls, @Nullable Class<?> toClass) {
+        return ClassUtils.isAssignable(cls, toClass);
+    }
+
+    public static boolean isAssignable(@Nullable Class<?> cls, @Nullable Class<?> toClass, final boolean autoboxing) {
+        return ClassUtils.isAssignable(cls, toClass, autoboxing);
+    }
+
+    // Superclasses/Superinterfaces
+    // ----------------------------------------------------------------------
+
+    @Nullable
+    public static List<Class<?>> getAllSuperclasses(@Nullable Class<?> cls) {
+        return ClassUtils.getAllSuperclasses(cls);
+    }
+
+    @Nullable
+    public static List<Class<?>> getAllInterfaces(@Nullable Class<?> cls) {
+        return ClassUtils.getAllInterfaces(cls);
+    }
+
+    public static Iterable<Class<?>> hierarchy(Class<?> type) {
+        return hierarchy(type, false);
+    }
+
+    /**
+     * Get an {@link Iterable} that can iterate over a class hierarchy in ascending (subclass to superclass) order.
+     *
+     * @param type the type to get the class hierarchy from
+     * @param includeInterfaces flag indicating whether to include or exclude interfaces
+     * @return Iterable an Iterable over the class hierarchy of the given class
+     */
+    public static Iterable<Class<?>> hierarchy(Class<?> type, final boolean includeInterfaces) {
+        ClassUtils.Interfaces interfaces = includeInterfaces
+                ? ClassUtils.Interfaces.INCLUDE : ClassUtils.Interfaces.EXCLUDE;
+        return ClassUtils.hierarchy(type, interfaces);
+    }
+
+    // Resource
+    // ----------------------------------------------------------------------
 
     @Nullable
     public static URL getResourceAsURL(String resource) {

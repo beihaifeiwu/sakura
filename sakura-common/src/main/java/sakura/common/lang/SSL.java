@@ -4,6 +4,7 @@ import lombok.Data;
 import lombok.experimental.UtilityClass;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.IOUtils;
+import sakura.common.lang.annotation.Nullable;
 
 import javax.net.ssl.*;
 import java.io.InputStream;
@@ -43,7 +44,8 @@ public class SSL {
         }
     }
 
-    private static TrustManager[] loadTrustManager(InputStream... certificates) {
+    @Nullable
+    private static TrustManager[] loadTrustManager(@Nullable InputStream... certificates) {
         if (certificates == null || certificates.length <= 0) return null;
         try {
             CertificateFactory certificateFactory = CertificateFactory.getInstance("X.509");
@@ -65,7 +67,8 @@ public class SSL {
 
     }
 
-    private static KeyManager[] loadKeyManager(InputStream bksFile, String password) {
+    @Nullable
+    private static KeyManager[] loadKeyManager(@Nullable InputStream bksFile, @Nullable String password) {
         if (bksFile == null || password == null) return null;
         try {
             KeyStore clientKeyStore = KeyStore.getInstance("BKS");
@@ -79,6 +82,7 @@ public class SSL {
         return null;
     }
 
+    @Nullable
     private static X509TrustManager chooseTrustManager(TrustManager[] trustManagers) {
         for (TrustManager trustManager : trustManagers) {
             if (trustManager instanceof X509TrustManager) {
@@ -120,7 +124,7 @@ public class SSL {
         private X509TrustManager defaultTrustManager;
         private X509TrustManager localTrustManager;
 
-        public DefaultTrustManager(X509TrustManager localTrustManager) throws NoSuchAlgorithmException, KeyStoreException {
+        public DefaultTrustManager(@Nullable X509TrustManager localTrustManager) throws NoSuchAlgorithmException, KeyStoreException {
             TrustManagerFactory factory = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm());
             factory.init((KeyStore) null);
             defaultTrustManager = chooseTrustManager(factory.getTrustManagers());

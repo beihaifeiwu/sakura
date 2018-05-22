@@ -4,15 +4,17 @@ import lombok.NonNull;
 import lombok.SneakyThrows;
 import org.jooq.lambda.fi.util.function.CheckedSupplier;
 
+import java.io.Serializable;
+
 /**
  * Created by liupin on 2017/6/9.
  */
 public final class Lazy<T> {
 
-    private static final Object NO_INIT = new Object();
+    private static final NotInit NOT_INIT = new NotInit();
 
     @SuppressWarnings("unchecked")
-    private volatile T object = (T) NO_INIT;
+    private volatile T object = (T) NOT_INIT;
 
     private final CheckedSupplier<T> supplier;
 
@@ -26,10 +28,10 @@ public final class Lazy<T> {
         // volatile field
         T result = object;
 
-        if (result == NO_INIT) {
+        if (result == NOT_INIT) {
             synchronized (this) {
                 result = object;
-                if (result == NO_INIT) {
+                if (result == NOT_INIT) {
                     result = supplier.get();
                     object = result;
                 }
@@ -41,6 +43,19 @@ public final class Lazy<T> {
 
     public static <V> Lazy<V> of(@NonNull CheckedSupplier<V> supplier) {
         return new Lazy<>(supplier);
+    }
+
+    private static class NotInit implements Serializable {
+
+        private static final long serialVersionUID = 7092611880189329093L;
+
+        private NotInit() {
+            super();
+        }
+
+        private Object readResolve() {
+            return NOT_INIT;
+        }
     }
 
 }

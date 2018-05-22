@@ -3,6 +3,7 @@ package sakura.common.lang;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Iterators;
 import lombok.experimental.UtilityClass;
+import org.apache.commons.lang3.ObjectUtils;
 import sakura.common.lang.annotation.Nullable;
 
 import java.lang.reflect.Array;
@@ -14,7 +15,7 @@ import java.util.*;
 @UtilityClass
 public class OBJ {
 
-    public static boolean isEmpty(@Nullable Object o) {
+    public static boolean isEmpty(@Nullable final Object o) {
         if (o == null) return true;
         if (o instanceof CharSequence) return ((CharSequence) o).length() == 0;
         if (o.getClass().isArray()) return Array.getLength(o) == 0;
@@ -25,11 +26,11 @@ public class OBJ {
         return false;
     }
 
-    public static boolean isNotEmpty(@Nullable Object o) {
+    public static boolean isNotEmpty(@Nullable final Object o) {
         return !isEmpty(o);
     }
 
-    public static Object[] toArray(@Nullable Object o) {
+    public static Object[] toArray(@Nullable final Object o) {
         if (o == null) return new Object[0];
         if (o instanceof Object[]) return (Object[]) o;
         if (o instanceof Collection) return ((Collection) o).toArray();
@@ -49,7 +50,7 @@ public class OBJ {
         return new Object[]{o};
     }
 
-    public static Iterable<?> toIterable(@Nullable Object o) {
+    public static Iterable<?> toIterable(@Nullable final Object o) {
         if (o == null) return Collections.emptyList();
         if (o instanceof Iterable) return (Iterable<?>) o;
         if (o instanceof Map) return ((Map) o).entrySet();
@@ -66,6 +67,52 @@ public class OBJ {
             return answer;
         }
         return Collections.singleton(o);
+    }
+
+    @Nullable
+    @SafeVarargs
+    public static <T> T firstNonNull(@Nullable final T... values) {
+        return ObjectUtils.firstNonNull(values);
+    }
+
+    @Nullable
+    @SafeVarargs
+    public static <T extends Comparable<? super T>> T min(@Nullable final T... values) {
+        return ObjectUtils.min(values);
+    }
+
+    @Nullable
+    @SafeVarargs
+    public static <T extends Comparable<? super T>> T max(@Nullable final T... values) {
+        return ObjectUtils.max(values);
+    }
+
+    @SafeVarargs
+    public static <T extends Comparable<? super T>> T median(final T... items) {
+        return ObjectUtils.median(items);
+    }
+
+    @SafeVarargs
+    public static <T> T median(final Comparator<T> comparator, final T... items) {
+        return ObjectUtils.median(comparator, items);
+    }
+
+    /**
+     * Find the most frequently occurring item.
+     *
+     * @param <T> type of values processed by this method
+     * @param items to check
+     * @return most populous T, {@code null} if non-unique or no items supplied
+     */
+    @Nullable
+    @SafeVarargs
+    public static <T> T mode(@Nullable final T... items) {
+        return ObjectUtils.mode(items);
+    }
+
+    @Nullable
+    public static String identityToString(@Nullable Object object) {
+        return ObjectUtils.identityToString(object);
     }
 
     public static boolean equals(@Nullable Object a, @Nullable Object b) {

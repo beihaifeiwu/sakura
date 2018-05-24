@@ -59,6 +59,12 @@
             <artifactId>jool-java-8</artifactId>
         </dependency>
 
+        <!-- classmate -->
+        <dependency>
+            <groupId>com.fasterxml</groupId>
+            <artifactId>classmate</artifactId>
+        </dependency>
+
         <!-- jackson -->
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>

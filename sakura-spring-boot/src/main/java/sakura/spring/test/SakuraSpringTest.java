@@ -1,5 +1,6 @@
 package sakura.spring.test;
 
+import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.AssumptionViolatedException;
@@ -17,6 +18,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.core.annotation.AnnotationAttributes;
 import org.springframework.core.type.AnnotationMetadata;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.util.ClassUtils;
@@ -30,8 +32,10 @@ import java.util.Set;
 /**
  * Created by haomu on 2018/4/13.
  */
+@Slf4j
 @RunWith(SakuraSpringTest.TestRunner.class)
 @ContextConfiguration(classes = SakuraSpringTest.TestConfiguration.class)
+@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_CLASS)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
 public abstract class SakuraSpringTest {
 
@@ -58,7 +62,7 @@ public abstract class SakuraSpringTest {
 
     private static void logInfo(Description description, String status, long nanos) {
         String testName = description.getMethodName();
-        System.out.println(String.format("Test %s %s, spent %s", testName, status, TIME.humanReadable(nanos)));
+        log.info("Test {} {}, spent {}", testName, status, TIME.humanReadable(nanos));
     }
 
     private static Class<?> testClass;

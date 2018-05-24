@@ -14,8 +14,8 @@
     <name>Sakura :: Dependencies</name>
 
     <properties>
-        <bouncycastle.version>1.57</bouncycastle.version>
-        <camel.version>2.21.0</camel.version>
+        <bouncycastle.version>1.59</bouncycastle.version>
+        <camel.version>2.21.1</camel.version>
         <commons-collections4.version>4.1</commons-collections4.version>
         <commons-compress.version>1.15</commons-compress.version>
         <commons-csv.version>1.4</commons-csv.version>
@@ -32,7 +32,7 @@
         <disruptor.version>3.4.2</disruptor.version>
         <findbugs.version>3.0.2</findbugs.version>
         <geojson-jackson.version>1.8</geojson-jackson.version>
-        <guava.version>25.0-jre</guava.version>
+        <guava.version>25.1-jre</guava.version>
         <jackson-datatype-jts.version>2.4</jackson-datatype-jts.version>
         <jansi.version>1.16</jansi.version>
         <javassist.version>3.22.0-GA</javassist.version>
@@ -51,7 +51,7 @@
         <sparkjava.version>2.7.2</sparkjava.version>
         <unbescape.version>1.1.6.RELEASE</unbescape.version>
         <velocity.version>2.0</velocity.version>
-        <zookeeper.version>3.4.10</zookeeper.version>
+        <zookeeper.version>3.4.12</zookeeper.version>
     </properties>
 
     <dependencyManagement>

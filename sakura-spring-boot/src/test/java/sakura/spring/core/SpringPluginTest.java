@@ -30,12 +30,12 @@ public class SpringPluginTest extends SakuraSpringTest {
 
     @Test
     public void testPlugin() {
-        TestPlugin test = Plugins.getPlugin(TestPlugin.class, "test");
+        TestPlugin test = Plugins.getPlugin(TestPlugin.class, "test_plugin");
         assertNotNull(test);
-        assertEquals(SpringBeans.getBean("test").orElse(null), test);
+        assertEquals(SpringBeans.getBean("test_plugin").orElse(null), test);
     }
 
-    @TestBean("test")
+    @TestBean("test_plugin")
     public static class TestPlugin {
 
     }

@@ -1,12 +1,16 @@
 package sakura.common.lang;
 
+import com.google.common.util.concurrent.MoreExecutors;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import com.google.common.util.concurrent.Uninterruptibles;
 import lombok.experimental.UtilityClass;
 import lombok.extern.slf4j.Slf4j;
+import lombok.val;
+import org.apache.commons.lang3.ThreadUtils;
 import sakura.common.lang.annotation.Nullable;
 
 import java.time.Duration;
+import java.util.Collection;
 import java.util.concurrent.*;
 
 /**
@@ -22,73 +26,78 @@ public class Threads {
         return AVAILABLE_PROCESSORS;
     }
 
-    public static ThreadFactory newThreadFactory(String name) {
-        ThreadFactoryBuilder builder = new ThreadFactoryBuilder();
+    public static String currentName() {
+        return Thread.currentThread().getName();
+    }
+
+    // ThreadFactory/ThreadPool
+    // ----------------------------------------------------------------------
+
+    public static ThreadFactory newFactory(String name) {
+        val builder = new ThreadFactoryBuilder();
         builder.setDaemon(true);
         builder.setUncaughtExceptionHandler((t, e) -> log.error("Caught an Exception in {}", t, e));
         builder.setNameFormat(name + "-%d");
         return builder.build();
     }
 
+    public static ExecutorService newDirect() {
+        return MoreExecutors.newDirectExecutorService();
+    }
+
     public static ExecutorService newSingle(String name) {
-        ThreadFactory factory = newThreadFactory(name);
+        val factory = newFactory(name);
         return Executors.newSingleThreadExecutor(factory);
     }
 
-    public static ExecutorService newCached(String name) {
-        return newExecutor(-1, name);
+    public static ExecutorService newElastic(String name, int max) {
+        val factory = newFactory(name);
+        val size = max < 0 ? Integer.MAX_VALUE : max;
+        val queue = new SynchronousQueue<Runnable>();
+        val handler = new ThreadPoolExecutor.CallerRunsPolicy();
+        return new ThreadPoolExecutor(0, size, 60L, TimeUnit.SECONDS, queue, factory, handler);
     }
 
-    public static ExecutorService newExecutor(String name) {
-        return newExecutor(1, name);
+    public static ExecutorService newParallel(String name, int parallelism) {
+        val size = Math.max(parallelism, 2);
+        val queueSize = Math.max(16, 2 * size);
+        val factory = newFactory(name);
+        val queue = new LinkedBlockingDeque<Runnable>(queueSize);
+        val handler = new ThreadPoolExecutor.AbortPolicy();
+        return new ThreadPoolExecutor(size, size, 0L, TimeUnit.MILLISECONDS, queue, factory, handler);
     }
 
-    public static ExecutorService newExecutor(int times, String name) {
-        ThreadFactory factory = newThreadFactory(name);
-        if (times < 0) {
-            return Executors.newCachedThreadPool(factory);
-        }
-        times = Math.max(1, times);
-        return Executors.newFixedThreadPool(processors() * times, factory);
+    public static ScheduledExecutorService newScheduled(String name, int min) {
+        val factory = newFactory(name);
+        val core = Math.max(1, min);
+        return Executors.newScheduledThreadPool(core, factory);
     }
 
-    public static ScheduledExecutorService newScheduler(String name) {
-        return newScheduler(1, name);
-    }
+    // Shutdown
+    // ----------------------------------------------------------------------
 
-    public static ScheduledExecutorService newScheduler(int times, String name) {
-        ThreadFactory factory = newThreadFactory(name);
-        times = Math.max(1, times);
-        return Executors.newScheduledThreadPool(processors() * times, factory);
+    public static void shutdown(ExecutorService service, long timeout, TimeUnit unit) {
+        MoreExecutors.shutdownAndAwaitTermination(service, timeout, unit);
     }
 
     public static void shutdown(@Nullable ExecutorService... executors) {
-        if (executors == null || executors.length <= 0) {
-            return;
+        if (OBJ.isEmpty(executors)) return;
+
+        for (ExecutorService executor : executors) {
+            if (executor == null) continue;
+            if (executor.isTerminated()) continue;
+            executor.shutdown();
         }
 
         for (ExecutorService executor : executors) {
-            if (executor != null && !executor.isTerminated()) {
-                executor.shutdown();
-            }
-        }
-
-        for (ExecutorService executor : executors) {
-            if (executor != null && !executor.isTerminated()) {
-                try {
-                    executor.awaitTermination(5, TimeUnit.SECONDS);
-                } catch (Exception e) {
-                    log.error("Cannot shutdown executor {} in 5s, executor will be force shutdown", executor, e);
-                } finally {
-                    executor.shutdownNow();
-                }
-            }
+            if (executor == null) continue;
+            if (executor.isTerminated()) continue;
+            shutdown(executor, 5, TimeUnit.SECONDS);
         }
     }
 
-    public static String currentName() {
-        return Thread.currentThread().getName();
-    }
+    // Sleep
+    // ----------------------------------------------------------------------
 
     public static void sleepQuietly(Duration duration) {
         sleepQuietly(duration.toNanos(), TimeUnit.NANOSECONDS);
@@ -112,6 +121,13 @@ public class Threads {
         if (sleepFor <= 0) return;
         if (unit == null) unit = TimeUnit.MILLISECONDS;
         Uninterruptibles.sleepUninterruptibly(sleepFor, unit);
+    }
+
+    // find
+    // ----------------------------------------------------------------------
+
+    public static Collection<Thread> find(String threadName, String groupName) {
+        return ThreadUtils.findThreadsByName(threadName, groupName);
     }
 
 }

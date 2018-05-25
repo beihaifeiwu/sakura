@@ -23,7 +23,6 @@ public class ClassmateTest extends AbstractTest {
     @Test
     public void testType() {
 
-
         ResolvedType arrayListType = typeResolver.resolve(ArrayList.class, String.class);
         MemberResolver memberResolver = new MemberResolver(typeResolver);
         ResolvedTypeWithMembers arrayListTypeWithMembers = memberResolver.resolve(arrayListType, null, null);

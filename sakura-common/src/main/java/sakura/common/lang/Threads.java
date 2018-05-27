@@ -123,11 +123,28 @@ public class Threads {
         Uninterruptibles.sleepUninterruptibly(sleepFor, unit);
     }
 
-    // find
+    // Thread/ThreadGroup
     // ----------------------------------------------------------------------
+
+    public static ThreadGroup systemGroup() {
+        return ThreadUtils.getSystemThreadGroup();
+    }
+
+    @Nullable
+    public static Thread get(long threadId) {
+        return ThreadUtils.findThreadById(threadId);
+    }
+
+    public static Collection<Thread> find(String threadName) {
+        return ThreadUtils.findThreadsByName(threadName);
+    }
 
     public static Collection<Thread> find(String threadName, String groupName) {
         return ThreadUtils.findThreadsByName(threadName, groupName);
+    }
+
+    public static Collection<ThreadGroup> findGroup(String groupName) {
+        return ThreadUtils.findThreadGroupsByName(groupName);
     }
 
 }

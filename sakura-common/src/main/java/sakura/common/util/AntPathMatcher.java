@@ -1,9 +1,9 @@
 package sakura.common.util;
 
 import org.apache.commons.lang3.Validate;
+import sakura.common.$;
 import sakura.common.cache.Cache;
 import sakura.common.cache.Caches;
-import sakura.common.lang.STR;
 import sakura.common.lang.annotation.Nullable;
 
 import java.util.*;
@@ -342,7 +342,7 @@ public class AntPathMatcher {
      * @return the tokenized path parts
      */
     protected String[] tokenizePath(String path) {
-        return STR.tokenize(path, this.pathSeparator, this.trimTokens, true);
+        return $.str.splitter(pathSeparator).trim(trimTokens).omitEmpty().split(path);
     }
 
     /**
@@ -391,8 +391,8 @@ public class AntPathMatcher {
      * does <strong>not</strong> enforce this.
      */
     public String extractPathWithinPattern(String pattern, String path) {
-        String[] patternParts = STR.tokenize(pattern, this.pathSeparator, this.trimTokens, true);
-        String[] pathParts = STR.tokenize(path, this.pathSeparator, this.trimTokens, true);
+        String[] patternParts = tokenizePath(pattern);
+        String[] pathParts = tokenizePath(path);
         StringBuilder builder = new StringBuilder();
         boolean pathStarted = false;
 
@@ -451,13 +451,13 @@ public class AntPathMatcher {
      * @throws IllegalArgumentException if the two patterns cannot be combined
      */
     public String combine(String pattern1, String pattern2) {
-        if (STR.isBlank(pattern1) && STR.isBlank(pattern2)) {
+        if ($.str.isBlank(pattern1) && $.str.isBlank(pattern2)) {
             return "";
         }
-        if (STR.isBlank(pattern1)) {
+        if ($.str.isBlank(pattern1)) {
             return pattern2;
         }
-        if (STR.isBlank(pattern2)) {
+        if ($.str.isBlank(pattern2)) {
             return pattern1;
         }
 

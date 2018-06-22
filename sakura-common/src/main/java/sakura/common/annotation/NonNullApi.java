@@ -1,4 +1,4 @@
-package sakura.common.lang.annotation;
+package sakura.common.annotation;
 
 import javax.annotation.Nonnull;
 import javax.annotation.meta.TypeQualifierDefault;

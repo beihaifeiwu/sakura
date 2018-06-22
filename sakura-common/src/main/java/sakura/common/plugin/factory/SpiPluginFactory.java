@@ -4,7 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import sakura.common.cache.Cache;
 import sakura.common.cache.Caches;
-import sakura.common.lang.annotation.Nullable;
+import sakura.common.annotation.Nullable;
 import sakura.common.plugin.Plugin;
 
 import java.util.ArrayList;

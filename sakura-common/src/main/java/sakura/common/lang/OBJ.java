@@ -4,7 +4,7 @@ import com.google.common.collect.Iterables;
 import com.google.common.collect.Iterators;
 import lombok.experimental.UtilityClass;
 import org.apache.commons.lang3.ObjectUtils;
-import sakura.common.lang.annotation.Nullable;
+import sakura.common.annotation.Nullable;
 
 import java.lang.reflect.Array;
 import java.util.*;

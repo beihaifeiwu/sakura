@@ -1,9 +1,10 @@
-package sakura.common.lang.string;
+package sakura.common.string;
 
+import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 import org.apache.commons.lang3.Validate;
-import sakura.common.lang.annotation.Nullable;
+import sakura.common.annotation.Nullable;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -15,16 +16,14 @@ import java.util.StringTokenizer;
  */
 @Setter
 @Accessors(fluent = true, chain = true)
+@RequiredArgsConstructor
 public class StringSplitter {
 
     private final String delimiter;
+
     private boolean trim;
     private boolean omitEmpty;
     private int limit = -1;
-
-    public StringSplitter(String delimiter) {
-        this.delimiter = delimiter;
-    }
 
     public StringSplitter trim() {
         this.trim = true;

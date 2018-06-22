@@ -1,4 +1,4 @@
-package sakura.common.lang.exception;
+package sakura.common.exception;
 
 /**
  * Created by liupin on 2017/6/9.

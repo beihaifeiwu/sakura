@@ -14,7 +14,7 @@ import org.jooq.lambda.fi.util.function.CheckedConsumer;
 import org.jooq.lambda.fi.util.function.CheckedFunction;
 import sakura.common.lang.Lazy;
 import sakura.common.lang.OBJ;
-import sakura.common.lang.annotation.Nullable;
+import sakura.common.annotation.Nullable;
 
 import java.io.InputStream;
 import java.io.OutputStream;

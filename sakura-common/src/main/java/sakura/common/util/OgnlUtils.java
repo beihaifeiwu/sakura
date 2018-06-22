@@ -6,7 +6,7 @@ import ognl.*;
 import sakura.common.cache.Cache;
 import sakura.common.cache.Caches;
 import sakura.common.lang.OBJ;
-import sakura.common.lang.annotation.Nullable;
+import sakura.common.annotation.Nullable;
 
 import java.io.StringReader;
 import java.math.BigDecimal;

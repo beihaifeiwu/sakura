@@ -4,7 +4,7 @@ package sakura.common.util;
  * Copyright Terracotta, Inc.
  */
 
-import sakura.common.lang.annotation.Nullable;
+import sakura.common.annotation.Nullable;
 
 import java.text.ParseException;
 import java.util.*;

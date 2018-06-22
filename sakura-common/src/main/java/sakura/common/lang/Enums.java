@@ -2,7 +2,7 @@ package sakura.common.lang;
 
 import com.google.common.base.CharMatcher;
 import lombok.experimental.UtilityClass;
-import sakura.common.lang.annotation.Nullable;
+import sakura.common.annotation.Nullable;
 
 import java.lang.reflect.Field;
 import java.util.Optional;

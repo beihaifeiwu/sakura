@@ -1,8 +1,8 @@
 package sakura.common.lang;
 
 import lombok.experimental.UtilityClass;
-import sakura.common.lang.annotation.Nullable;
-import sakura.common.lang.exception.UncheckedException;
+import sakura.common.annotation.Nullable;
+import sakura.common.exception.UncheckedException;
 
 import java.io.IOException;
 import java.io.UncheckedIOException;

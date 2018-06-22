@@ -2,7 +2,7 @@ package sakura.common.cache;
 
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
-import sakura.common.lang.annotation.Nullable;
+import sakura.common.annotation.Nullable;
 
 import java.util.function.Function;
 

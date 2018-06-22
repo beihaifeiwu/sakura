@@ -5,7 +5,7 @@ import lombok.val;
 import org.apache.commons.io.IOUtils;
 import sakura.common.lang.CLS;
 import sakura.common.lang.Lazy;
-import sakura.common.lang.annotation.Nullable;
+import sakura.common.annotation.Nullable;
 
 import java.io.InputStream;
 import java.net.URL;

@@ -1,6 +1,6 @@
 package sakura.common.cache;
 
-import sakura.common.lang.annotation.Nullable;
+import sakura.common.annotation.Nullable;
 
 import java.util.function.Function;
 

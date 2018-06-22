@@ -3,7 +3,7 @@ package sakura.common.reactor;
 import lombok.experimental.UtilityClass;
 import org.reactivestreams.Subscription;
 import reactor.core.publisher.BaseSubscriber;
-import sakura.common.lang.annotation.Nullable;
+import sakura.common.annotation.Nullable;
 
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.Consumer;

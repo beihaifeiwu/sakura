@@ -9,7 +9,7 @@ import lombok.val;
 import org.apache.commons.lang3.ClassUtils;
 import org.apache.commons.lang3.reflect.ConstructorUtils;
 import org.apache.commons.vfs2.AllFileSelector;
-import sakura.common.lang.annotation.Nullable;
+import sakura.common.annotation.Nullable;
 import sakura.common.util.AntPathMatcher;
 import sakura.common.util.ClassLoaderWrapper;
 import sakura.common.util.VFSUtils;

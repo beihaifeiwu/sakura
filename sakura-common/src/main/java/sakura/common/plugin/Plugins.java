@@ -2,7 +2,7 @@ package sakura.common.plugin;
 
 import lombok.val;
 import sakura.common.lang.OBJ;
-import sakura.common.lang.annotation.Nullable;
+import sakura.common.annotation.Nullable;
 import sakura.common.plugin.factory.PluginFactoryWrapper;
 
 import java.util.List;

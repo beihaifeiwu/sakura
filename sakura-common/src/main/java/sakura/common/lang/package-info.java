@@ -4,4 +4,4 @@
 @NonNullApi
 package sakura.common.lang;
 
-import sakura.common.lang.annotation.NonNullApi;
+import sakura.common.annotation.NonNullApi;

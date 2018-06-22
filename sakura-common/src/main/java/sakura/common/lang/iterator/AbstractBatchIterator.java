@@ -2,7 +2,7 @@ package sakura.common.lang.iterator;
 
 import com.google.common.collect.AbstractIterator;
 import sakura.common.lang.OBJ;
-import sakura.common.lang.annotation.Nullable;
+import sakura.common.annotation.Nullable;
 
 import java.util.ArrayList;
 import java.util.Collection;

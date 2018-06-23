@@ -12,6 +12,8 @@ import sakura.common.string.StringStripper;
 @UtilityClass
 public class S {
 
+    // ---------------------- String ------------------
+
     public boolean isEmpty(@Nullable CharSequence cs) {
         return StringUtils.isEmpty(cs);
     }
@@ -20,12 +22,16 @@ public class S {
         return StringUtils.isBlank(cs);
     }
 
+    public StringStripper stripper() {
+        return new StringStripper(null);
+    }
+
     public StringStripper stripper(String stripChars) {
         return new StringStripper(stripChars);
     }
 
-    public StringSplitter splitter(String delimiter) {
-        return new StringSplitter(delimiter);
+    public StringSplitter splitter() {
+        return new StringSplitter();
     }
 
 }

@@ -2,9 +2,10 @@ package sakura.common.util;
 
 import org.apache.commons.lang3.Validate;
 import sakura.common.S;
+import sakura.common.annotation.Nullable;
 import sakura.common.cache.Cache;
 import sakura.common.cache.Caches;
-import sakura.common.annotation.Nullable;
+import sakura.common.string.StringSplitter;
 
 import java.util.*;
 import java.util.regex.Matcher;
@@ -342,7 +343,9 @@ public class AntPathMatcher {
      * @return the tokenized path parts
      */
     protected String[] tokenizePath(String path) {
-        return S.splitter(pathSeparator).trim(trimTokens).omitEmpty().split(path);
+        StringSplitter splitter = S.splitter().on(pathSeparator);
+        if (trimTokens) splitter.trim();
+        return splitter.splitToArray(path);
     }
 
     /**

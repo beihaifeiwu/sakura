@@ -67,14 +67,6 @@ public class $ {
         return Objects.toArray(o);
     }
 
-    public static Iterable<?> toIterable(@Nullable Object o) {
-        return Objects.toIterable(o);
-    }
-
-    public static <T> List<T> toList(@Nullable Object o) {
-        return Objects.toList(o);
-    }
-
 
     //----------------------------------Compare--------------------------------
     @Nullable
@@ -111,6 +103,14 @@ public class $ {
 
     public static <K, V> Map<K, V> newMap(final int expectedSize) {
         return Maps.newHashMapWithExpectedSize(expectedSize);
+    }
+
+    public static Iterable<?> iterable(@Nullable Object o) {
+        return Objects.toIterable(o);
+    }
+
+    public static <T> List<T> list(@Nullable Object o) {
+        return Objects.toList(o);
     }
 
     public static <T> Iterable<List<T>> partition(final Iterable<T> iterable, final int size) {

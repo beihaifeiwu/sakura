@@ -28,7 +28,7 @@ public class Reactor {
                                CheckedConsumer<List<I>> consumer) {
         if (inputs == null || inputs.isEmpty()) return;
 
-        List<I> list = $.toList(inputs);
+        List<I> list = $.list(inputs);
         partitionSize = Math.max(partitionSize, 1);
 
         if (list.size() <= partitionSize) {
@@ -58,7 +58,7 @@ public class Reactor {
                                       CheckedFunction<List<I>, List<R>> transformer) {
         if (inputs == null || inputs.isEmpty()) return Collections.emptyList();
 
-        List<I> list = $.toList(inputs);
+        List<I> list = $.list(inputs);
         partitionSize = Math.max(partitionSize, 1);
 
         if (list.size() <= partitionSize) return transformer.apply(list);

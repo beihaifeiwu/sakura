@@ -5,7 +5,7 @@ import org.junit.Rule;
 import org.junit.rules.ExpectedException;
 import org.junit.rules.Stopwatch;
 import org.junit.runner.Description;
-import sakura.common.lang.TIME;
+import sakura.common.lang.Times;
 
 /**
  * Created by haomu on 2018/5/18.
@@ -35,7 +35,7 @@ public abstract class AbstractTest {
 
     private static void logInfo(Description description, String status, long nanos) {
         String testName = description.getMethodName();
-        System.out.println(String.format("Test %s %s, spent %s", testName, status, TIME.humanReadable(nanos)));
+        System.out.println(String.format("Test %s %s, spent %s", testName, status, Times.humanReadable(nanos)));
     }
 
 }

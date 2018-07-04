@@ -22,7 +22,7 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.util.ClassUtils;
-import sakura.common.lang.TIME;
+import sakura.common.lang.Times;
 import sakura.spring.core.AbstractBeanRegistrar;
 
 import java.util.HashSet;
@@ -62,7 +62,7 @@ public abstract class SakuraSpringTest {
 
     private static void logInfo(Description description, String status, long nanos) {
         String testName = description.getMethodName();
-        log.info("Test {} {}, spent {}", testName, status, TIME.humanReadable(nanos));
+        log.info("Test {} {}, spent {}", testName, status, Times.humanReadable(nanos));
     }
 
     private static Class<?> testClass;

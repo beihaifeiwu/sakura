@@ -1,6 +1,6 @@
 package sakura.spring.core;
 
-import sakura.common.lang.OBJ;
+import sakura.common.lang.$;
 import sakura.common.plugin.Plugin;
 import sakura.common.plugin.factory.PluginFactory;
 
@@ -17,7 +17,7 @@ public class SpringPluginFactory implements PluginFactory {
     @Override
     public <T> List<String> getPluginNames(Class<T> type) {
         String[] names = SpringBeans.getBeanNames(type);
-        return OBJ.isEmpty(names) ? Collections.emptyList() : Arrays.asList(names);
+        return $.isEmpty(names) ? Collections.emptyList() : Arrays.asList(names);
     }
 
     @Override

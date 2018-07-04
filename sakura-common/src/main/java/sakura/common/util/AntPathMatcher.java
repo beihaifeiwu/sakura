@@ -1,11 +1,10 @@
 package sakura.common.util;
 
 import org.apache.commons.lang3.Validate;
-import sakura.common.S;
+import sakura.common.lang.$;
 import sakura.common.annotation.Nullable;
 import sakura.common.cache.Cache;
 import sakura.common.cache.Caches;
-import sakura.common.string.StringSplitter;
 
 import java.util.*;
 import java.util.regex.Matcher;
@@ -13,9 +12,9 @@ import java.util.regex.Pattern;
 
 /**
  * PathMatcher implementation for Ant-style path patterns.
- * <p>
+ *
  * <p>Part of this mapping code has been kindly borrowed from <a href="http://ant.apache.org">Apache Ant</a>.
- * <p>
+ *
  * <p>The mapping matches URLs using the following rules:<br>
  * <ul>
  * <li>{@code ?} matches one character</li>
@@ -23,7 +22,7 @@ import java.util.regex.Pattern;
  * <li>{@code **} matches zero or more <em>directories</em> in a path</li>
  * <li>{@code {spring:[a-z]+}} matches the regexp {@code [a-z]+} as a path variable named "spring"</li>
  * </ul>
- * <p>
+ *
  * <h3>Examples</h3>
  * <ul>
  * <li>{@code com/t?st.jsp} &mdash; matches {@code com/test.jsp} but also
@@ -40,7 +39,7 @@ import java.util.regex.Pattern;
  * <li>{@code com/{filename:\\w+}.jsp} will match {@code com/test.jsp} and assign the value {@code test}
  * to the {@code filename} variable</li>
  * </ul>
- * <p>
+ *
  * <p><strong>Note:</strong> a pattern and a path must both be absolute or must
  * both be relative in order for the two to match. Therefore it is recommended
  * that users of this implementation to sanitize patterns in order to prefix
@@ -342,10 +341,16 @@ public class AntPathMatcher {
      * @param path the path to tokenize
      * @return the tokenized path parts
      */
-    protected String[] tokenizePath(String path) {
-        StringSplitter splitter = S.splitter().on(pathSeparator);
-        if (trimTokens) splitter.trim();
-        return splitter.splitToArray(path);
+    protected String[] tokenizePath(@Nullable String path) {
+        if (path == null) return new String[0];
+        StringTokenizer st = new StringTokenizer(path, pathSeparator);
+        List<String> tokens = new ArrayList<>();
+        while (st.hasMoreTokens()) {
+            String token = st.nextToken();
+            if (trimTokens) token = token.trim();
+            if (token.length() > 0) tokens.add(token);
+        }
+        return tokens.toArray(new String[0]);
     }
 
     /**
@@ -453,14 +458,15 @@ public class AntPathMatcher {
      * @return the combination of the two patterns
      * @throws IllegalArgumentException if the two patterns cannot be combined
      */
-    public String combine(String pattern1, String pattern2) {
-        if (S.isBlank(pattern1) && S.isBlank(pattern2)) {
+    @Nullable
+    public String combine(@Nullable String pattern1, @Nullable String pattern2) {
+        if ($.isBlank(pattern1) && $.isBlank(pattern2)) {
             return "";
         }
-        if (S.isBlank(pattern1)) {
+        if ($.isBlank(pattern1)) {
             return pattern2;
         }
-        if (S.isBlank(pattern2)) {
+        if ($.isBlank(pattern2)) {
             return pattern1;
         }
 

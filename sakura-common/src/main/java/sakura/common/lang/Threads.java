@@ -81,7 +81,7 @@ public class Threads {
     }
 
     public static void shutdown(@Nullable ExecutorService... executors) {
-        if (OBJ.isEmpty(executors)) return;
+        if (Objects.isEmpty(executors)) return;
 
         for (ExecutorService executor : executors) {
             if (executor == null) continue;

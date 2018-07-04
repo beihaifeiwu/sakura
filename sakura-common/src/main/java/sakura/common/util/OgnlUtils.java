@@ -5,7 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import ognl.*;
 import sakura.common.cache.Cache;
 import sakura.common.cache.Caches;
-import sakura.common.lang.OBJ;
+import sakura.common.lang.Objects;
 import sakura.common.annotation.Nullable;
 
 import java.io.StringReader;
@@ -73,7 +73,7 @@ public class OgnlUtils {
 
     public static Iterable<?> getIterable(String expression, Object root, @Nullable Map context) {
         Object value = getValue(expression, root, context);
-        return OBJ.toIterable(value);
+        return Objects.toIterable(value);
     }
 
     public static Iterable<?> getIterable(String expression, Object root) {

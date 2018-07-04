@@ -9,12 +9,12 @@ import java.util.*;
 
 import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.junit.Assert.*;
-import static sakura.common.lang.OBJ.*;
+import static sakura.common.lang.Objects.*;
 
 /**
  * Created by haomu on 2018/5/2.
  */
-public class OBJTest extends AbstractTest {
+public class ObjectsTest extends AbstractTest {
 
     @Test
     public void testIsEmpty() {
@@ -54,41 +54,6 @@ public class OBJTest extends AbstractTest {
         assertNotSame(ints, toArray(ints));
         assertEquals(toArray(ints)[0], 1);
         assertEquals(toArray(ints)[3], 4);
-    }
-
-    @Test
-    public void testFirstNonNull() {
-        assertNull(firstNonNull());
-        assertNull(firstNonNull(null, null));
-        assertNull(firstNonNull((Object) null));
-        assertNull(firstNonNull((Object[]) null));
-
-        assertEquals("", firstNonNull(null, ""));
-        assertEquals("", firstNonNull(null, null, ""));
-        assertEquals("zz", firstNonNull(null, "zz"));
-        assertEquals("abc", firstNonNull("abc", "a", null));
-        assertEquals("xyz", firstNonNull(null, "xyz", "a", null));
-
-        assertSame(Boolean.TRUE, firstNonNull(Boolean.TRUE));
-    }
-
-    @Test
-    public void testIdentityToString() {
-        assertNull(identityToString(null));
-
-        Integer i = 90;
-        String expected = "java.lang.Integer@" + Integer.toHexString(System.identityHashCode(i));
-        assertEquals(expected, identityToString(i));
-    }
-
-    @Test
-    public void testMode() {
-        assertNull(mode((Object[]) null));
-        assertNull(mode());
-        assertNull(mode("foo", "bar", "baz"));
-        assertNull(mode("foo", "bar", "baz", "foo", "bar"));
-        assertEquals("foo", mode("foo", "bar", "baz", "foo"));
-        assertEquals(9, mode("foo", "bar", "baz", 9, 10, 9));
     }
 
 }

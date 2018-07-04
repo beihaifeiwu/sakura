@@ -1,20 +1,128 @@
 package sakura.common.lang;
 
+import com.google.common.collect.Iterables;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
+import com.google.common.collect.Sets;
 import lombok.experimental.UtilityClass;
+import org.apache.commons.lang3.ObjectUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.jooq.lambda.Unchecked;
 import org.jooq.lambda.fi.lang.CheckedRunnable;
 import org.jooq.lambda.fi.util.CheckedComparator;
 import org.jooq.lambda.fi.util.function.*;
+import sakura.common.annotation.Nullable;
 
-import java.util.Comparator;
+import java.util.*;
 import java.util.function.*;
 
 /**
- * Created by haomu on 2018/4/19.
+ * Created by liupin on 2018/6/23.
  */
 @UtilityClass
-public class FUNC {
-    
+public class $ {
+
+    //--------------------------------Object---------------------------------
+    public static boolean isEmpty(@Nullable Object o) {
+        return Objects.isEmpty(o);
+    }
+
+    public static boolean equals(@Nullable Object a, @Nullable Object b) {
+        return (a == b) || (a != null && a.equals(b));
+    }
+
+    public static boolean deepEquals(@Nullable Object a, @Nullable Object b) {
+        return java.util.Objects.deepEquals(a, b);
+    }
+
+    public static int hashCode(@Nullable Object o) {
+        return o != null ? o.hashCode() : 0;
+    }
+
+    public static int hashCode(@Nullable Object... values) {
+        return Arrays.hashCode(values);
+    }
+
+    public static String toString(@Nullable Object o) {
+        return String.valueOf(o);
+    }
+
+    public static String toString(@Nullable Object o, final String nullDefault) {
+        return (o != null) ? o.toString() : nullDefault;
+    }
+
+
+    //----------------------------------String--------------------------------
+    public static boolean isEmpty(@Nullable CharSequence cs) {
+        return StringUtils.isEmpty(cs);
+    }
+
+    public static boolean isBlank(@Nullable CharSequence cs) {
+        return StringUtils.isBlank(cs);
+    }
+
+
+    //----------------------------------Convert--------------------------------
+    public static Object[] toArray(@Nullable Object o) {
+        return Objects.toArray(o);
+    }
+
+    public static Iterable<?> toIterable(@Nullable Object o) {
+        return Objects.toIterable(o);
+    }
+
+    public static <T> List<T> toList(@Nullable Object o) {
+        return Objects.toList(o);
+    }
+
+
+    //----------------------------------Compare--------------------------------
+    @Nullable
+    @SafeVarargs
+    public static <T extends Comparable<? super T>> T min(@Nullable T... values) {
+        return ObjectUtils.min(values);
+    }
+
+    @Nullable
+    @SafeVarargs
+    public static <T extends Comparable<? super T>> T max(@Nullable T... values) {
+        return ObjectUtils.max(values);
+    }
+
+    @SafeVarargs
+    public static <T extends Comparable<? super T>> T median(final T... items) {
+        return ObjectUtils.median(items);
+    }
+
+    @SafeVarargs
+    public static <T> T median(final Comparator<T> comparator, final T... items) {
+        return ObjectUtils.median(comparator, items);
+    }
+
+
+    //----------------------------------Collection/Map--------------------------
+    public static <T> List<T> newList(final int estimatedSize) {
+        return Lists.newArrayListWithExpectedSize(estimatedSize);
+    }
+
+    public static <T> Set<T> newSet(final int expectedSize) {
+        return Sets.newHashSetWithExpectedSize(expectedSize);
+    }
+
+    public static <K, V> Map<K, V> newMap(final int expectedSize) {
+        return Maps.newHashMapWithExpectedSize(expectedSize);
+    }
+
+    public static <T> Iterable<List<T>> partition(final Iterable<T> iterable, final int size) {
+        return Iterables.partition(iterable, size);
+    }
+
+    public static <T> List<List<T>> partition(final List<T> list, final int size) {
+        return Lists.partition(list, size);
+    }
+
+
+    //----------------------------------Function--------------------------------
     public static Runnable unchecked(CheckedRunnable runnable) {
         return Unchecked.runnable(runnable, EX::rethrow);
     }

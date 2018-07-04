@@ -71,7 +71,7 @@ public class Urls {
      */
     public static String append(@NonNull CharSequence url, Map<?, ?> params) {
         val baseUrl = url.toString();
-        if (OBJ.isEmpty(params)) return baseUrl;
+        if (Objects.isEmpty(params)) return baseUrl;
 
         val result = new StringBuilder(baseUrl);
         addPathSeparator(baseUrl, result);
@@ -102,7 +102,7 @@ public class Urls {
      */
     public static String append(@NonNull CharSequence url, Object... params) {
         val baseUrl = url.toString();
-        if (OBJ.isEmpty(params)) return baseUrl;
+        if (Objects.isEmpty(params)) return baseUrl;
         Validate.isTrue(params.length % 2 == 0, "Must specify an even number of parameter names/values");
 
         val result = new StringBuilder(baseUrl);

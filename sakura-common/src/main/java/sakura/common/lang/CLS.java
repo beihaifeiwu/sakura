@@ -81,7 +81,7 @@ public class CLS {
     @SneakyThrows
     public static <T> T newInstance(Class<T> type, @Nullable Object... args) {
         T result;
-        if (OBJ.isEmpty(args)) {
+        if ($.isEmpty(args)) {
             result = type.newInstance();
         } else {
             result = ConstructorUtils.invokeConstructor(type, args);
@@ -120,7 +120,7 @@ public class CLS {
     /**
      * Get an {@link Iterable} that can iterate over a class hierarchy in ascending (subclass to superclass) order.
      *
-     * @param type the type to get the class hierarchy from
+     * @param type              the type to get the class hierarchy from
      * @param includeInterfaces flag indicating whether to include or exclude interfaces
      * @return Iterable an Iterable over the class hierarchy of the given class
      */

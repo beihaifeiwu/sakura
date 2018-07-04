@@ -1,6 +1,6 @@
 package sakura.common.lang.iterator;
 
-import sakura.common.lang.OBJ;
+import sakura.common.lang.Objects;
 
 import java.util.Collection;
 import java.util.function.BiFunction;
@@ -27,7 +27,7 @@ public class PageableIterator<I, T> extends AbstractBatchIterator<T> {
     @Override
     protected Collection<T> computeNextBatch() {
         Collection<T> values = fetcher.apply(start, pageSize);
-        if (OBJ.isEmpty(values)) {
+        if (Objects.isEmpty(values)) {
             return endOfBatchData();
         }
         start = selector.apply(values, start);

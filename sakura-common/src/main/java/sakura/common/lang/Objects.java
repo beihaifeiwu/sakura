@@ -50,39 +50,25 @@ public class Objects {
         return new Object[]{o};
     }
 
-    public static Iterable<?> toIterable(@Nullable final Object o) {
+    @SuppressWarnings("unchecked")
+    public static Iterable<Object> toIterable(@Nullable final Object o) {
         if (o == null) return Collections.emptyList();
-        if (o instanceof Iterable) return (Iterable<?>) o;
+        if (o instanceof Iterable) return (Iterable<Object>) o;
         if (o instanceof Iterator) return Lists.newArrayList((Iterator) o);
         if (o instanceof Map) return ((Map) o).entrySet();
-        if (o.getClass().isArray()) return arrayToList(o);
+        if (o.getClass().isArray()) {
+            // the array may be primitive, so Arrays.asList() may throw
+            // a ClassCastException.  Do the work manually
+            // Curse primitives! :) (JGB)
+            int size = Array.getLength(o);
+            List<Object> answer = new ArrayList<>(size);
+            for (int i = 0; i < size; i++) {
+                Object e = Array.get(o, i);
+                answer.add(e);
+            }
+            return answer;
+        }
         return Collections.singleton(o);
-    }
-
-    @SuppressWarnings("unchecked")
-    public static <T> List<T> toList(@Nullable final Object o) {
-        if (o == null) return Collections.emptyList();
-        if (o instanceof List) return (List<T>) o;
-        if (o instanceof Collection) return Lists.newArrayList((Collection<T>) o);
-        if (o instanceof Iterable) return Lists.newArrayList((Iterable<T>) o);
-        if (o instanceof Iterator) return Lists.newArrayList((Iterator<T>) o);
-        return (List<T>) arrayToList(o);
-    }
-
-    public static List<Object> arrayToList(Object array) {
-        if (!array.getClass().isArray()) {
-            return Collections.singletonList(array);
-        }
-        // the array may be primitive, so Arrays.asList() may throw
-        // a ClassCastException.  Do the work manually
-        // Curse primitives! :) (JGB)
-        int size = Array.getLength(array);
-        List<Object> answer = new ArrayList<>(size);
-        for (int i = 0; i < size; i++) {
-            Object e = Array.get(array, i);
-            answer.add(e);
-        }
-        return answer;
     }
 
 }

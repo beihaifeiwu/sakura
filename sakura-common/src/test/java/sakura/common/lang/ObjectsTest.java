@@ -7,9 +7,10 @@ import sakura.common.AbstractTest;
 
 import java.util.*;
 
-import static org.hamcrest.CoreMatchers.instanceOf;
-import static org.junit.Assert.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.Assert.assertTrue;
 import static sakura.common.lang.Objects.*;
+
 
 /**
  * Created by haomu on 2018/5/2.
@@ -37,23 +38,40 @@ public class ObjectsTest extends AbstractTest {
 
     @Test
     public void testToArray() {
-        assertNotNull(toArray(null));
-        assertTrue(isEmpty(toArray(null)));
+        assertThat(toArray(null)).isNotNull().isEmpty();
 
         Integer[] objArray = new Integer[]{1, 2, 3, 4};
-        assertSame(objArray, toArray(objArray));
+        assertThat(toArray(objArray)).isSameAs(objArray);
 
-        assertEquals(1, toArray(Collections.singleton(1))[0]);
-        assertEquals(1, toArray(Iterators.singletonIterator(1))[0]);
+        assertThat(toArray(Collections.singleton(1))).containsExactly(1);
+        assertThat(toArray(Iterators.singletonIterator(1))).containsExactly(1);
 
         val entry = toArray(Collections.singletonMap("key", "value"))[0];
-        assertThat(entry, instanceOf(Map.Entry.class));
-        assertEquals("key", ((Map.Entry) entry).getKey());
+        assertThat(entry).isInstanceOf(Map.Entry.class).hasFieldOrPropertyWithValue("key", "key");
 
-        int[] ints = new int[]{1, 2, 3, 4};
-        assertNotSame(ints, toArray(ints));
-        assertEquals(toArray(ints)[0], 1);
-        assertEquals(toArray(ints)[3], 4);
+        val ints = new int[]{1, 2, 3, 4};
+        assertThat(toArray(ints)).isNotSameAs(ints).containsExactly(1, 2, 3, 4);
+
+        assertThat(toArray(1)).isNotEmpty().containsExactly(1);
+    }
+
+    @Test
+    public void testToIterable() {
+        assertThat(toIterable(null)).isNotNull().isEmpty();
+
+        val singleton = Collections.singleton(1);
+        assertThat(toIterable(singleton)).isSameAs(singleton).containsExactly(1);
+
+        val iterator = Iterators.singletonIterator(1);
+        assertThat(toIterable(iterator)).containsExactly(1);
+
+        val map = Collections.singletonMap("key", "value");
+        assertThat(toIterable(map)).isSameAs(map.entrySet());
+
+        val ints = new int[]{1, 2, 3, 4};
+        assertThat(toIterable(ints)).isNotSameAs(ints).containsExactly(1, 2, 3, 4);
+
+        assertThat(toIterable(1)).isNotEmpty().containsExactly(1);
     }
 
 }

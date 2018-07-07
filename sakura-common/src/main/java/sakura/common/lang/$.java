@@ -22,11 +22,65 @@ import java.util.function.*;
 @UtilityClass
 public class $ {
 
-    //--------------------------------Object---------------------------------
+    //--------------------------------Empty---------------------------------
+    public static boolean isBlank(@Nullable CharSequence cs) {
+        return StringUtils.isBlank(cs);
+    }
+
+    public static boolean isEmpty(@Nullable CharSequence cs) {
+        return StringUtils.isEmpty(cs);
+    }
+
+    public static boolean isEmpty(@Nullable long[] array) {
+        return array == null || array.length == 0;
+    }
+
+    public static boolean isEmpty(@Nullable int[] array) {
+        return array == null || array.length == 0;
+    }
+
+    public static boolean isEmpty(@Nullable short[] array) {
+        return array == null || array.length == 0;
+    }
+
+    public static boolean isEmpty(@Nullable char[] array) {
+        return array == null || array.length == 0;
+    }
+
+    public static boolean isEmpty(@Nullable byte[] array) {
+        return array == null || array.length == 0;
+    }
+
+    public static boolean isEmpty(@Nullable double[] array) {
+        return array == null || array.length == 0;
+    }
+
+    public static boolean isEmpty(@Nullable float[] array) {
+        return array == null || array.length == 0;
+    }
+
+    public static boolean isEmpty(@Nullable boolean[] array) {
+        return array == null || array.length == 0;
+    }
+
+    public static boolean isEmpty(@Nullable Object[] array) {
+        return array == null || array.length == 0;
+    }
+
+    public static boolean isEmpty(@Nullable Collection c) {
+        return c == null || c.isEmpty();
+    }
+
+    public static boolean isEmpty(@Nullable Map m) {
+        return m == null || m.isEmpty();
+    }
+
     public static boolean isEmpty(@Nullable Object o) {
         return Objects.isEmpty(o);
     }
 
+
+    //--------------------------------Object---------------------------------
     public static boolean equals(@Nullable Object a, @Nullable Object b) {
         return (a == b) || (a != null && a.equals(b));
     }
@@ -52,40 +106,54 @@ public class $ {
     }
 
 
-    //----------------------------------String--------------------------------
-    public static boolean isEmpty(@Nullable CharSequence cs) {
-        return StringUtils.isEmpty(cs);
-    }
-
-    public static boolean isBlank(@Nullable CharSequence cs) {
-        return StringUtils.isBlank(cs);
-    }
-
-
     //----------------------------------Convert--------------------------------
     public static Object[] toArray(@Nullable Object o) {
         return Objects.toArray(o);
     }
 
+    public static Iterable<Object> iterable(@Nullable Object o) {
+        return Objects.toIterable(o);
+    }
+
 
     //----------------------------------Compare--------------------------------
-    @Nullable
-    @SafeVarargs
-    public static <T extends Comparable<? super T>> T min(@Nullable T... values) {
-        return ObjectUtils.min(values);
+    public static int min(int a, int b, @Nullable int... rest) {
+        int r = (a <= b) ? a : b;
+        if (!isEmpty(rest)) {
+            for (int i = 0; i < rest.length; i++) {
+                r = (r <= rest[i]) ? r : rest[i];
+            }
+        }
+        return r;
+    }
+
+    public static long min(long a, long b, @Nullable long... rest) {
+        long r = (a <= b) ? a : b;
+        if (!isEmpty(rest)) {
+            for (int i = 0; i < rest.length; i++) {
+                r = (r <= rest[i]) ? r : rest[i];
+            }
+        }
+        return r;
     }
 
     @Nullable
     @SafeVarargs
     public static <T extends Comparable<? super T>> T max(@Nullable T... values) {
+        if (isEmpty(values)) return null;
+        if (values.length == 1) return values[0];
         return ObjectUtils.max(values);
     }
 
+    @Nullable
     @SafeVarargs
-    public static <T extends Comparable<? super T>> T median(final T... items) {
-        return ObjectUtils.median(items);
+    public static <T extends Comparable<? super T>> T median(final T... values) {
+        if (isEmpty(values)) return null;
+        if (values.length == 1) return values[0];
+        return ObjectUtils.median(values);
     }
 
+    @Nullable
     @SafeVarargs
     public static <T> T median(final Comparator<T> comparator, final T... items) {
         return ObjectUtils.median(comparator, items);
@@ -105,12 +173,28 @@ public class $ {
         return Maps.newHashMapWithExpectedSize(expectedSize);
     }
 
-    public static Iterable<?> iterable(@Nullable Object o) {
-        return Objects.toIterable(o);
+    @SafeVarargs
+    public static <T> List<T> list(@Nullable T... elements) {
+        if (isEmpty(elements)) return Collections.emptyList();
+        if (elements.length == 1) return Collections.singletonList(elements[0]);
+        return Lists.newArrayList(elements);
     }
 
-    public static <T> List<T> list(@Nullable Object o) {
-        return Objects.toList(o);
+    public static <T> List<T> list(@Nullable Iterable<T> iterable) {
+        if (iterable == null) return Collections.emptyList();
+        return Lists.newArrayList(iterable);
+    }
+
+    @SafeVarargs
+    public static <T> Set<T> set(@Nullable T... elements) {
+        if (isEmpty(elements)) return Collections.emptySet();
+        if (elements.length == 1) return Collections.singleton(elements[0]);
+        return Sets.newHashSet(elements);
+    }
+
+    public static <T> Set<T> set(@Nullable Iterable<T> iterable) {
+        if (iterable == null) return Collections.emptySet();
+        return Sets.newHashSet(iterable);
     }
 
     public static <T> Iterable<List<T>> partition(final Iterable<T> iterable, final int size) {

@@ -5,7 +5,6 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import lombok.experimental.UtilityClass;
-import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.jooq.lambda.Unchecked;
 import org.jooq.lambda.fi.lang.CheckedRunnable;
@@ -113,50 +112,6 @@ public class $ {
 
     public static Iterable<Object> iterable(@Nullable Object o) {
         return Objects.toIterable(o);
-    }
-
-
-    //----------------------------------Compare--------------------------------
-    public static int min(int a, int b, @Nullable int... rest) {
-        int r = (a <= b) ? a : b;
-        if (!isEmpty(rest)) {
-            for (int i = 0; i < rest.length; i++) {
-                r = (r <= rest[i]) ? r : rest[i];
-            }
-        }
-        return r;
-    }
-
-    public static long min(long a, long b, @Nullable long... rest) {
-        long r = (a <= b) ? a : b;
-        if (!isEmpty(rest)) {
-            for (int i = 0; i < rest.length; i++) {
-                r = (r <= rest[i]) ? r : rest[i];
-            }
-        }
-        return r;
-    }
-
-    @Nullable
-    @SafeVarargs
-    public static <T extends Comparable<? super T>> T max(@Nullable T... values) {
-        if (isEmpty(values)) return null;
-        if (values.length == 1) return values[0];
-        return ObjectUtils.max(values);
-    }
-
-    @Nullable
-    @SafeVarargs
-    public static <T extends Comparable<? super T>> T median(final T... values) {
-        if (isEmpty(values)) return null;
-        if (values.length == 1) return values[0];
-        return ObjectUtils.median(values);
-    }
-
-    @Nullable
-    @SafeVarargs
-    public static <T> T median(final Comparator<T> comparator, final T... items) {
-        return ObjectUtils.median(comparator, items);
     }
 
 

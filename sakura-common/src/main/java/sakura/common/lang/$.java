@@ -1,9 +1,6 @@
 package sakura.common.lang;
 
-import com.google.common.collect.Iterables;
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
-import com.google.common.collect.Sets;
+import com.google.common.collect.*;
 import lombok.experimental.UtilityClass;
 import org.apache.commons.lang3.StringUtils;
 import org.jooq.lambda.Unchecked;
@@ -130,26 +127,20 @@ public class $ {
 
     @SafeVarargs
     public static <T> List<T> list(@Nullable T... elements) {
-        if (isEmpty(elements)) return Collections.emptyList();
-        if (elements.length == 1) return Collections.singletonList(elements[0]);
-        return Lists.newArrayList(elements);
+        return isEmpty(elements) ? Collections.emptyList() : ImmutableList.copyOf(elements);
     }
 
     public static <T> List<T> list(@Nullable Iterable<T> iterable) {
-        if (iterable == null) return Collections.emptyList();
-        return Lists.newArrayList(iterable);
+        return iterable == null ? Collections.emptyList() : ImmutableList.copyOf(iterable);
     }
 
     @SafeVarargs
     public static <T> Set<T> set(@Nullable T... elements) {
-        if (isEmpty(elements)) return Collections.emptySet();
-        if (elements.length == 1) return Collections.singleton(elements[0]);
-        return Sets.newHashSet(elements);
+        return isEmpty(elements) ? Collections.emptySet() : ImmutableSet.copyOf(elements);
     }
 
     public static <T> Set<T> set(@Nullable Iterable<T> iterable) {
-        if (iterable == null) return Collections.emptySet();
-        return Sets.newHashSet(iterable);
+        return iterable == null ? Collections.emptySet() : ImmutableSet.copyOf(iterable);
     }
 
     public static <T> Iterable<List<T>> partition(final Iterable<T> iterable, final int size) {

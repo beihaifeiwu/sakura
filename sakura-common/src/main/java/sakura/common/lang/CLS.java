@@ -7,10 +7,12 @@ import lombok.experimental.UtilityClass;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.apache.commons.lang3.ClassUtils;
+import org.apache.commons.lang3.Validate;
 import org.apache.commons.lang3.reflect.ConstructorUtils;
 import org.apache.commons.vfs2.AllFileSelector;
+import sakura.common.$;
 import sakura.common.annotation.Nullable;
-import sakura.common.util.AntPathMatcher;
+import sakura.common.resource.AntPathMatcher;
 import sakura.common.util.ClassLoaderWrapper;
 import sakura.common.util.VFSUtils;
 
@@ -27,15 +29,33 @@ import java.util.Set;
 @UtilityClass
 public class CLS {
 
-    private static final ClassLoaderWrapper WRAPPER = new ClassLoaderWrapper(CLS.class.getClassLoader());
+    private static final char PACKAGE_SEPARATOR = '.';
+    private static final char PATH_SEPARATOR = '/';
+
+    private static final ClassLoaderWrapper WRAPPER = new ClassLoaderWrapper(getDefaultClassLoader());
     private static final Lazy<AntPathMatcher> MATCHER = Lazy.of(AntPathMatcher::new);
 
     public static ClassLoader getDefaultClassLoader() {
-        return WRAPPER.getDefaultClassLoader();
-    }
-
-    public static void setDefaultClassLoader(ClassLoader defaultClassLoader) {
-        WRAPPER.setDefaultClassLoader(defaultClassLoader);
+        ClassLoader cl = null;
+        try {
+            cl = Thread.currentThread().getContextClassLoader();
+        } catch (Throwable ex) {
+            // Cannot access thread context ClassLoader - falling back...
+        }
+        if (cl == null) {
+            // No thread context class loader -> use class loader of this class.
+            cl = CLS.class.getClassLoader();
+            if (cl == null) {
+                // getClassLoader() returning null indicates the bootstrap ClassLoader
+                try {
+                    cl = ClassLoader.getSystemClassLoader();
+                } catch (Throwable ex) {
+                    // Cannot access system ClassLoader - oh well, maybe the caller can live with null...
+                }
+            }
+        }
+        Validate.notNull(cl, "Cannot access ClassLoader, why ?");
+        return cl;
     }
 
     // Primitive
@@ -48,6 +68,17 @@ public class CLS {
     public static boolean isPrimitiveOrWrapper(@Nullable Class<?> type) {
         if (type == null) return false;
         return type.isPrimitive() || isPrimitiveWrapper(type);
+    }
+
+    // Package
+    // ----------------------------------------------------------------------
+    public static String classPackageAsResourcePath(@Nullable Class<?> clazz) {
+        if (clazz == null) return "";
+        String className = clazz.getName();
+        int packageEndIndex = className.lastIndexOf(PACKAGE_SEPARATOR);
+        if (packageEndIndex == -1) return "";
+        String packageName = className.substring(0, packageEndIndex);
+        return packageName.replace(PACKAGE_SEPARATOR, PATH_SEPARATOR);
     }
 
     // Name

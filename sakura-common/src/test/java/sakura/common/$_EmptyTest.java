@@ -1,4 +1,4 @@
-package sakura.common.lang;
+package sakura.common;
 
 import com.google.common.collect.Iterators;
 import com.google.common.collect.Maps;
@@ -10,14 +10,14 @@ import java.util.Map;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
-import static sakura.common.lang.$.isBlank;
-import static sakura.common.lang.$.isEmpty;
+import static sakura.common.$.isBlank;
+import static sakura.common.$.isEmpty;
 
 /**
  * Created by haomu on 2018/7/8.
  */
 @SuppressWarnings("ConstantConditions")
-public class $_EmptyTest {
+public class $_EmptyTest extends AbstractTest {
 
     @Test
     public void testString() {

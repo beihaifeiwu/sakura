@@ -7,7 +7,7 @@ import org.jooq.lambda.fi.util.function.CheckedConsumer;
 import org.jooq.lambda.fi.util.function.CheckedFunction;
 import reactor.core.publisher.Flux;
 import reactor.core.scheduler.Schedulers;
-import sakura.common.lang.$;
+import sakura.common.$;
 
 import javax.annotation.Nonnegative;
 import javax.annotation.Nullable;

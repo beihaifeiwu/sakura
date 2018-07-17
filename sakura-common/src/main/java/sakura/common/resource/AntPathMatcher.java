@@ -1,7 +1,7 @@
-package sakura.common.util;
+package sakura.common.resource;
 
 import org.apache.commons.lang3.Validate;
-import sakura.common.lang.$;
+import sakura.common.$;
 import sakura.common.annotation.Nullable;
 import sakura.common.cache.Cache;
 import sakura.common.cache.Caches;
@@ -44,16 +44,8 @@ import java.util.regex.Pattern;
  * both be relative in order for the two to match. Therefore it is recommended
  * that users of this implementation to sanitize patterns in order to prefix
  * them with "/" as it makes sense in the context in which they're used.
- *
- * @author Alef Arendsen
- * @author Juergen Hoeller
- * @author Rob Harrop
- * @author Arjen Poutsma
- * @author Rossen Stoyanchev
- * @author Sam Brannen
- * @since 16.07.2003
  */
-public class AntPathMatcher {
+public class AntPathMatcher implements PathMatcher {
 
     public static final String DEFAULT_PATH_SEPARATOR = "/";
     private static final Pattern VARIABLE_PATTERN = Pattern.compile("\\{[^/]+?\\}");
@@ -113,14 +105,17 @@ public class AntPathMatcher {
         this.trimTokens = trimTokens;
     }
 
+    @Override
     public boolean isPattern(String path) {
         return (path.indexOf('*') != -1 || path.indexOf('?') != -1);
     }
 
+    @Override
     public boolean match(String pattern, String path) {
         return doMatch(pattern, path, true, null);
     }
 
+    @Override
     public boolean matchStart(String pattern, String path) {
         return doMatch(pattern, path, false, null);
     }
@@ -398,6 +393,7 @@ public class AntPathMatcher {
      * <p>Assumes that {@link #match} returns {@code true} for '{@code pattern}' and '{@code path}', but
      * does <strong>not</strong> enforce this.
      */
+    @Override
     public String extractPathWithinPattern(String pattern, String path) {
         String[] patternParts = tokenizePath(pattern);
         String[] pathParts = tokenizePath(path);
@@ -420,6 +416,7 @@ public class AntPathMatcher {
         return builder.toString();
     }
 
+    @Override
     public Map<String, String> extractUriTemplateVariables(String pattern, String path) {
         Map<String, String> variables = new LinkedHashMap<String, String>();
         boolean result = doMatch(pattern, path, true, variables);
@@ -459,6 +456,7 @@ public class AntPathMatcher {
      * @throws IllegalArgumentException if the two patterns cannot be combined
      */
     @Nullable
+    @Override
     public String combine(@Nullable String pattern1, @Nullable String pattern2) {
         if ($.isBlank(pattern1) && $.isBlank(pattern2)) {
             return "";
@@ -538,6 +536,7 @@ public class AntPathMatcher {
      * @param path the full path to use for comparison
      * @return a comparator capable of sorting patterns in order of explicitness
      */
+    @Override
     public Comparator<String> getPatternComparator(String path) {
         return new AntPatternComparator(path);
     }

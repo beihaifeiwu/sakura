@@ -1,4 +1,4 @@
-package sakura.common.lang;
+package sakura.common;
 
 import com.google.common.collect.*;
 import lombok.experimental.UtilityClass;
@@ -8,6 +8,7 @@ import org.jooq.lambda.fi.lang.CheckedRunnable;
 import org.jooq.lambda.fi.util.CheckedComparator;
 import org.jooq.lambda.fi.util.function.*;
 import sakura.common.annotation.Nullable;
+import sakura.common.lang.EX;
 
 import java.util.*;
 import java.util.function.*;
@@ -72,7 +73,7 @@ public class $ {
     }
 
     public static boolean isEmpty(@Nullable Object o) {
-        return Objects.isEmpty(o);
+        return sakura.common.lang.Objects.isEmpty(o);
     }
 
 
@@ -104,11 +105,11 @@ public class $ {
 
     //----------------------------------Convert--------------------------------
     public static Object[] toArray(@Nullable Object o) {
-        return Objects.toArray(o);
+        return sakura.common.lang.Objects.toArray(o);
     }
 
     public static Iterable<Object> iterable(@Nullable Object o) {
-        return Objects.toIterable(o);
+        return sakura.common.lang.Objects.toIterable(o);
     }
 
 
@@ -141,6 +142,18 @@ public class $ {
 
     public static <T> Set<T> set(@Nullable Iterable<T> iterable) {
         return iterable == null ? Collections.emptySet() : ImmutableSet.copyOf(iterable);
+    }
+
+    public static <K, V> Map<K, V> map(K k1, V v1) {
+        return ImmutableMap.of(k1, v1);
+    }
+
+    public static <K, V> Map<K, V> map(K k1, V v1, K k2, V v2) {
+        return ImmutableMap.of(k1, v1, k2, v2);
+    }
+
+    public static <K, V> Map<K, V> map(K k1, V v1, K k2, V v2, K k3, V v3) {
+        return ImmutableMap.of(k1, v1, k2, v2, k3, v3);
     }
 
     public static <T> Iterable<List<T>> partition(final Iterable<T> iterable, final int size) {

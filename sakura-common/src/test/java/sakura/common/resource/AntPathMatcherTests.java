@@ -1,4 +1,4 @@
-package sakura.common.util;
+package sakura.common.resource;
 
 import org.junit.Test;
 import sakura.common.AbstractTest;

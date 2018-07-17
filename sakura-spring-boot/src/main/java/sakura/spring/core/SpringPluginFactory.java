@@ -1,6 +1,6 @@
 package sakura.spring.core;
 
-import sakura.common.lang.$;
+import sakura.common.$;
 import sakura.common.plugin.Plugin;
 import sakura.common.plugin.factory.PluginFactory;
 

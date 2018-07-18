@@ -133,7 +133,22 @@ public abstract class AbstractResource implements Resource {
     }
 
     protected static String cleanPath(String path) {
-        return FilenameUtils.normalize(path);
+        String pathToUse = FilenameUtils.separatorsToUnix(path);
+        // Strip prefix from path to analyze, to not treat it as part of the
+        // first path element. This is necessary to correctly parse paths like
+        // "file:common/../common/resource/./Resource.class", where the ".." should just
+        // strip the first "core" directory while keeping the "file:" prefix.
+        int prefixIndex = pathToUse.indexOf(':');
+        String prefix = "";
+        if (prefixIndex != -1) {
+            prefix = pathToUse.substring(0, prefixIndex + 1);
+            if (prefix.contains("/")) {
+                prefix = "";
+            } else {
+                pathToUse = pathToUse.substring(prefixIndex + 1);
+            }
+        }
+        return prefix + FilenameUtils.normalize(pathToUse, true);
     }
 
     protected static String getName(String path) {
@@ -141,7 +156,8 @@ public abstract class AbstractResource implements Resource {
     }
 
     protected static String applyRelativePath(String path, String relativePath) {
-        return FilenameUtils.concat(path, relativePath);
+        String basePath = FilenameUtils.getFullPath(path);
+        return FilenameUtils.concat(basePath, relativePath);
     }
 
 }

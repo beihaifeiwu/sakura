@@ -50,13 +50,12 @@ public class ReactorParallelTest {
         batch = 100;
         output = Reactor.call(input, batch, this::transform);
         assertThat(output).isNotEmpty().hasSameElementsAs(input);
-        assertThat(threads).hasSize(1).containsExactly(Thread.currentThread().getName());
-        threads.clear();
+        assertRunInCurrentThread();
 
         batch = 200;
         output = Reactor.call(input, batch, this::transform);
         assertThat(output).isNotEmpty().hasSameElementsAs(input);
-        assertThat(threads).hasSize(1).containsExactly(Thread.currentThread().getName());
+        assertRunInCurrentThread();
     }
 
     @Test
@@ -65,14 +64,13 @@ public class ReactorParallelTest {
         output = Reactor.call(input, batch, this::transform);
         output.sort(Comparator.naturalOrder());
         assertThat(output).isNotEmpty().hasSameElementsAs(input);
-        assertThat(threads).hasSize(Runtime.getRuntime().availableProcessors());
-        threads.clear();
+        assertRunInElasticThreadPool();
 
         batch = 7;
         output = Reactor.call(input, batch, this::transform);
         output.sort(Comparator.naturalOrder());
         assertThat(output).isNotEmpty().hasSameElementsAs(input);
-        assertThat(threads).hasSize(Runtime.getRuntime().availableProcessors());
+        assertRunInElasticThreadPool();
     }
 
     @Test(expected = ExpectedException.class)
@@ -80,7 +78,7 @@ public class ReactorParallelTest {
         output = Reactor.call(input, 5, i -> {
             throw new ExpectedException();
         });
-        assertThat(threads).hasSize(Runtime.getRuntime().availableProcessors());
+        assertRunInElasticThreadPool();
     }
 
     @Test
@@ -97,25 +95,22 @@ public class ReactorParallelTest {
     public void testRunWithOneBatch() {
         batch = 100;
         Reactor.run(input, batch, this::transform);
-        assertThat(threads).hasSize(1).containsExactly(Thread.currentThread().getName());
-        threads.clear();
+        assertRunInCurrentThread();
 
         batch = 200;
         Reactor.run(input, batch, this::transform);
-        assertThat(threads).hasSize(1).containsExactly(Thread.currentThread().getName());
-        threads.clear();
+        assertRunInCurrentThread();
     }
 
     @Test
     public void testRunWithBatches() {
         batch = 5;
         Reactor.run(input, batch, this::transform);
-        assertThat(threads).hasSize(Runtime.getRuntime().availableProcessors());
-        threads.clear();
+        assertRunInElasticThreadPool();
 
         batch = 7;
         Reactor.run(input, batch, this::transform);
-        assertThat(threads).hasSize(Runtime.getRuntime().availableProcessors());
+        assertRunInElasticThreadPool();
     }
 
     @Test(expected = ExpectedException.class)
@@ -123,7 +118,20 @@ public class ReactorParallelTest {
         Reactor.run(input, 5, i -> {
             throw new ExpectedException();
         });
-        assertThat(threads).hasSize(Runtime.getRuntime().availableProcessors());
+        assertRunInElasticThreadPool();
+    }
+
+    private void assertRunInCurrentThread() {
+        String threadName = Thread.currentThread().getName();
+        assertThat(threads).hasSize(1).containsExactly(threadName);
+        threads.clear();
+    }
+
+    private void assertRunInElasticThreadPool() {
+        int processors = Runtime.getRuntime().availableProcessors();
+        assertThat(threads).allMatch(s -> s.startsWith("elastic"));
+        assertThat(threads.size()).isBetween(1, processors);
+        threads.clear();
     }
 
     private <T> List<T> transform(List<T> input) {

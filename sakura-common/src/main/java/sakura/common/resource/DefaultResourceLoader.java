@@ -175,7 +175,10 @@ public class DefaultResourceLoader implements ResourceLoader {
         if ("".equals(path)) {
             // The above result is likely to be incomplete, i.e. only containing file system references.
             // We need to have pointers to each of the jar files on the classpath as well...
-            addAllClassLoaderJarRoots(cl, result);
+            Set<URL> jarRoots = CLS.getJarRoots(cl);
+            for (URL url : jarRoots) {
+                result.add(new UrlResource(url));
+            }
         }
         return result;
     }
@@ -189,78 +192,6 @@ public class DefaultResourceLoader implements ResourceLoader {
      */
     protected Resource convertClassLoaderURL(URL url) {
         return new UrlResource(url);
-    }
-
-    /**
-     * Search all {@link URLClassLoader} URLs for jar file references and add them to the
-     * given set of resources in the form of pointers to the root of the jar file content.
-     *
-     * @param classLoader the ClassLoader to search (including its ancestors)
-     * @param result      the set of resources to add jar roots to
-     */
-    protected void addAllClassLoaderJarRoots(@Nullable ClassLoader classLoader, Set<Resource> result) {
-        if (classLoader instanceof URLClassLoader) {
-            try {
-                for (URL url : ((URLClassLoader) classLoader).getURLs()) {
-                    try {
-                        UrlResource jarResource = new UrlResource(JAR_URL_PREFIX + url + JAR_URL_SEPARATOR);
-                        if (jarResource.exists()) result.add(jarResource);
-                    } catch (MalformedURLException ex) {
-                        log.debug("Cannot search for matching files underneath [{}] " +
-                                "because it cannot be converted to a valid 'jar:' URL: {}", url, ex.getMessage());
-                    }
-                }
-            } catch (Exception ex) {
-                log.debug("Cannot introspect jar files since ClassLoader [{}] does not support 'getURLs()'", classLoader, ex);
-            }
-        }
-
-        if (classLoader == ClassLoader.getSystemClassLoader()) {
-            // "java.class.path" manifest evaluation...
-            addClassPathManifestEntries(result);
-        }
-
-        if (classLoader != null) {
-            try {
-                // Hierarchy traversal...
-                addAllClassLoaderJarRoots(classLoader.getParent(), result);
-            } catch (Exception ex) {
-                log.debug("Cannot introspect jar files in parent ClassLoader since [{}] does not support 'getParent()'", classLoader, ex);
-            }
-        }
-    }
-
-    /**
-     * Determine jar file references from the "java.class.path." manifest property and add them
-     * to the given set of resources in the form of pointers to the root of the jar file content.
-     *
-     * @param result the set of resources to add jar roots to
-     */
-    protected void addClassPathManifestEntries(Set<Resource> result) {
-        try {
-            String javaClassPathProperty = System.getProperty("java.class.path", "");
-            String[] paths = StringUtils.split(javaClassPathProperty, System.getProperty("path.separator"));
-            for (String path : paths) {
-                try {
-                    String filePath = new File(path).getAbsolutePath();
-                    int prefixIndex = filePath.indexOf(':');
-                    if (prefixIndex == 1) {
-                        // Possibly "c:" drive prefix on Windows, to be upper-cased for proper duplicate detection
-                        filePath = StringUtils.capitalize(filePath);
-                    }
-                    UrlResource jarResource = new UrlResource(JAR_URL_PREFIX + FILE_URL_PREFIX + filePath + JAR_URL_SEPARATOR);
-                    // Potentially overlapping with URLClassLoader.getURLs() result above!
-                    if (!result.contains(jarResource) && !hasDuplicate(filePath, result) && jarResource.exists()) {
-                        result.add(jarResource);
-                    }
-                } catch (MalformedURLException ex) {
-                    log.debug("Cannot search for matching files underneath [{}] " +
-                            "because it cannot be converted to a valid 'jar:' URL: {}", path, ex.getMessage());
-                }
-            }
-        } catch (Exception ex) {
-            log.debug("Failed to evaluate 'java.class.path' manifest entries: ", ex);
-        }
     }
 
     /**

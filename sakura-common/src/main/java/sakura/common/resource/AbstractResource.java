@@ -13,7 +13,9 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 
-
+/**
+ * Base class for resource
+ */
 public abstract class AbstractResource implements Resource {
 
     @Override

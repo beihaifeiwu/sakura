@@ -1,9 +1,8 @@
 package sakura.common.lang;
 
-import lombok.Cleanup;
+import com.google.common.primitives.Primitives;
 import lombok.val;
 import org.junit.Test;
-import sakura.common.util.VFSUtils;
 
 import static org.junit.Assert.*;
 
@@ -11,6 +10,27 @@ import static org.junit.Assert.*;
  * Created by haomu on 2018/4/25.
  */
 public class CLSTest {
+
+    @Test
+    public void testPrimitive() {
+        for (Class<?> type : Primitives.allWrapperTypes()) {
+            assertTrue(CLS.isPrimitiveWrapper(type));
+        }
+        for (Class<?> type : Primitives.allPrimitiveTypes()) {
+            assertFalse(CLS.isPrimitiveWrapper(type));
+        }
+        assertFalse(CLS.isPrimitiveWrapper(String.class));
+        assertFalse(CLS.isPrimitiveWrapper(int.class));
+
+        for (Class<?> type : Primitives.allWrapperTypes()) {
+            assertTrue(CLS.isPrimitiveOrWrapper(type));
+        }
+        for (Class<?> type : Primitives.allPrimitiveTypes()) {
+            assertTrue(CLS.isPrimitiveOrWrapper(type));
+        }
+        assertFalse(CLS.isPrimitiveWrapper(String.class));
+        assertFalse(CLS.isPrimitiveWrapper(CLSTest.class));
+    }
 
     @Test
     public void testGetResources() {
@@ -23,33 +43,7 @@ public class CLSTest {
 
         val roots = CLS.getResources("");
         roots.forEach(System.out::println);
-    }
-
-    @Test
-    public void testVFS() throws Exception {
-        val dirs = CLS.getResources("org/apache/commons/vfs2/events");
-        assertNotNull(dirs);
-        assertTrue(dirs.size() > 0);
-        val dir = dirs.iterator().next();
-        assertNotNull(dir);
-
-        @Cleanup val file = VFSUtils.getFile(dir);
-        assertTrue(file.isFolder());
-        val name = file.getName();
-        val children = file.getChildren();
-        for (val child : children) {
-            System.out.println(name.getRelativeName(child.getName()));
-        }
-    }
-
-    @Test
-    public void testFindResources() {
-        val xmls = CLS.findResources("**/*.xml");
-        xmls.forEach(System.out::println);
-        System.out.println();
-
-        val classes = CLS.findResources("sakura/common/lang/*.class");
-        classes.forEach(System.out::println);
+        assertEquals(roots, CLS.getJarRoots(classLoader));
     }
 
 }

@@ -25,7 +25,7 @@ public class PageableIterator<I, T> extends AbstractBatchIterator<T> {
     }
 
     @Override
-    protected Collection<T> computeNextBatch() {
+    protected Iterable<T> computeNextBatch() {
         Collection<T> values = fetcher.apply(start, pageSize);
         if (Objects.isEmpty(values)) {
             return endOfBatchData();

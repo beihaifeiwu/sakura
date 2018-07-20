@@ -9,7 +9,6 @@ import sakura.common.lang.iterator.AbstractBatchIterator;
 import sakura.common.lang.iterator.PageableIterator;
 
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.Collections;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -25,7 +24,7 @@ public class IteratorTest extends AbstractTest {
         val iterator = Iterators.partition(Arrays.asList(array).iterator(), 2);
         val batch = new AbstractBatchIterator<Integer>() {
             @Override
-            protected Collection<Integer> computeNextBatch() {
+            protected Iterable<Integer> computeNextBatch() {
                 int random = RandomUtils.nextInt();
                 if (random % 3 == 0) return null;
                 if (random % 3 == 1) return Collections.emptyList();

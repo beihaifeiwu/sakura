@@ -1,20 +1,19 @@
 package sakura.common.reactor;
 
-import lombok.SneakyThrows;
 import lombok.experimental.UtilityClass;
 import lombok.val;
-import org.jooq.lambda.fi.util.function.CheckedConsumer;
-import org.jooq.lambda.fi.util.function.CheckedFunction;
+import org.apache.commons.lang3.ObjectUtils;
 import reactor.core.publisher.Flux;
 import reactor.core.scheduler.Schedulers;
 import sakura.common.$;
+import sakura.common.annotation.Nullable;
 
-import javax.annotation.Nonnegative;
-import javax.annotation.Nullable;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicReference;
+import java.util.function.Consumer;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+
+import static java.util.Collections.emptyList;
 
 /**
  * Created by haomu on 2018/4/23.
@@ -22,67 +21,48 @@ import java.util.concurrent.atomic.AtomicReference;
 @UtilityClass
 public class Reactor {
 
-    @SneakyThrows
-    public static <I> void run(@Nullable Collection<I> inputs,
-                               @Nonnegative int partitionSize,
-                               CheckedConsumer<List<I>> consumer) {
-        if (inputs == null || inputs.isEmpty()) return;
-
-        List<I> list = $.list(inputs);
-        partitionSize = Math.max(partitionSize, 1);
-
-        if (list.size() <= partitionSize) {
-            consumer.accept(list);
-            return;
-        }
-
-        val reference = new AtomicReference<Throwable>();
-        Flux.fromIterable($.partition(list, partitionSize))
-                .parallel()
-                .runOn(Schedulers.elastic())
-                .doOnNext(is -> {
-                    try {
-                        consumer.accept(is);
-                    } catch (Throwable throwable) {
-                        reference.set(throwable);
-                    }
-                })
-                .sequential()
-                .blockLast();
-        if (reference.get() != null) throw reference.get();
+    public static <I> void run(@Nullable Iterable<I> inputs,
+                               @Nullable Integer size,
+                               @Nullable Consumer<List<I>> consumer) {
+        if (inputs == null) return;
+        if (consumer == null) return;
+        run($.partition(inputs, ObjectUtils.defaultIfNull(size, 1)), consumer);
     }
 
-    @SneakyThrows
-    public static <I, R> List<R> call(@Nullable Collection<I> inputs,
-                                      @Nonnegative int partitionSize,
-                                      CheckedFunction<List<I>, List<R>> transformer) {
-        if (inputs == null || inputs.isEmpty()) return Collections.emptyList();
-
-        List<I> list = $.list(inputs);
-        partitionSize = Math.max(partitionSize, 1);
-
-        if (list.size() <= partitionSize) return transformer.apply(list);
-
-        val reference = new AtomicReference<Throwable>();
-        List<R> results = $.newList(inputs.size());
-        Flux.fromIterable($.partition(list, partitionSize))
+    public static <I> void run(@Nullable Iterable<I> inputs,
+                               @Nullable Consumer<I> consumer) {
+        if (inputs == null) return;
+        if (consumer == null) return;
+        Flux.fromIterable(inputs)
                 .parallel()
                 .runOn(Schedulers.elastic())
-                .map(is -> {
-                    try {
-                        return transformer.apply(is);
-                    } catch (Throwable throwable) {
-                        reference.set(throwable);
-                    }
-                    return Collections.<R>emptyList();
-                })
+                .doOnNext(consumer)
                 .sequential()
-                .doOnNext(results::addAll)
                 .blockLast();
+    }
 
-        if (reference.get() != null) throw reference.get();
+    public static <I, R> List<R> call(@Nullable Iterable<I> inputs,
+                                      @Nullable Integer size,
+                                      @Nullable Function<List<I>, List<R>> transformer) {
+        if (inputs == null) return emptyList();
+        if (transformer == null) return emptyList();
+        val parts = $.partition(inputs, ObjectUtils.defaultIfNull(size, 1));
+        val result = call(parts, transformer);
+        return result.stream().flatMap(List::stream).collect(Collectors.toList());
+    }
 
-        return results;
+    public static <I, R> List<R> call(@Nullable Iterable<I> inputs,
+                                      @Nullable Function<I, R> transformer) {
+        if (inputs == null) return emptyList();
+        if (transformer == null) return emptyList();
+        return Flux.fromIterable(inputs)
+                .parallel()
+                .runOn(Schedulers.elastic())
+                .map(transformer)
+                .sequential()
+                .collectList()
+                .blockOptional()
+                .orElse(emptyList());
     }
 
 }

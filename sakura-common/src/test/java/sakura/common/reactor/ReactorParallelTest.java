@@ -5,6 +5,8 @@ import com.google.common.collect.Sets;
 import org.junit.Before;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
+import org.junit.runners.MethodSorters;
+import sakura.common.AbstractTest;
 
 import java.util.*;
 
@@ -14,8 +16,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 /**
  * Created by haomu on 2018/7/19.
  */
-@FixMethodOrder
-public class ReactorParallelTest {
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
+public class ReactorParallelTest extends AbstractTest {
 
     private List<Integer> input;
     private List<Integer> output;
@@ -43,19 +45,14 @@ public class ReactorParallelTest {
         output = Reactor.call((List<Integer>) null, batch, this::transform);
         assertThat(output).isNotNull().isEmpty();
         assertThat(threads).hasSize(0);
-    }
 
-    @Test
-    public void testCallWithOneBatch() {
-        batch = 100;
-        output = Reactor.call(input, batch, this::transform);
-        assertThat(output).isNotEmpty().hasSameElementsAs(input);
-        assertRunInCurrentThread();
+        output = Reactor.call(new ArrayList<Integer>(), this::transform);
+        assertThat(output).isNotNull().isEmpty();
+        assertThat(threads).hasSize(0);
 
-        batch = 200;
-        output = Reactor.call(input, batch, this::transform);
-        assertThat(output).isNotEmpty().hasSameElementsAs(input);
-        assertRunInCurrentThread();
+        output = Reactor.call((List<Integer>) null, this::transform);
+        assertThat(output).isNotNull().isEmpty();
+        assertThat(threads).hasSize(0);
     }
 
     @Test
@@ -71,13 +68,10 @@ public class ReactorParallelTest {
         output.sort(Comparator.naturalOrder());
         assertThat(output).isNotEmpty().hasSameElementsAs(input);
         assertRunInElasticThreadPool();
-    }
 
-    @Test(expected = ExpectedException.class)
-    public void testCallWithException() {
-        output = Reactor.call(input, 5, i -> {
-            throw new ExpectedException();
-        });
+        output = Reactor.call(input, this::transform);
+        output.sort(Comparator.naturalOrder());
+        assertThat(output).isNotEmpty().hasSameElementsAs(input);
         assertRunInElasticThreadPool();
     }
 
@@ -89,17 +83,12 @@ public class ReactorParallelTest {
 
         Reactor.run(Collections.emptyList(), batch, this::transform);
         assertThat(threads).hasSize(0);
-    }
 
-    @Test
-    public void testRunWithOneBatch() {
-        batch = 100;
-        Reactor.run(input, batch, this::transform);
-        assertRunInCurrentThread();
+        Reactor.run(null, this::transform);
+        assertThat(threads).hasSize(0);
 
-        batch = 200;
-        Reactor.run(input, batch, this::transform);
-        assertRunInCurrentThread();
+        Reactor.run(Collections.emptyList(), this::transform);
+        assertThat(threads).hasSize(0);
     }
 
     @Test
@@ -111,20 +100,9 @@ public class ReactorParallelTest {
         batch = 7;
         Reactor.run(input, batch, this::transform);
         assertRunInElasticThreadPool();
-    }
 
-    @Test(expected = ExpectedException.class)
-    public void testRunWithException() {
-        Reactor.run(input, 5, i -> {
-            throw new ExpectedException();
-        });
+        Reactor.run(input, this::transform);
         assertRunInElasticThreadPool();
-    }
-
-    private void assertRunInCurrentThread() {
-        String threadName = Thread.currentThread().getName();
-        assertThat(threads).hasSize(1).containsExactly(threadName);
-        threads.clear();
     }
 
     private void assertRunInElasticThreadPool() {
@@ -132,6 +110,13 @@ public class ReactorParallelTest {
         assertThat(threads).allMatch(s -> s.startsWith("elastic"));
         assertThat(threads.size()).isBetween(1, processors);
         threads.clear();
+    }
+
+    private <T> T transform(T input) {
+        String name = Thread.currentThread().getName();
+        threads.add(name);
+//        System.out.println(name + ": " + input);
+        return input;
     }
 
     private <T> List<T> transform(List<T> input) {

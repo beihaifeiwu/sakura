@@ -58,10 +58,7 @@ public class Caches {
     }
 
     public static <T> TypeCache<T> newTypeCache(boolean weak, boolean sync) {
-        val impl = weak
-                ? (sync ? TypeCache.Implementation.SYNC_WEAK : TypeCache.Implementation.WEAK)
-                : (sync ? TypeCache.Implementation.SYNC_MAP : TypeCache.Implementation.MAP);
-        return new TypeCache<>(impl);
+        return TypeCache.<T>create().threadsafe(sync).weak(weak).get();
     }
 
     @SuppressWarnings("unchecked")

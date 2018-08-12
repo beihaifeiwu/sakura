@@ -1,9 +1,8 @@
-package sakura.common.caches;
+package sakura.common.cache;
 
 import lombok.val;
 import org.junit.Test;
 import sakura.common.AbstractTest;
-import sakura.common.cache.Caches;
 import sakura.common.lang.Threads;
 
 import java.util.concurrent.TimeUnit;

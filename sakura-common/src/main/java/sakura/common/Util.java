@@ -16,7 +16,7 @@ import java.util.function.*;
  * Created by liupin on 2018/6/23.
  */
 @UtilityClass
-public class $ {
+public class Util {
 
     //--------------------------------Empty---------------------------------
     public static boolean isBlank(@Nullable CharSequence cs) {

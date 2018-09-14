@@ -1,7 +1,7 @@
 package sakura.common.resource;
 
 import org.apache.commons.lang3.Validate;
-import sakura.common.$;
+import sakura.common.Util;
 import sakura.common.annotation.Nullable;
 import sakura.common.cache.Cache;
 import sakura.common.cache.Caches;
@@ -458,13 +458,13 @@ public class AntPathMatcher implements PathMatcher {
     @Nullable
     @Override
     public String combine(@Nullable String pattern1, @Nullable String pattern2) {
-        if ($.isBlank(pattern1) && $.isBlank(pattern2)) {
+        if (Util.isBlank(pattern1) && Util.isBlank(pattern2)) {
             return "";
         }
-        if ($.isBlank(pattern1)) {
+        if (Util.isBlank(pattern1)) {
             return pattern2;
         }
-        if ($.isBlank(pattern2)) {
+        if (Util.isBlank(pattern2)) {
             return pattern1;
         }
 

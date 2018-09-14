@@ -10,14 +10,14 @@ import java.util.Map;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
-import static sakura.common.$.isBlank;
-import static sakura.common.$.isEmpty;
+import static sakura.common.Util.isBlank;
+import static sakura.common.Util.isEmpty;
 
 /**
  * Created by haomu on 2018/7/8.
  */
 @SuppressWarnings("ConstantConditions")
-public class $_EmptyTest extends AbstractTest {
+public class UtilEmptyTest extends AbstractTest {
 
     @Test
     public void testString() {

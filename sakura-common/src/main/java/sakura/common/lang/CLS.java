@@ -9,7 +9,7 @@ import org.apache.commons.lang3.ClassUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Validate;
 import org.apache.commons.lang3.reflect.ConstructorUtils;
-import sakura.common.$;
+import sakura.common.Util;
 import sakura.common.annotation.Nullable;
 
 import java.io.File;
@@ -114,7 +114,7 @@ public class CLS {
     @SneakyThrows
     public static <T> T newInstance(Class<T> type, @Nullable Object... args) {
         T result;
-        if ($.isEmpty(args)) {
+        if (Util.isEmpty(args)) {
             result = type.newInstance();
         } else {
             result = ConstructorUtils.invokeConstructor(type, args);

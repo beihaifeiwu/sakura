@@ -5,7 +5,7 @@ import lombok.val;
 import org.apache.commons.lang3.ObjectUtils;
 import reactor.core.publisher.Flux;
 import reactor.core.scheduler.Schedulers;
-import sakura.common.$;
+import sakura.common.Util;
 import sakura.common.annotation.Nullable;
 
 import java.util.List;
@@ -26,7 +26,7 @@ public class Reactor {
                                @Nullable Consumer<List<I>> consumer) {
         if (inputs == null) return;
         if (consumer == null) return;
-        run($.partition(inputs, ObjectUtils.defaultIfNull(size, 1)), consumer);
+        run(Util.partition(inputs, ObjectUtils.defaultIfNull(size, 1)), consumer);
     }
 
     public static <I> void run(@Nullable Iterable<I> inputs,
@@ -46,7 +46,7 @@ public class Reactor {
                                       @Nullable Function<List<I>, List<R>> transformer) {
         if (inputs == null) return emptyList();
         if (transformer == null) return emptyList();
-        val parts = $.partition(inputs, ObjectUtils.defaultIfNull(size, 1));
+        val parts = Util.partition(inputs, ObjectUtils.defaultIfNull(size, 1));
         val result = call(parts, transformer);
         return result.stream().flatMap(List::stream).collect(Collectors.toList());
     }

@@ -1,7 +1,7 @@
 package sakura.common.resource;
 
 import org.apache.commons.lang3.Validate;
-import sakura.common.$;
+import sakura.common.Util;
 import sakura.common.annotation.Nullable;
 import sakura.common.lang.CLS;
 
@@ -135,8 +135,8 @@ public class ClassPathResource extends AbstractFileResolvingResource {
         if (obj instanceof ClassPathResource) {
             ClassPathResource otherRes = (ClassPathResource) obj;
             return (this.path.equals(otherRes.path) &&
-                    $.equals(this.classLoader, otherRes.classLoader) &&
-                    $.equals(this.clazz, otherRes.clazz));
+                    Util.equals(this.classLoader, otherRes.classLoader) &&
+                    Util.equals(this.clazz, otherRes.clazz));
         }
         return false;
     }

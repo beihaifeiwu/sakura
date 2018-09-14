@@ -5,7 +5,7 @@ import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.util.CollectionUtils;
-import sakura.common.$;
+import sakura.common.Util;
 import sakura.spring.core.SpringBeans;
 
 import java.util.List;
@@ -28,7 +28,7 @@ public class ConversionServiceConfigurerInitializer implements InitializingBean 
             return;
         }
         for (ConversionServiceConfigurer configurer : configurerList) {
-            serviceList.forEach($.unchecked(configurer::configure));
+            serviceList.forEach(Util.unchecked(configurer::configure));
         }
     }
 
